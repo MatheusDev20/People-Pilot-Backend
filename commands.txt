@@ -1,0 +1,4 @@
+-> Create and Connect (Via Shell) to MYSQL Database
+    docker run --name employee_management -e MYSQL_ROOT_PASSWORD=dblocal123 -d mysql
+    docker exec -it employee_management bash
+    mysql --host=localhost --user=root --password=dblocal123
