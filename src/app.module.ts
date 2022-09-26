@@ -3,8 +3,29 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { EmployeeModule } from './employee/employee.module';
+// import { EmployeeModule } from './employee/employee.module';
+import { DepartmentsModule } from './departments/departments.module';
+
 @Module({
-  imports: [ConfigModule.forRoot(), TypeOrmModule.forRoot()],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      username: process.env.MYSQL_USER,
+      password: process.env.MYSQL_DB_PASSWORD,
+      database: process.env.DB_NAME,
+      entities: [],
+      synchronize: Boolean(process.env.DB_SYNC),
+    }),
+    EmployeeModule,
+    DepartmentsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
