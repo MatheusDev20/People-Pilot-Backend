@@ -3,9 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { EmployeeModule } from './employee/employee.module';
-// import { EmployeeModule } from './employee/employee.module';
-import { DepartmentsModule } from './departments/departments.module';
+import { EmployeeModule } from './modules/employee/employee.module';
+import { Department } from './modules/departments/department.entity';
+import { DepartmentsModule } from './modules/departments/departments.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { DepartmentsModule } from './departments/departments.module';
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [],
+      entities: ['dist/modules/**/*.entity.js'],
       synchronize: Boolean(process.env.DB_SYNC),
     }),
     EmployeeModule,
