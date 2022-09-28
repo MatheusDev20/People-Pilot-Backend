@@ -2,14 +2,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Roles } from '../roles/roles.entity';
+import { Department } from '../departments/department.entity';
 
 @Entity()
-export class Department {
+export class Roles {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -19,14 +20,12 @@ export class Department {
   @Column()
   description: string;
 
-  @Column()
-  manager: string;
-
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(() => Roles, (role) => role.name)
-  roles: Roles[];
+  @ManyToOne(() => Department)
+  @JoinColumn({ name: 'department_id' })
+  department: Department;
 
   @CreateDateColumn()
   created_at: Date;

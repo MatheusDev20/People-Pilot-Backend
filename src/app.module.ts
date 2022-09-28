@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { EmployeeModule } from './modules/employee/employee.module';
-import { Department } from './modules/departments/department.entity';
+import { RolesModule } from './modules/roles/roles.module';
 import { DepartmentsModule } from './modules/departments/departments.module';
 
 @Module({
@@ -25,6 +25,7 @@ import { DepartmentsModule } from './modules/departments/departments.module';
     }),
     EmployeeModule,
     DepartmentsModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
