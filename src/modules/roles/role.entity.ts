@@ -10,15 +10,12 @@ import {
 import { Department } from '../departments/department.entity';
 
 @Entity()
-export class Roles {
-  @PrimaryGeneratedColumn()
+export class Role {
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Column()
   name: string;
-
-  @Column()
-  description: string;
 
   @Column({ default: true })
   isActive: boolean;

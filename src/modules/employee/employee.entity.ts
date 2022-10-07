@@ -9,11 +9,11 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Department } from '../departments/department.entity';
-import { Roles } from '../roles/roles.entity';
+import { Role } from '../roles/role.entity';
 
 @Entity()
 export class Employee {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()
@@ -31,6 +31,9 @@ export class Employee {
 
   @Column()
   department_name: string;
+
+  @Column()
+  role: string;
 
   @UpdateDateColumn()
   updated_at: Date;
