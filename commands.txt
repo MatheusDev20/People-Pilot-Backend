@@ -2,3 +2,6 @@
     docker run --name employee_management -e MYSQL_ROOT_PASSWORD=dblocal123 -d mysql
     docker exec -it employee_management bash
     mysql --host=localhost --user=root --password=dblocal123
+
+-> See the tailing logs of a running container
+    docker logs --follow <container_id>

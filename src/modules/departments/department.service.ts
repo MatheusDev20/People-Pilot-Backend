@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Department } from './department.entity';
 import { CreateDepartmentDTO } from './DTO/create-department.dto';
 import { v4 } from 'uuid';
-import { Roles } from '../roles/role.entity';
+import { Role } from '../roles/role.entity';
 
 @Injectable()
 export class DepartmentsService {

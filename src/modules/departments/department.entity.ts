@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Roles } from '../roles/role.entity';
+import { Role } from '../roles/role.entity';
 
 @Entity()
 export class Department {
@@ -25,8 +25,8 @@ export class Department {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(() => Roles, (role) => role.name)
-  roles: Roles[];
+  @OneToMany(() => Role, (role) => role.name)
+  roles: Role[];
 
   @CreateDateColumn()
   created_at: Date;
