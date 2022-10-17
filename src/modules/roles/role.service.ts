@@ -12,7 +12,7 @@ export class RoleService {
     this.repository.findOneBy({ id: roleId });
   }
 
-  async createRole(createRoleDTO: CreateRoleDTO) {
-    console.log('Creating role name ==>', createRoleDTO.name);
+  async createRole(createRoleDTO: CreateRoleDTO): Promise<Role> {
+    return this.repository.save(createRoleDTO);
   }
 }
