@@ -20,9 +20,9 @@ export class Role {
   @Column({ default: true })
   isActive: boolean;
 
-  @ManyToOne(() => Department)
-  @JoinColumn({ name: 'department_id' })
-  department: Department;
+  // @ManyToOne(() => Department)
+  // @JoinColumn({ name: 'department_id' })
+  // department: Department;
 
   @CreateDateColumn()
   created_at: Date;

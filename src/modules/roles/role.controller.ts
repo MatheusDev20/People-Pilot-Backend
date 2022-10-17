@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { created } from '../../helpers/http/http-helpers';
+import { created } from '../../helpers/http';
 import { HttpResponse } from 'src/helpers/http/http-helpers';
 import { CreateRoleDTO } from './DTOs/CreateRoleDTO';
 import { RoleService } from './role.service';
@@ -17,7 +17,6 @@ export class RolesController {
     @Body() createRoleDTO: CreateRoleDTO,
   ): Promise<HttpResponse> {
     const role = await this.service.createRole(createRoleDTO);
-
     return created(role);
   }
 }

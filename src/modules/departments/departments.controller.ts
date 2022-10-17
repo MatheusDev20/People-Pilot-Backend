@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { created } from 'src/helpers/http';
 import { DepartmentsService } from './department.service';
 import { CreateDepartmentDTO } from './DTO/create-department.dto';
 @Controller('departments')
@@ -12,7 +13,7 @@ export class DepartmentsController {
 
   @Post()
   async postDepartment(@Body() data: CreateDepartmentDTO) {
-    console.log(data);
-    await this.service.createDepartment(data);
+    const response = await this.service.createDepartment(data);
+    return created(response);
   }
 }

@@ -25,8 +25,8 @@ export class Department {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(() => Role, (role) => role.name)
-  roles: Role[];
+  // @OneToMany(() => Role, (role) => role.name)
+  // roles: Role[];
 
   @CreateDateColumn()
   created_at: Date;

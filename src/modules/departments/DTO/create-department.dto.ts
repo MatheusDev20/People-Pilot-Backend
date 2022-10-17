@@ -14,7 +14,4 @@ export class CreateDepartmentDTO {
   @IsString()
   @MaxLength(25)
   manager: string;
-
-  @IsNotEmpty()
-  roles: string[];
 }
