@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { EmployeeModule } from './modules/employee/employee.module';
-import { RolesModule } from './modules/roles/roles.module';
+import { RolesModule } from './modules/role/roles.module';
 import { DepartmentsModule } from './modules/departments/departments.module';
 import { MySQLDBConfigService } from './config/MysqlConfig.service';
 
