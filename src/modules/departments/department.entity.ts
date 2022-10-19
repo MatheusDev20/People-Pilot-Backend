@@ -2,10 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Employee } from '../employee/employee.entity';
 import { Role } from '../role/role.entity';
 
 @Entity()
@@ -25,8 +27,8 @@ export class Department {
   @Column({ default: true })
   isActive: boolean;
 
-  // @OneToMany(() => Role, (role) => role.name)
-  // roles: Role[];
+  @OneToMany(() => Employee, (employee) => employee.department)
+  employees: Employee[];
 
   @CreateDateColumn()
   created_at: Date;

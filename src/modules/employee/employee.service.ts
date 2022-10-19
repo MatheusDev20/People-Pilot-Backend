@@ -11,8 +11,9 @@ export class EmployeeService {
     @InjectRepository(Employee) private repository: Repository<Employee>,
     private departmentService: DepartmentsService,
   ) {}
-  list() {
-    return 'A list of employee has been returned';
+
+  async list(name: string) {
+    return await this.departmentService.getDepartmentEmployees(name);
   }
 
   async createEmployee(data: CreateEmployeeDTO): Promise<Employee> {
@@ -22,9 +23,12 @@ export class EmployeeService {
 
       const newEmployee = {
         ...data,
-        department_id: employeeDepartment.id,
+        department: employeeDepartment,
       };
-      return await this.repository.save(newEmployee);
+
+      const res = await this.repository.save(newEmployee);
+      console.log('??');
+      return res;
     } catch (err) {
       console.log('Error Saving Entity =>', err);
     }

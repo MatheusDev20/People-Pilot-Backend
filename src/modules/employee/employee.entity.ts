@@ -4,6 +4,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -24,12 +25,8 @@ export class Employee {
   @Column()
   phone: string;
 
-  @OneToOne(() => Department)
-  @JoinColumn({ name: 'department_id' })
-  department_id: string;
-
-  @Column()
-  department_name: string;
+  @ManyToOne(() => Department, (department) => department.employees)
+  department: Department;
 
   @Column()
   role: string;

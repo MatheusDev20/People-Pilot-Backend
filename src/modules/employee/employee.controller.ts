@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { created, HttpResponse } from 'src/helpers/http';
 import { CreateEmployeeDTO } from './DTOs/CreateEmployeeDTO';
 import { EmployeeService } from './employee.service';
@@ -7,12 +7,16 @@ import { DepartmentsService } from '../departments/department.service';
 export class EmployeeController {
   constructor(private employeeService: EmployeeService) {}
   @Get()
-  getEmployee(): string {
-    return this.employeeService.list();
+  async getEmployee(@Query() queryParams): Promise<HttpResponse> {
+    const employess = await this.employeeService.list(
+      queryParams.departmentName,
+    );
+    console.log(employess);
+    return created(employess);
   }
   @Post()
   async saveEmployee(@Body() data: CreateEmployeeDTO): Promise<HttpResponse> {
-    const response = this.employeeService.createEmployee(data);
+    const response = await this.employeeService.createEmployee(data);
     return created(response);
   }
 }
