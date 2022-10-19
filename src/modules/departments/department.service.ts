@@ -11,6 +11,10 @@ export class DepartmentsService {
   ) {}
 
   async createDepartment(data: CreateDepartmentDTO): Promise<Department> {
-    return this.repository.save(data);
+    return await this.repository.save(data);
+  }
+
+  async getDepartamentByName(name: string): Promise<Department> {
+    return await this.repository.findOneBy({ name: name });
   }
 }

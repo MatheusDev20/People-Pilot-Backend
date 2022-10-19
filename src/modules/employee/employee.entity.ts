@@ -9,7 +9,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Department } from '../departments/department.entity';
-import { Role } from '../roles/role.entity';
 
 @Entity()
 export class Employee {
@@ -27,7 +26,7 @@ export class Employee {
 
   @OneToOne(() => Department)
   @JoinColumn({ name: 'department_id' })
-  department_id: number;
+  department_id: string;
 
   @Column()
   department_name: string;
