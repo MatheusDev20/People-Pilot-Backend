@@ -3,17 +3,18 @@ import { created, HttpResponse } from 'src/helpers/http';
 import { CreateEmployeeDTO } from './DTOs/CreateEmployeeDTO';
 import { EmployeeService } from './employee.service';
 import { DepartmentsService } from '../departments/department.service';
+
 @Controller('employee')
 export class EmployeeController {
   constructor(private employeeService: EmployeeService) {}
   @Get()
-  async getEmployee(@Query() queryParams): Promise<HttpResponse> {
+  async getEmployeeByDepartament(@Query() queryParams): Promise<HttpResponse> {
     const employess = await this.employeeService.list(
       queryParams.departmentName,
     );
-    console.log(employess);
     return created(employess);
   }
+
   @Post()
   async saveEmployee(@Body() data: CreateEmployeeDTO): Promise<HttpResponse> {
     const response = await this.employeeService.createEmployee(data);
