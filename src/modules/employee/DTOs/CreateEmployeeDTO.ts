@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength, Validate } from 'class-validator';
+import { DepartmentNameValidator } from '../validators/DepartmentNameValidator';
 
 export class CreateEmployeeDTO {
   @IsNotEmpty()
@@ -15,9 +16,11 @@ export class CreateEmployeeDTO {
   @MaxLength(12)
   phone: string;
 
+  @MaxLength(12)
   @IsNotEmpty()
   @IsString()
-  department_name: string;
+  @Validate(DepartmentNameValidator)
+  departmentName: string;
 
   @IsNotEmpty()
   @IsString()

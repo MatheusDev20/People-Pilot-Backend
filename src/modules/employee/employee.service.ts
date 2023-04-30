@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DepartmentsService } from '../departments/department.service';
@@ -17,20 +17,19 @@ export class EmployeeService {
   }
 
   async createEmployee(data: CreateEmployeeDTO): Promise<Employee> {
-    try {
-      const employeeDepartment =
-        await this.departmentService.getDepartamentByName(data.department_name);
-
-      const newEmployee = {
-        ...data,
-        department: employeeDepartment,
-      };
-
-      const res = await this.repository.save(newEmployee);
-      console.log('??');
-      return res;
-    } catch (err) {
-      console.log('Error Saving Entity =>', err);
+    const { departmentName } = data;
+    const department = await this.departmentService.getDepartamentByName(
+      departmentName,
+    );
+    if (!department) {
+      throw new NotFoundException(`Departament ${departmentName} not found`);
     }
+    delete data.departmentName;
+    const newEmployee = {
+      ...data,
+      department: department,
+    };
+    const res = await this.repository.save(newEmployee);
+    return res;
   }
 }

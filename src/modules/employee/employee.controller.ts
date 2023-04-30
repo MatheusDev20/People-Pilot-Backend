@@ -1,8 +1,17 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
-import { created, HttpResponse } from 'src/helpers/http';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  NotFoundException,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { created, HttpResponse, ok } from 'src/helpers/http';
 import { CreateEmployeeDTO } from './DTOs/CreateEmployeeDTO';
 import { EmployeeService } from './employee.service';
-import { DepartmentsService } from '../departments/department.service';
+import { NotFoundError } from 'rxjs';
 
 @Controller('employee')
 export class EmployeeController {
@@ -12,12 +21,13 @@ export class EmployeeController {
     const employess = await this.employeeService.list(
       queryParams.departmentName,
     );
-    return created(employess);
+
+    return ok(employess);
   }
 
   @Post()
   async saveEmployee(@Body() data: CreateEmployeeDTO): Promise<HttpResponse> {
-    const response = await this.employeeService.createEmployee(data);
-    return created(response);
+    const { id } = await this.employeeService.createEmployee(data);
+    return created({ id });
   }
 }

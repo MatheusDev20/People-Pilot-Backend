@@ -22,9 +22,6 @@ export class Employee {
   @Column()
   phone: string;
 
-  @ManyToOne(() => Department, (department) => department.employees)
-  department: Department;
-
   @Column()
   role: string;
 
@@ -33,4 +30,7 @@ export class Employee {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @ManyToOne(() => Department, (department) => department.employees)
+  department: Department;
 }

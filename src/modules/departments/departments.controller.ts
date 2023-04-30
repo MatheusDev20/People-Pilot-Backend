@@ -1,14 +1,23 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { created } from 'src/helpers/http';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
+import { created, ok } from 'src/helpers/http';
 import { DepartmentsService } from './department.service';
 import { CreateDepartmentDTO } from './DTO/create-department.dto';
 @Controller('departments')
 export class DepartmentsController {
   constructor(private service: DepartmentsService) {}
 
-  @Get()
-  getDepartments() {
-    return 'All Departments';
+  @Get(':id')
+  async getDepartmentByID(@Param('id', ParseUUIDPipe) uuid: string) {
+    const response = await this.service.getDepartmentById(uuid);
+    return ok(response);
   }
 
   @Post()

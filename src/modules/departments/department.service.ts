@@ -11,6 +11,9 @@ export class DepartmentsService {
     @InjectRepository(Department) private repository: Repository<Department>,
   ) {}
 
+  async getDepartmentById(id: string) {
+    return this.repository.findOneBy({ id });
+  }
   async createDepartment(data: CreateDepartmentDTO): Promise<Department> {
     return await this.repository.save(data);
   }
