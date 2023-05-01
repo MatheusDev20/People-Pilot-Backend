@@ -24,6 +24,7 @@ export const handler: Handler = async (
   callback: Callback,
 ) => {
   // Caching the serveless
+  // TIL: Nullish Coalescing
   server = server ?? (await bootstrap());
   return server(event, context, callback);
 };
