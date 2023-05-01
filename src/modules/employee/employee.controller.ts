@@ -1,17 +1,7 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpException,
-  NotFoundException,
-  Param,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { created, HttpResponse, ok } from 'src/helpers/http';
 import { CreateEmployeeDTO } from './DTOs/CreateEmployeeDTO';
 import { EmployeeService } from './employee.service';
-import { NotFoundError } from 'rxjs';
 
 @Controller('employee')
 export class EmployeeController {
@@ -21,7 +11,6 @@ export class EmployeeController {
     const employess = await this.employeeService.list(
       queryParams.departmentName,
     );
-
     return ok(employess);
   }
 

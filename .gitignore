@@ -35,6 +35,10 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 ## Env Files
-.env.production
 .env.development
 .env
+.env.prod
+
+
+.serverless
+security.txt
