@@ -6,12 +6,16 @@ import {
   DEFAULT_APP_LIMIT,
   DEFAULT_APP_PAGINATION,
 } from 'src/constants/constants';
+import { GetEmployeeByDepartmentDTO } from './DTOs/get-employees-by-department';
 
 @Controller('employee')
 export class EmployeeController {
   constructor(private employeeService: EmployeeService) {}
   @Get()
-  async getEmployeeByDepartament(@Query() queryParams): Promise<HttpResponse> {
+  // TODO: Validate these Query params ( only department name is required )
+  async getEmployeeByDepartament(
+    @Query() queryParams: GetEmployeeByDepartmentDTO,
+  ): Promise<HttpResponse> {
     const { name, page, limit } = queryParams;
 
     const pagination = page ?? DEFAULT_APP_PAGINATION;
@@ -22,6 +26,7 @@ export class EmployeeController {
       pagination,
       appLimit,
     );
+
     return ok(employess);
   }
 
