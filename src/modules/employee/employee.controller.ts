@@ -8,9 +8,8 @@ export class EmployeeController {
   constructor(private employeeService: EmployeeService) {}
   @Get()
   async getEmployeeByDepartament(@Query() queryParams): Promise<HttpResponse> {
-    const employess = await this.employeeService.list(
-      queryParams.departmentName,
-    );
+    const { name } = queryParams;
+    const employess = await this.employeeService.listEmployeeByDepartment(name);
     return ok(employess);
   }
 

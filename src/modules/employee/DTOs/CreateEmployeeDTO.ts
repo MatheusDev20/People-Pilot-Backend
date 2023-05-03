@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString, MaxLength, Validate } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  Validate,
+} from 'class-validator';
 import { DepartmentNameValidator } from '../validators/DepartmentNameValidator';
 
 export class CreateEmployeeDTO {
@@ -9,6 +15,7 @@ export class CreateEmployeeDTO {
 
   @IsNotEmpty()
   @IsString()
+  @IsEmail()
   email: string;
 
   @IsNotEmpty()
@@ -24,5 +31,6 @@ export class CreateEmployeeDTO {
 
   @IsNotEmpty()
   @IsString()
+  @MaxLength(25)
   role: string;
 }

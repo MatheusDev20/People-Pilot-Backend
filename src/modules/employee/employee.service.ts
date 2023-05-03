@@ -1,4 +1,4 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DepartmentsService } from '../departments/department.service';
@@ -12,8 +12,8 @@ export class EmployeeService {
     private departmentService: DepartmentsService,
   ) {}
 
-  async list(name: string) {
-    return await this.departmentService.getDepartmentEmployees(name);
+  async listEmployeeByDepartment(departmentName: string) {
+    return await this.departmentService.getDepartmentEmployees(departmentName);
   }
 
   async createEmployee(data: CreateEmployeeDTO): Promise<Employee> {
@@ -21,15 +21,13 @@ export class EmployeeService {
     const department = await this.departmentService.getDepartamentByName(
       departmentName,
     );
+
     if (!department) {
       throw new NotFoundException(`Departament ${departmentName} not found`);
     }
+
     delete data.departmentName;
-    const newEmployee = {
-      ...data,
-      department: department,
-    };
-    const res = await this.repository.save(newEmployee);
-    return res;
+
+    return await this.repository.save({ ...data, department });
   }
 }
