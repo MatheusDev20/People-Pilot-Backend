@@ -21,21 +21,4 @@ export class DepartmentsService {
   async getDepartamentByName(name: string): Promise<Department> {
     return await this.repository.findOneBy({ name });
   }
-
-  async getDepartmentEmployees(departmentName: string): Promise<Employee[]> {
-    const department = await this.getDepartamentByName(departmentName);
-    if (!department) throw new NotFoundException('Department not found');
-    const { name } = department;
-
-    const { employees } = await this.repository.findOne({
-      where: {
-        name: name,
-      },
-      relations: {
-        employees: true,
-      },
-    });
-
-    return employees;
-  }
 }

@@ -2,14 +2,26 @@ import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { created, HttpResponse, ok } from 'src/helpers/http';
 import { CreateEmployeeDTO } from './DTOs/CreateEmployeeDTO';
 import { EmployeeService } from './employee.service';
+import {
+  DEFAULT_APP_LIMIT,
+  DEFAULT_APP_PAGINATION,
+} from 'src/constants/constants';
 
 @Controller('employee')
 export class EmployeeController {
   constructor(private employeeService: EmployeeService) {}
   @Get()
   async getEmployeeByDepartament(@Query() queryParams): Promise<HttpResponse> {
-    const { name } = queryParams;
-    const employess = await this.employeeService.listEmployeeByDepartment(name);
+    const { name, page, limit } = queryParams;
+
+    const pagination = page ?? DEFAULT_APP_PAGINATION;
+    const appLimit = limit ?? DEFAULT_APP_LIMIT;
+
+    const employess = await this.employeeService.getEmployeeByDepartment(
+      name,
+      pagination,
+      appLimit,
+    );
     return ok(employess);
   }
 
