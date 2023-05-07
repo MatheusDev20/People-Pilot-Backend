@@ -1789,12 +1789,12 @@
     "jsonc-parser" "3.2.0"
     "pluralize" "8.0.0"
 
-"@nestjs/testing@^9.0.0":
-  "integrity" "sha512-BfwERdTppE4oz6qxCNJVo0kaRH2FO7mipooedT2nDtYW3krGZ8978odmGdpVgNz1xwqKDH3Y/68frs5oW2CTZw=="
-  "resolved" "https://registry.npmjs.org/@nestjs/testing/-/testing-9.1.2.tgz"
-  "version" "9.1.2"
+"@nestjs/testing@^9.4.0":
+  "integrity" "sha512-xZWp363P4otcebg++gSjUcdCfTK0RorORzyFq3aLaSAQOlq8kxfFDRIKzEATR4aOUfqTMMsAA8lhnMJWf35N6A=="
+  "resolved" "https://registry.npmjs.org/@nestjs/testing/-/testing-9.4.0.tgz"
+  "version" "9.4.0"
   dependencies:
-    "tslib" "2.4.0"
+    "tslib" "2.5.0"
 
 "@nestjs/typeorm@^9.0.1":
   "integrity" "sha512-A2BgLIPsMtmMI0bPKEf4bmzgFPsnvHqNBx3KkvaJ7hJrBQy0OqYOb+Rr06ifblKWDWS2tUPNrAFQbZjtk3PI+g=="
@@ -8060,6 +8060,11 @@
   "version" "2.4.0"
 
 "tslib@^2.5.0":
+  "integrity" "sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg=="
+  "resolved" "https://registry.npmjs.org/tslib/-/tslib-2.5.0.tgz"
+  "version" "2.5.0"
+
+"tslib@2.5.0":
   "integrity" "sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg=="
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-2.5.0.tgz"
   "version" "2.5.0"
