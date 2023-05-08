@@ -1,4 +1,5 @@
-Create Amazon VPC to connect the lambda function to GC SQL Database
+
 Starting write unit tests
+Allow departaments bigger than 12 Characters on /api/v1/employee
 
 

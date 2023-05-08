@@ -1,9 +1,11 @@
 # Deploy Steps.
 
-Run serverless offline to test your lambda function locally
-
-# Changes on lambda configuration
+# Deploy a new service to AWS i.e changes on serveless.yml
+```
 serverless deploy --stage dev
+```
 
 ## Att current function "main"
-serverless deploy function -f main
+```
+npm run deploy
+```

@@ -1,7 +1,6 @@
 import { HttpExceptionFilter } from './helpers/http/http-exceptions.filter';
 import { Inject, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { EmployeeModule } from './modules/employee/employee.module';
@@ -21,7 +20,6 @@ import { APP_FILTER } from '@nestjs/core';
   ],
   controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
