@@ -1,11 +1,11 @@
-import { Hashing } from './../security/interfaces/hashing';
-import { CreateEmployeeRepositoryDTO } from './repositories/DTOs/create-employee.dto';
+import { Hashing } from '../../security/interfaces/hashing';
+import { CreateEmployeeRepositoryDTO } from '../repositories/DTOs/create-employee.dto';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { DepartmentsService } from '../departments/department.service';
-import { CreateEmployeeDTO } from './DTOs/create-employee-dto';
-import { Employee } from './employee.entity';
-import { EmployeeRepository } from './repositories/employee.repository';
-import { CreateEmployeeResponse } from './DTOs/types';
+import { DepartmentsService } from '../../departments/services/department.service';
+import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
+import { Employee } from '../employee.entity';
+import { EmployeeRepository } from '../repositories/employee.repository';
+import { CreateEmployeeResponse } from '../DTOs/types';
 
 @Injectable()
 export class EmployeeService {
@@ -53,5 +53,9 @@ export class EmployeeService {
     };
 
     return await this.employeeRepository.saveEmployee(newEmployeeData);
+  }
+
+  async getByEmail(email: string): Promise<Employee> {
+    return await this.employeeRepository.findByEmail(email);
   }
 }

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Department } from '../departments/department.entity';
-import { EmployeeController } from './employee.controller';
+import { EmployeeController } from './controllers/employee.controller';
 import { Employee } from './employee.entity';
-import { EmployeeService } from './employee.service';
+import { EmployeeService } from './services/employee.service';
 import { EmployeeRepository } from './repositories/employee.repository';
 import { SecurityModule } from '../security/security.module';
 import { DepartmentsModule } from '../departments/departments.module';
@@ -16,5 +16,6 @@ import { DepartmentsModule } from '../departments/departments.module';
   ],
   controllers: [EmployeeController],
   providers: [EmployeeService, EmployeeRepository],
+  exports: [EmployeeService],
 })
 export class EmployeeModule {}

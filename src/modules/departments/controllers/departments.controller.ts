@@ -7,8 +7,8 @@ import {
   Post,
 } from '@nestjs/common';
 import { created, ok } from 'src/helpers/http';
-import { DepartmentsService } from './department.service';
-import { CreateDepartmentDTO } from './DTO/create-department.dto';
+import { DepartmentsService } from '../services/department.service';
+import { CreateDepartmentDTO } from '../DTO/create-department.dto';
 @Controller('departments')
 export class DepartmentsController {
   constructor(private service: DepartmentsService) {}

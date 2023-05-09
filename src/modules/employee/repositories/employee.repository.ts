@@ -21,7 +21,8 @@ export class EmployeeRepository {
     page,
     limit,
     id,
-  }: any): Promise<Employee[]> {
+  }: // TODO: Create DTO to type this
+  any): Promise<Employee[]> {
     return await this.repository
       .createQueryBuilder('employee')
       .leftJoin(
@@ -41,5 +42,9 @@ export class EmployeeRepository {
     const dbResponse = await this.repository.save({ ...newEmployeeData });
     const { id } = dbResponse;
     return { id: String(id) };
+  }
+
+  async findByEmail(email: string): Promise<Employee> {
+    return await this.repository.findOne({ where: { email } });
   }
 }

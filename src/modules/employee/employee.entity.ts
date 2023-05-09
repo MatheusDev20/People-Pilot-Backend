@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Department } from '../departments/department.entity';
-import { UserType } from './Enums/user_type';
+import { UserType } from './enums/user_type';
 
 @Entity()
 export class Employee {

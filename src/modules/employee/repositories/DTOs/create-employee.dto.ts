@@ -1,4 +1,4 @@
-import { UserType } from './../../Enums/user_type';
+import { UserType } from '../../enums/user_type';
 import { Department } from 'src/modules/departments/department.entity';
 
 export class CreateEmployeeRepositoryDTO {

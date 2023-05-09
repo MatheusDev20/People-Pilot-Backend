@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { created, HttpResponse, ok } from 'src/helpers/http';
-import { CreateEmployeeDTO } from './DTOs/create-employee-dto';
-import { EmployeeService } from './employee.service';
+import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
+import { EmployeeService } from '../services/employee.service';
 import {
   DEFAULT_APP_LIMIT,
   DEFAULT_APP_PAGINATION,
 } from 'src/constants/constants';
-import { GetEmployeeByDepartmentDTO } from './DTOs/get-employees-by-department';
+import { GetEmployeeByDepartmentDTO } from '../DTOs/get-employees-by-department';
 
 @Controller('employee')
 export class EmployeeController {

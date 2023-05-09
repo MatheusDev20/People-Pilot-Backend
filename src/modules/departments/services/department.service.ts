@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Department } from './department.entity';
-import { CreateDepartmentDTO } from './DTO/create-department.dto';
-import { DepartmentRepository } from './repositories/department.repository';
+import { Department } from '../department.entity';
+import { CreateDepartmentDTO } from '../DTO/create-department.dto';
+import { DepartmentRepository } from '../repositories/department.repository';
 
 @Injectable()
 export class DepartmentsService {

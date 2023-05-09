@@ -7,7 +7,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { UserType } from '../Enums/user_type';
+import { UserType } from '../enums/user_type';
 
 export class CreateEmployeeDTO {
   @IsNotEmpty()
