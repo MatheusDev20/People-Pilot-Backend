@@ -1,9 +1,10 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from '../employee.entity';
 import { Repository } from 'typeorm';
 import { Department } from 'src/modules/departments/department.entity';
 import { CreateEmployeeResponse } from '../DTOs/types';
+import { CreateEmployeeRepositoryDTO } from './DTOs/create-employee.dto';
 
 @Injectable()
 export class EmployeeRepository {
@@ -34,11 +35,11 @@ export class EmployeeRepository {
       .getMany();
   }
 
-  async saveEmployee(newEmployeeData): Promise<CreateEmployeeResponse> {
-    const dbResponse = await this.repository.save(newEmployeeData);
+  async saveEmployee(
+    newEmployeeData: CreateEmployeeRepositoryDTO,
+  ): Promise<CreateEmployeeResponse> {
+    const dbResponse = await this.repository.save({ ...newEmployeeData });
     const { id } = dbResponse;
-    return {
-      id,
-    };
+    return { id: String(id) };
   }
 }

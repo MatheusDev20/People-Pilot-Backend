@@ -1,12 +1,12 @@
 import { HttpExceptionFilter } from './helpers/http/http-exceptions.filter';
-import { Inject, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { EmployeeModule } from './modules/employee/employee.module';
 import { DepartmentsModule } from './modules/departments/departments.module';
 import { MySQLDBConfigService } from './config/MysqlConfig.service';
 import { APP_FILTER } from '@nestjs/core';
+import { AuthenticationModule } from './modules/authentication/authentication.module';
 
 @Module({
   imports: [
@@ -17,8 +17,8 @@ import { APP_FILTER } from '@nestjs/core';
     }),
     EmployeeModule,
     DepartmentsModule,
+    AuthenticationModule,
   ],
-  controllers: [AppController],
   providers: [
     {
       provide: APP_FILTER,

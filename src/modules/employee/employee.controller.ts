@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { created, HttpResponse, ok } from 'src/helpers/http';
-import { CreateEmployeeDTO } from './DTOs/CreateEmployeeDTO';
+import { CreateEmployeeDTO } from './DTOs/create-employee-dto';
 import { EmployeeService } from './employee.service';
 import {
   DEFAULT_APP_LIMIT,

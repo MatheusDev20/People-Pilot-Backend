@@ -1,11 +1,13 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
+  IsStrongPassword,
   MaxLength,
-  Validate,
+  MinLength,
 } from 'class-validator';
-import { DepartmentNameValidator } from '../validators/DepartmentNameValidator';
+import { UserType } from '../Enums/user_type';
 
 export class CreateEmployeeDTO {
   @IsNotEmpty()
@@ -20,17 +22,25 @@ export class CreateEmployeeDTO {
 
   @IsNotEmpty()
   @IsString()
+  @MinLength(8)
+  // @IsStrongPassword()
+  password: string;
+
+  @IsNotEmpty()
+  @IsString()
   @MaxLength(12)
   phone: string;
 
-  @MaxLength(12)
+  @MaxLength(30)
   @IsNotEmpty()
   @IsString()
-  @Validate(DepartmentNameValidator)
   departmentName: string;
 
   @IsNotEmpty()
   @IsString()
   @MaxLength(25)
   role: string;
+
+  @IsOptional()
+  userType: UserType;
 }
