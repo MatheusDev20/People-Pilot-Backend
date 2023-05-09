@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   ParseUUIDPipe,
   Post,
 } from '@nestjs/common';

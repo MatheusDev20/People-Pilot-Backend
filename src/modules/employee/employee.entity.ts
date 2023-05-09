@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Department } from '../departments/department.entity';
+import { UserType } from './Enums/user_type';
 
 @Entity()
 export class Employee {
@@ -18,6 +19,9 @@ export class Employee {
 
   @Column()
   email: string;
+
+  @Column()
+  password: string;
 
   @Column()
   phone: string;
@@ -33,4 +37,14 @@ export class Employee {
 
   @ManyToOne(() => Department, (department) => department.employees)
   department: Department;
+
+  @Column({
+    type: 'enum',
+    enum: UserType,
+    default: UserType.EMPLOYEE,
+  })
+  user_type: UserType;
+
+  @Column({ nullable: true })
+  hire_date: Date;
 }

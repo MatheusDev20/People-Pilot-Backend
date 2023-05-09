@@ -3,8 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import serverlessExpress from '@vendia/serverless-express';
-import { Context, Handler } from 'aws-lambda';
-import { Callback } from 'typeorm';
+import { Context, Handler, Callback } from 'aws-lambda';
 
 let server: Handler;
 async function bootstrap() {
