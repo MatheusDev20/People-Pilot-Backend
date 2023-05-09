@@ -7,6 +7,7 @@ import { DepartmentsModule } from './modules/departments/departments.module';
 import { MySQLDBConfigService } from './config/MysqlConfig.service';
 import { APP_FILTER } from '@nestjs/core';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
+import { JwtConfigService } from './config/security/jwt.config.service';
 
 @Module({
   imports: [

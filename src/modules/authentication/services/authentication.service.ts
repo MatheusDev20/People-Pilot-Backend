@@ -3,17 +3,22 @@ import { LoginDTO } from '../DTOs/login-controller.dto';
 import {
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Hashing } from 'src/modules/security/interfaces/hashing';
 import { InvalidCredentials, NotFoundEmail } from 'src/errors/messages';
+import { JwtManager } from 'src/modules/security/interfaces/jwt';
 
 @Injectable()
 export class AuthenticationService {
+  private logger = new Logger();
+
   constructor(
     private employeeService: EmployeeService,
     @Inject('HashingService') private hashService: Hashing,
+    @Inject('JwtManager') private jwtManager: JwtManager,
   ) {}
   async signIn(data: LoginDTO) {
     const { email, password } = data;
@@ -24,9 +29,18 @@ export class AuthenticationService {
       password,
       findUser.password,
     );
+
+    this.logger.log(
+      `\n Generating a new JWT for user ${
+        findUser.id
+      } \n Date: ${new Date()} \n Expiration: 1h`,
+    );
+
     if (isPasswordMatch) {
-      // TODO: Generate a fresh new JWT
-      return;
+      return this.jwtManager.generate({
+        username: findUser.name,
+        sub: String(findUser.id),
+      });
     }
 
     throw new UnauthorizedException(InvalidCredentials);
