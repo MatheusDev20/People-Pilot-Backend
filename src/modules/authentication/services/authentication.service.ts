@@ -23,6 +23,7 @@ export class AuthenticationService {
   async signIn(data: LoginDTO) {
     const { email, password } = data;
     const findUser = await this.employeeService.getByEmail(email);
+
     if (!findUser) throw new NotFoundException(NotFoundEmail);
 
     const isPasswordMatch = await this.hashService.compare(

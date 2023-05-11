@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { JwtManager } from '../interfaces/jwt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtData } from '../DTOs/jwt/jwt-dto';
-import { JwtPayload } from '../DTOs/jwt/jwt-payload';
+import { CreateJwtData, JwtPayload } from '../DTOs/jwt/jwt-payload';
 import { JwtConfigService } from 'src/config/security/jwt.config.service';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class JwtServiceManager implements JwtManager {
     @Inject('JWTConfigService') private jwtConfig: JwtConfigService,
   ) {}
 
-  async generate(payload: JwtPayload): Promise<JwtData> {
+  async generate(payload: CreateJwtData): Promise<JwtData> {
     const jwtOptions = this.jwtConfig.getJwtOptions();
     const access_token = await this.jwtService.signAsync(payload, {
       secret: jwtOptions.secret,
@@ -22,5 +22,13 @@ export class JwtServiceManager implements JwtManager {
       access_token,
       expiration: jwtOptions.expiration,
     };
+  }
+
+  async verifyToken(token: string): Promise<JwtPayload> {
+    const jwtOptions = this.jwtConfig.getJwtOptions();
+    const payload = await this.jwtService.verifyAsync(token, {
+      secret: jwtOptions.secret,
+    });
+    return { id: payload.sub };
   }
 }
