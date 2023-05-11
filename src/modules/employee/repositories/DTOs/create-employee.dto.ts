@@ -8,6 +8,6 @@ export class CreateEmployeeRepositoryDTO {
   phone: string;
   department: Department;
   role: string;
-  hireDate?: Date;
+  hire_date?: string;
   user_type?: UserType;
 }

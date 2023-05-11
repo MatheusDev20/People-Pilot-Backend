@@ -1,9 +1,9 @@
 import {
+  IsDateString,
   IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsStrongPassword,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -43,4 +43,8 @@ export class CreateEmployeeDTO {
 
   @IsOptional()
   userType: UserType;
+
+  @IsNotEmpty()
+  @IsDateString()
+  hire_date: string;
 }
