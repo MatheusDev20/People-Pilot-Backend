@@ -52,6 +52,6 @@ export class EmployeeController {
   @UseGuards(LoginGuard)
   @Get('details')
   async getEmployeeDetails(@Request() request: Request): Promise<HttpResponse> {
-    return ok('Employee Details');
+    return ok(`Employee Logged ${request['user'].id}`);
   }
 }

@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { getClientIp } from 'src/helpers';
-import { unauthLoginLog } from 'src/logs/unathorized-login';
+import { unauthLoginLog } from '../../../helpers/logs-templates/';
 import { JwtManager } from 'src/modules/security/interfaces/jwt';
 
 @Injectable()
