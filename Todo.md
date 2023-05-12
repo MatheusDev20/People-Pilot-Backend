@@ -6,3 +6,5 @@
     - Starting store password (Encrypted with Bycript) - Done
     - Create an module for authentication
 
+### AWS is making me poor
+    - Change the host to my digital ocean droplet (Use the current ngnix to redirect to two ports?)

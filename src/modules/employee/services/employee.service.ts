@@ -1,6 +1,12 @@
+import { RegisteredEmail } from './../../../errors/';
 import { Hashing } from '../../security/interfaces/hashing';
 import { CreateEmployeeRepositoryDTO } from '../repositories/DTOs/create-employee.dto';
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { DepartmentsService } from '../../departments/services/department.service';
 import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
 import { Employee } from '../employee.entity';
@@ -37,7 +43,10 @@ export class EmployeeService {
   async createEmployee(
     data: CreateEmployeeDTO,
   ): Promise<CreateEmployeeResponse> {
-    const { departmentName } = data;
+    const { departmentName, email, password } = data;
+
+    const existedUser = await this.employeeRepository.findByEmail(email);
+    if (existedUser) throw new BadRequestException(RegisteredEmail);
 
     const employeeDepartment =
       await this.departmentService.getDepartamentByName(departmentName);
@@ -48,7 +57,7 @@ export class EmployeeService {
 
     const newEmployeeData: CreateEmployeeRepositoryDTO = {
       ...data,
-      password: await this.hashService.hash(data.password),
+      password: await this.hashService.hash(password),
       department: employeeDepartment,
     };
 
