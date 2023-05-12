@@ -1,4 +1,4 @@
-import { UserType } from '../../enums/user_type';
+import { Role } from '../../entities/roles.entity';
 import { Department } from 'src/modules/departments/department.entity';
 
 export class CreateEmployeeRepositoryDTO {
@@ -7,7 +7,7 @@ export class CreateEmployeeRepositoryDTO {
   password: string;
   phone: string;
   department: Department;
-  role: string;
+  position: string;
+  roles: Role[];
   hire_date?: string;
-  user_type?: UserType;
 }

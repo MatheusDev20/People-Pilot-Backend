@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Employee } from '../employee.entity';
+import { Employee } from '../entities/employee.entity';
 import { Repository } from 'typeorm';
 import { Department } from 'src/modules/departments/department.entity';
 import { CreateEmployeeResponse } from '../DTOs/types';
@@ -46,5 +46,12 @@ export class EmployeeRepository {
 
   async findByEmail(email: string): Promise<Employee> {
     return await this.repository.findOne({ where: { email } });
+  }
+
+  async getRoles(userId: string): Promise<Employee> {
+    return this.repository.findOne({
+      where: { id: userId },
+      relations: ['roles'],
+    });
   }
 }

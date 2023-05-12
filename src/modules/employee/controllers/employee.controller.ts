@@ -15,17 +15,16 @@ import {
   DEFAULT_APP_PAGINATION,
 } from 'src/constants/constants';
 import { GetEmployeeByDepartmentDTO } from '../DTOs/get-employees-by-department';
-import { LoginGuard } from 'src/modules/authentication/guards/login.guard';
+import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard';
 
 @Controller('employee')
 export class EmployeeController {
   constructor(private employeeService: EmployeeService) {}
 
-  @Get()
-  @UseGuards(LoginGuard)
   /**
    * List of all employes by one department paginated
    */
+  @Get()
   async getEmployeesByDepartament(
     @Query() queryParams: GetEmployeeByDepartmentDTO,
   ): Promise<HttpResponse> {

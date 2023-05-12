@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { getClientIp } from 'src/helpers';
-import { unauthLoginLog } from '../../../helpers/logs-templates/';
+import { unauthLoginLog } from '../../../../helpers/logs-templates';
 import { JwtManager } from 'src/modules/security/interfaces/jwt';
 
 @Injectable()
@@ -19,12 +19,14 @@ export class LoginGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
     const token = this.extractToken(request);
+
     if (!token) {
       throw new UnauthorizedException('Unauthorized Request');
     }
     try {
       const payload = await this.jwtManager.verifyToken(token);
       request['user'] = payload;
+      console.log(request['user']);
       this.logger.log(`Sucessfull logged user ${payload.id}`);
     } catch (err) {
       this.logger.error(

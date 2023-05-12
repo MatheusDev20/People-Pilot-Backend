@@ -2,17 +2,19 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Department } from '../departments/department.entity';
-import { UserType } from './enums/user_type';
+import { Department } from '../../departments/department.entity';
+import { Role } from './roles.entity';
 
 @Entity()
 export class Employee {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   name: string;
@@ -27,7 +29,7 @@ export class Employee {
   phone: string;
 
   @Column()
-  role: string;
+  position: string;
 
   @UpdateDateColumn()
   updated_at: Date;
@@ -38,12 +40,13 @@ export class Employee {
   @ManyToOne(() => Department, (department) => department.employees)
   department: Department;
 
-  @Column({
-    type: 'enum',
-    enum: UserType,
-    default: UserType.EMPLOYEE,
+  @ManyToMany(() => Role, (role) => role.employees)
+  @JoinTable({
+    name: 'employee_roles', // Specify the table name
+    joinColumn: { name: 'employee_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
   })
-  user_type: UserType;
+  roles: Role[];
 
   @Column({ nullable: true })
   hire_date: Date;

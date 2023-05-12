@@ -2,12 +2,10 @@ import {
   IsDateString,
   IsEmail,
   IsNotEmpty,
-  IsOptional,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { UserType } from '../enums/user_type';
 
 export class CreateEmployeeDTO {
   @IsNotEmpty()
@@ -39,12 +37,13 @@ export class CreateEmployeeDTO {
   @IsNotEmpty()
   @IsString()
   @MaxLength(25)
-  role: string;
-
-  @IsOptional()
-  userType: UserType;
+  position: string;
 
   @IsNotEmpty()
   @IsDateString()
   hire_date: string;
+
+  @IsNotEmpty()
+  @MaxLength(21)
+  roles: string;
 }
