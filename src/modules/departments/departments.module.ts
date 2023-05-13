@@ -6,6 +6,7 @@ import { DepartmentsController } from './controllers/departments.controller';
 import { DepartmentRepository } from './repositories/department.repository';
 import { SecurityModule } from '../security/security.module';
 import { EmployeeModule } from '../employee/employee.module';
+import { DepartmentValidations } from './validations/validations';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { EmployeeModule } from '../employee/employee.module';
     forwardRef(() => EmployeeModule),
   ],
   controllers: [DepartmentsController],
-  providers: [DepartmentsService, DepartmentRepository],
+  providers: [DepartmentValidations, DepartmentsService, DepartmentRepository],
   exports: [DepartmentsService, DepartmentRepository], // I have to export this classes to use them in another module
 })
 export class DepartmentsModule {}
