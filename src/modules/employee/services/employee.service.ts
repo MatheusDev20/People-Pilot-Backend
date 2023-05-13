@@ -1,12 +1,15 @@
-import { RegisteredEmail } from './../../../errors/';
 import { Hashing } from '../../security/interfaces/hashing';
 import { CreateEmployeeRepositoryDTO } from '../repositories/DTOs/create-employee.dto';
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DepartmentsService } from '../../departments/services/department.service';
 import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
 import { Employee } from '../entities/employee.entity';
 import { EmployeeRepository } from '../repositories/employee.repository';
-import { CreateEmployeeResponse, UpdateEmployeeResponse } from '../DTOs/responses.dto';
+import {
+  CreateEmployeeResponse,
+  DeleteEmployeeResponse,
+  UpdateEmployeeResponse,
+} from '../DTOs/responses.dto';
 import { Utils } from '../utils/employee.utils';
 import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
 import { Validations } from '../validations/validations';
@@ -80,5 +83,10 @@ export class EmployeeService {
     }
 
     return this.employeeRepository.updateEmployee(id, newEmployeeData);
+  }
+
+  async delete(id: string): Promise<DeleteEmployeeResponse> {
+    if (!this.employeeRepository.findById(id)) throw new NotFoundException('Employee not found');
+    return this.employeeRepository.delete(id);
   }
 }

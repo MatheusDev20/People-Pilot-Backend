@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Department } from '../department.entity';
 import { CreateDepartmentDTO } from '../DTO/create-department.dto';
 import { DepartmentRepository } from '../repositories/department.repository';
@@ -37,6 +37,9 @@ export class DepartmentsService {
   }
 
   async delete(id: string): Promise<DeleteDepartmentResponseDTO> {
+    if (!this.departmentRepository.findDepartment({ where: { id } }))
+      throw new NotFoundException(`Department not found `);
+
     return await this.departmentRepository.delete(id);
   }
 }

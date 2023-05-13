@@ -3,7 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from '../entities/employee.entity';
 import { Repository } from 'typeorm';
 import { Department } from 'src/modules/departments/department.entity';
-import { CreateEmployeeResponse, UpdateEmployeeResponse } from '../DTOs/responses.dto';
+import {
+  CreateEmployeeResponse,
+  DeleteEmployeeResponse,
+  UpdateEmployeeResponse,
+} from '../DTOs/responses.dto';
 import { CreateEmployeeRepositoryDTO } from './DTOs/create-employee.dto';
 import { GetDtoByDepartment } from './DTOs/get-employee-by-department.dto';
 import { UpdateEmployeeRepositoryDTO } from './DTOs/update-employee.dto';
@@ -55,7 +59,24 @@ export class EmployeeRepository {
       throw new InternalServerErrorException(`Error updating user ${err}`);
     }
   }
+  async delete(id: string): Promise<DeleteEmployeeResponse> {
+    try {
+      await this.repository
+        .createQueryBuilder('employee')
+        .delete()
+        .from(Employee)
+        .where('id = :id', { id })
+        .execute();
+    } catch (err: any) {
+      throw new InternalServerErrorException(`Error Deleting entity Employee ${id}`);
+    }
 
+    return { id };
+  }
+
+  /**
+   Find methods
+   */
   async findByEmail(email: string): Promise<Employee> {
     return await this.repository.findOne({ where: { email } });
   }

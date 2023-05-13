@@ -1,5 +1,16 @@
-import { Body, Controller, Get, Param, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
-import { created, HttpResponse, ok, updated } from 'src/helpers/http';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import { created, deleted, HttpResponse, ok, updated } from 'src/helpers/http';
 import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
 import { EmployeeService } from '../services/employee.service';
 import { DEFAULT_APP_LIMIT, DEFAULT_APP_PAGINATION } from 'src/constants/constants';
@@ -58,5 +69,13 @@ export class EmployeeController {
     const { uuid } = params;
     const { id } = await this.employeeService.updateEmployee(uuid, data);
     return updated({ id });
+  }
+
+  @UseGuards(LoginGuard, RoleGuard)
+  @Roles('admin')
+  @Delete(':uuid')
+  async delete(@Param() params: FindOneDTO): Promise<HttpResponse> {
+    const { uuid } = params;
+    return deleted(await this.employeeService.delete(uuid));
   }
 }

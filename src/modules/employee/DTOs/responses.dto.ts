@@ -4,3 +4,7 @@ export type CreateEmployeeResponse = {
 export type UpdateEmployeeResponse = {
   id: string;
 };
+
+export type DeleteEmployeeResponse = {
+  id: string;
+};
