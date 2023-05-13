@@ -6,7 +6,7 @@ import { DepartmentsService } from '../../departments/services/department.servic
 import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
 import { Employee } from '../entities/employee.entity';
 import { EmployeeRepository } from '../repositories/employee.repository';
-import { CreateEmployeeResponse, UpdateEmployeeResponse } from '../DTOs/types';
+import { CreateEmployeeResponse, UpdateEmployeeResponse } from '../DTOs/responses.dto';
 import { Utils } from '../utils/employee.utils';
 import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
 import { Validations } from '../validations/validations';

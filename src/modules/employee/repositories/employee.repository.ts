@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from '../entities/employee.entity';
 import { Repository } from 'typeorm';
 import { Department } from 'src/modules/departments/department.entity';
-import { CreateEmployeeResponse, UpdateEmployeeResponse } from '../DTOs/types';
+import { CreateEmployeeResponse, UpdateEmployeeResponse } from '../DTOs/responses.dto';
 import { CreateEmployeeRepositoryDTO } from './DTOs/create-employee.dto';
 import { GetDtoByDepartment } from './DTOs/get-employee-by-department.dto';
 import { UpdateEmployeeRepositoryDTO } from './DTOs/update-employee.dto';

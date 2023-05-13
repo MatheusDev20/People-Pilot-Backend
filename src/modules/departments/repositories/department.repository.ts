@@ -4,6 +4,7 @@ import { Department } from '../department.entity';
 import { CreateDepartmentDTO } from '../DTO/create-department.dto';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UpdateDepartmentDTO } from '../DTO/update-department.dto';
+import { DeleteDepartmentResponseDTO } from '../DTO/responses.dto';
 
 @Injectable()
 export class DepartmentRepository {
@@ -31,5 +32,20 @@ export class DepartmentRepository {
       console.log(err);
       throw new InternalServerErrorException(`Error updating department ${err}`);
     }
+  }
+
+  async delete(id: string): Promise<DeleteDepartmentResponseDTO> {
+    try {
+      await this.repository
+        .createQueryBuilder('department')
+        .delete()
+        .from(Department)
+        .where('id = :id', { id })
+        .execute();
+    } catch (err: any) {
+      throw new InternalServerErrorException(`Error Deleting entity ${id}`);
+    }
+
+    return { id };
   }
 }

@@ -1,5 +1,15 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put, UseGuards } from '@nestjs/common';
-import { created, ok, updated } from 'src/helpers/http';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
+import { HttpResponse, created, deleted, ok, updated } from 'src/helpers/http';
 import { DepartmentsService } from '../services/department.service';
 import { CreateDepartmentDTO } from '../DTO/create-department.dto';
 import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard';
@@ -22,17 +32,24 @@ export class DepartmentsController {
 
   @Post()
   @Roles('admin', 'manager')
-  async postDepartment(@Body() data: CreateDepartmentDTO) {
+  async post(@Body() data: CreateDepartmentDTO) {
     return created(await this.service.createDepartment(data));
   }
 
   @Roles('admin')
   @Put(':uuid')
-  async updateDepartment(
+  async update(
     @Param() params: FindOneDepartmentDTO,
     @Body() data: Partial<UpdateDepartmentDTO>,
-  ) {
+  ): Promise<HttpResponse> {
     const { uuid } = params;
     return updated(await this.service.updateDepartment(uuid, data));
+  }
+
+  @Roles('admin')
+  @Delete(':uuid')
+  async delete(@Param() params: FindOneDepartmentDTO): Promise<HttpResponse> {
+    const { uuid } = params;
+    return deleted(await this.service.delete(uuid));
   }
 }

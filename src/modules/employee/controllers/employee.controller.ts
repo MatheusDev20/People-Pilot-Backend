@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseUUIDPipe,
-  Post,
-  Put,
-  Query,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
 import { created, HttpResponse, ok, updated } from 'src/helpers/http';
 import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
 import { EmployeeService } from '../services/employee.service';
@@ -31,9 +20,7 @@ export class EmployeeController {
 
   @UseGuards(LoginGuard)
   @Get()
-  async getEmployeesByDepartament(
-    @Query() queryParams: GetEmployeeByDepartmentDTO,
-  ): Promise<HttpResponse> {
+  async getByDepartament(@Query() queryParams: GetEmployeeByDepartmentDTO): Promise<HttpResponse> {
     const { name, page, limit } = queryParams;
 
     const pagination = page ?? DEFAULT_APP_PAGINATION;
@@ -49,7 +36,7 @@ export class EmployeeController {
   }
 
   @Post()
-  async saveEmployee(@Body() data: CreateEmployeeDTO): Promise<HttpResponse> {
+  async save(@Body() data: CreateEmployeeDTO): Promise<HttpResponse> {
     const { id } = await this.employeeService.createEmployee(data);
     return created({ id });
   }
@@ -57,14 +44,14 @@ export class EmployeeController {
   @UseGuards(LoginGuard, RoleGuard)
   @Roles('admin', 'manager', 'simple-user')
   @Get('details')
-  async getEmployeeDetails(@Request() request: Request): Promise<HttpResponse> {
+  async getDetails(@Request() request: Request): Promise<HttpResponse> {
     return ok(`Employee Logged ${request['user'].id}`);
   }
 
   @UseGuards(LoginGuard, RoleGuard)
   @Roles('admin', 'manager')
   @Put(':uuid')
-  async updateEmployee(
+  async update(
     @Param() params: FindOneDTO,
     @Body() data: Partial<UpdateEmployeeDTO>,
   ): Promise<HttpResponse> {

@@ -3,7 +3,7 @@ import { Department } from '../department.entity';
 import { CreateDepartmentDTO } from '../DTO/create-department.dto';
 import { DepartmentRepository } from '../repositories/department.repository';
 import { UpdateDepartmentDTO } from '../DTO/update-department.dto';
-import { CreateDepartmentResponseDTO } from '../DTO/create-response.dto';
+import { CreateDepartmentResponseDTO, DeleteDepartmentResponseDTO } from '../DTO/responses.dto';
 import { DepartmentValidations } from '../validations/validations';
 
 @Injectable()
@@ -34,5 +34,9 @@ export class DepartmentsService {
   async updateDepartment(id: string, data: Partial<UpdateDepartmentDTO>) {
     await this.validations.validateDepartmentEntry(data);
     return this.departmentRepository.updateDepartment(id, data);
+  }
+
+  async delete(id: string): Promise<DeleteDepartmentResponseDTO> {
+    return await this.departmentRepository.delete(id);
   }
 }
