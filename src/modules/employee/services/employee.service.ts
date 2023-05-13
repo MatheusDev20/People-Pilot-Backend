@@ -63,16 +63,22 @@ export class EmployeeService {
     id: string,
     data: Partial<UpdateEmployeeDTO>,
   ): Promise<UpdateEmployeeResponse> {
-    const { departmentName, email } = data;
-    if (departmentName && email)
-      await this.validations.validateEmployeeEntry({ departmentName, email });
+    if (!this.employeeRepository.findById(id)) throw new NotFoundException(`User ${id} not found`);
+
+    await this.validations.validateEmployeeEntry(data);
+
+    const { departmentName } = data;
     delete data.departmentName;
 
-    const employeeDepartment = await this.departmentService.getDepartamentByName(departmentName);
     const newEmployeeData: Partial<UpdateEmployeeRepositoryDTO> = {
       ...data,
-      department: employeeDepartment,
     };
+    if (departmentName) {
+      newEmployeeData.department = await this.departmentService.getDepartamentByName(
+        departmentName,
+      );
+    }
+
     return this.employeeRepository.updateEmployee(id, newEmployeeData);
   }
 }

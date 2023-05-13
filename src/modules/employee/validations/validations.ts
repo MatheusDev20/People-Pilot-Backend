@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { DepartmentsService } from 'src/modules/departments/services/department.service';
 import { EmployeeRepository } from '../repositories/employee.repository';
 import { RegisteredEmail } from 'src/errors';
+import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
 
 @Injectable()
 export class Validations {
@@ -10,15 +11,17 @@ export class Validations {
     private employeeRepository: EmployeeRepository,
   ) {}
 
-  async validateEmployeeEntry(data: { departmentName: string; email: string }) {
+  async validateEmployeeEntry(data: Partial<UpdateEmployeeDTO>) {
     const { departmentName, email } = data;
-    const existedUser = await this.employeeRepository.findByEmail(email);
-    if (existedUser) throw new BadRequestException(RegisteredEmail);
+    if (departmentName || email) {
+      const existedUser = await this.employeeRepository.findByEmail(email);
+      if (existedUser) throw new BadRequestException(RegisteredEmail);
 
-    const employeeDepartment = await this.departmentService.getDepartamentByName(departmentName);
+      const employeeDepartment = await this.departmentService.getDepartamentByName(departmentName);
 
-    if (!employeeDepartment) {
-      throw new NotFoundException(`Departament ${departmentName} not found`);
+      if (!employeeDepartment) {
+        throw new NotFoundException(`Departament ${departmentName} not found`);
+      }
     }
   }
 }

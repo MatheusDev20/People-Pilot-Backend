@@ -59,6 +59,9 @@ export class EmployeeRepository {
   async findByEmail(email: string): Promise<Employee> {
     return await this.repository.findOne({ where: { email } });
   }
+  async findById(id: string): Promise<Employee> {
+    return await this.repository.findOne({ where: { id } });
+  }
 
   async getRoles(userId: string): Promise<Employee> {
     return this.repository.findOne({

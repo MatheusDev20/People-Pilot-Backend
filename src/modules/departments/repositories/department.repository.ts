@@ -6,17 +6,13 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class DepartmentRepository {
-  constructor(
-    @InjectRepository(Department) private repository: Repository<Department>,
-  ) {}
+  constructor(@InjectRepository(Department) private repository: Repository<Department>) {}
 
   async saveDepartment(newDepartmentData: CreateDepartmentDTO) {
     return this.repository.save(newDepartmentData);
   }
 
-  async findDepartment(
-    property: FindOneOptions<Department>,
-  ): Promise<Department> {
+  async findDepartment(property: FindOneOptions<Department>): Promise<Department> {
     return this.repository.findOne(property);
   }
 }
