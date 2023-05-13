@@ -14,3 +14,9 @@ export const created = (data: any): HttpResponse => ({
   message: 'Sucessfully Created!',
   body: data,
 });
+
+export const updated = (data: any): HttpResponse => ({
+  statusCode: 200,
+  message: 'Sucessfully Updated!',
+  body: data,
+});

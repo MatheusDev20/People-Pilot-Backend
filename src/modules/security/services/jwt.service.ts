@@ -18,6 +18,7 @@ export class JwtServiceManager implements JwtManager {
       secret: jwtOptions.secret,
       expiresIn: jwtOptions.expiration,
     });
+
     return {
       access_token,
       expiration: jwtOptions.expiration,

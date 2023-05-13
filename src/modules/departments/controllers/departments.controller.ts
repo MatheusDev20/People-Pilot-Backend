@@ -1,22 +1,14 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseUUIDPipe,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';
 import { created, ok } from 'src/helpers/http';
 import { DepartmentsService } from '../services/department.service';
 import { CreateDepartmentDTO } from '../DTO/create-department.dto';
 import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard';
-import { Roles } from 'src/modules/authentication/guards/role-based/decorators';
+import { Roles, Strategy } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
 
+@Strategy('any')
 @Controller('departments')
-@UseGuards(RoleGuard)
-@UseGuards(LoginGuard)
+@UseGuards(LoginGuard, RoleGuard)
 export class DepartmentsController {
   constructor(private service: DepartmentsService) {}
 

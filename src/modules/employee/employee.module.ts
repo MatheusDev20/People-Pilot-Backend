@@ -1,3 +1,4 @@
+import { Utils } from './utils/employee.utils';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Department } from '../departments/department.entity';
@@ -10,6 +11,7 @@ import { DepartmentsModule } from '../departments/departments.module';
 import { EmployeePermissionService } from './services/employee-permissions.service';
 import { RolesRepository } from './repositories/roles.repository';
 import { Role } from './entities/roles.entity';
+import { Validations } from './validations/validations';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { Role } from './entities/roles.entity';
     EmployeePermissionService,
     EmployeeRepository,
     RolesRepository,
+    Validations,
+    Utils,
   ],
   exports: [EmployeeService, EmployeePermissionService],
 })
