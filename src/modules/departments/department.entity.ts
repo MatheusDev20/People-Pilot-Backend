@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Employee } from '../employee/employee.entity';
+import { Employee } from '../employee/entities/employee.entity';
 
 @Entity()
 export class Department {

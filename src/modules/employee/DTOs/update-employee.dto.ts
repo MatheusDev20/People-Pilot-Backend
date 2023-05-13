@@ -1,6 +1,6 @@
-import { IsDateString, IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsDateString, IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-export class CreateEmployeeDTO {
+export class UpdateEmployeeDTO {
   @IsNotEmpty()
   @IsString()
   @MaxLength(30)
@@ -10,12 +10,6 @@ export class CreateEmployeeDTO {
   @IsString()
   @IsEmail()
   email: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(8)
-  // @IsStrongPassword()
-  password: string;
 
   @IsNotEmpty()
   @IsString()
@@ -35,8 +29,4 @@ export class CreateEmployeeDTO {
   @IsNotEmpty()
   @IsDateString()
   hire_date: string;
-
-  @IsNotEmpty()
-  @MaxLength(21)
-  roles: string;
 }

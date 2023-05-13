@@ -1,13 +1,10 @@
-import { Role } from '../../entities/roles.entity';
 import { Department } from 'src/modules/departments/department.entity';
 
-export class CreateEmployeeRepositoryDTO {
+export interface UpdateEmployeeRepositoryDTO {
   name: string;
   email: string;
-  password: string;
   phone: string;
   department: Department;
   position: string;
-  roles: Role[];
-  hire_date?: string;
+  hire_date: string;
 }
