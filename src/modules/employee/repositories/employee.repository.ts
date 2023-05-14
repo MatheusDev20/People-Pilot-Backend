@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from '../entities/employee.entity';
 import { Repository } from 'typeorm';
-import { Department } from 'src/modules/departments/department.entity';
+import { Department } from 'src/modules/departments/entities/department.entity';
 import {
   CreateEmployeeResponse,
   DeleteEmployeeResponse,

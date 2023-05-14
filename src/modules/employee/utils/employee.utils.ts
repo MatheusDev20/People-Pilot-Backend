@@ -17,4 +17,9 @@ export class Utils {
     }
     return userRoles;
   }
+
+  async isManager(roles: string): Promise<boolean> {
+    const rolesArr = roles.split(',');
+    return rolesArr.includes('manager');
+  }
 }

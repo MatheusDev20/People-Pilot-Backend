@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Department } from '../../departments/department.entity';
+import { Department } from '../../departments/entities/department.entity';
 import { Role } from './roles.entity';
 
 @Entity()

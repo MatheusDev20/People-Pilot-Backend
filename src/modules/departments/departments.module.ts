@@ -1,6 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Department } from './department.entity';
+import { Department } from './entities/department.entity';
 import { DepartmentsService } from './services/department.service';
 import { DepartmentsController } from './controllers/departments.controller';
 import { DepartmentRepository } from './repositories/department.repository';

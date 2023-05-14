@@ -1,7 +1,7 @@
 import { Utils } from './utils/employee.utils';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Department } from '../departments/department.entity';
+import { Department } from '../departments/entities/department.entity';
 import { EmployeeController } from './controllers/employee.controller';
 import { Employee } from './entities/employee.entity';
 import { EmployeeService } from './services/employee.service';
@@ -28,6 +28,6 @@ import { Validations } from './validations/validations';
     Validations,
     Utils,
   ],
-  exports: [EmployeeService, EmployeePermissionService],
+  exports: [EmployeeService, EmployeePermissionService, EmployeeRepository],
 })
 export class EmployeeModule {}

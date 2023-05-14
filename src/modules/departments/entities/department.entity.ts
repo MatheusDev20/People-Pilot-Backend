@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
+  JoinColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Employee } from '../employee/entities/employee.entity';
+import { Employee } from '../../employee/entities/employee.entity';
 
 @Entity()
 export class Department {
@@ -19,8 +21,9 @@ export class Department {
   @Column()
   description: string;
 
-  @Column()
-  manager: string;
+  @OneToOne(() => Employee)
+  @JoinColumn()
+  manager: Employee;
 
   @Column({ default: true })
   isActive: boolean;

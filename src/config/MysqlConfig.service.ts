@@ -9,9 +9,7 @@ export class MySQLDBConfigService implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService) {}
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
-    this.logger.log(
-      `Connecting to the Database ${this.configService.get<string>('DB_NAME')}`,
-    );
+    this.logger.log(`Connecting to the Database ${this.configService.get<string>('DB_NAME')}`);
     try {
       const options: TypeOrmModuleOptions = {
         type: 'mysql',
@@ -27,9 +25,7 @@ export class MySQLDBConfigService implements TypeOrmOptionsFactory {
       };
       return options;
     } catch (err) {
-      this.logger.error(
-        `Unhandled exception in createTypeOrmOptions: ${err.message}`,
-      );
+      this.logger.error(`Unhandled exception in createTypeOrmOptions: ${err.message}`);
     }
   }
 }

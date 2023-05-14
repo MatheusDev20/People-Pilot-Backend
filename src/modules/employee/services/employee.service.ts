@@ -47,9 +47,17 @@ export class EmployeeService {
 
   async createEmployee(data: CreateEmployeeDTO): Promise<CreateEmployeeResponse> {
     const { departmentName, password, roles } = data;
-    await this.validations.validateEmployeeEntry(data);
+    /**
+     * If the employee is a manager, attach to a default department (Directory)
+     */
+    if (await this.utils.isManager(roles)) {
+      return await this.createManager(data);
+    }
+    /**
+     * If the employee is not a manager you have to specify the department
+     */
 
-    const employeeDepartment = await this.departmentService.getDepartamentByName(departmentName);
+    const employeeDepartment = await this.validations.validateDepartmentOnCreation(departmentName);
     delete data.departmentName;
 
     const newEmployeeData: CreateEmployeeRepositoryDTO = {
@@ -82,11 +90,25 @@ export class EmployeeService {
       );
     }
 
-    return this.employeeRepository.updateEmployee(id, newEmployeeData);
+    return await this.employeeRepository.updateEmployee(id, newEmployeeData);
   }
 
   async delete(id: string): Promise<DeleteEmployeeResponse> {
     if (!this.employeeRepository.findById(id)) throw new NotFoundException('Employee not found');
-    return this.employeeRepository.delete(id);
+    return await this.employeeRepository.delete(id);
+  }
+
+  async createManager(
+    data: Omit<CreateEmployeeDTO, 'departmentName'>,
+  ): Promise<CreateEmployeeResponse> {
+    const { password, roles } = data;
+    const defaultDepartment = await this.departmentService.getDepartamentByName('Directory');
+    const newEmployeeData: CreateEmployeeRepositoryDTO = {
+      ...data,
+      password: await this.hashService.hash(password),
+      department: defaultDepartment,
+      roles: await this.utils.pushRoles(roles),
+    };
+    return await this.employeeRepository.saveEmployee(newEmployeeData);
   }
 }

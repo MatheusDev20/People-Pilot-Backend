@@ -1,5 +1,5 @@
 import { Role } from '../../entities/roles.entity';
-import { Department } from 'src/modules/departments/department.entity';
+import { Department } from 'src/modules/departments/entities/department.entity';
 
 export class CreateEmployeeRepositoryDTO {
   name: string;

@@ -1,4 +1,4 @@
-import { Department } from 'src/modules/departments/department.entity';
+import { Department } from 'src/modules/departments/entities/department.entity';
 
 export interface UpdateEmployeeRepositoryDTO {
   name: string;

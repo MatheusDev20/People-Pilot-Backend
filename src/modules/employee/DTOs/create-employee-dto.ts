@@ -1,4 +1,12 @@
-import { IsDateString, IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsDateString,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class CreateEmployeeDTO {
   @IsNotEmpty()
@@ -23,7 +31,7 @@ export class CreateEmployeeDTO {
   phone: string;
 
   @MaxLength(30)
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   departmentName: string;
 

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength, IsEmail } from 'class-validator';
 export class CreateDepartmentDTO {
   @IsNotEmpty()
   @IsString()
@@ -11,7 +11,6 @@ export class CreateDepartmentDTO {
   description: string;
 
   @IsNotEmpty()
-  @IsString()
-  @MaxLength(25)
-  manager: string;
+  @IsEmail()
+  managerMail: string;
 }
