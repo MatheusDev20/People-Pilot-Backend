@@ -12,5 +12,4 @@
 
 ### App things.
     Make a generic service class logger.
-    Introduce a new metadata Key in my Role-based guard.
     
