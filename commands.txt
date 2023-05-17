@@ -5,3 +5,7 @@
 
 -> See the tailing logs of a running container
     docker logs --follow <container_id>
+
+
+-> Kill process on port 3001
+    fuser -k 9999/tcp

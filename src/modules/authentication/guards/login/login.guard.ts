@@ -18,7 +18,18 @@ export class LoginGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
-    const token = this.extractToken(request);
+    if (this.areCookiesExpired(request.cookies)) {
+      this.logger.error(
+        unauthLoginLog({
+          reason: 'Expired Cookie',
+          ipAddress: getClientIp(request),
+          time: new Date(),
+          userAgent: request.headers['user-agent'],
+        }),
+      );
+      throw new UnauthorizedException('Expired Cookie');
+    }
+    const token = this.exctractFromCookies(request);
 
     if (!token) {
       throw new UnauthorizedException('Unauthorized Request');
@@ -26,7 +37,6 @@ export class LoginGuard implements CanActivate {
     try {
       const payload = await this.jwtManager.verifyToken(token);
       request['user'] = payload;
-      console.log(request['user']);
       this.logger.log(`Sucessfull logged user ${payload.id}`);
     } catch (err) {
       this.logger.error(
@@ -42,8 +52,12 @@ export class LoginGuard implements CanActivate {
     return true;
   }
 
-  extractToken(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+  exctractFromCookies(request: Request): string | undefined {
+    if (request.cookies && request.cookies.access_token) {
+      return request.cookies.access_token;
+    }
+    return null;
   }
+
+  areCookiesExpired = (cookies: any) => Object.keys(cookies).length === 0;
 }

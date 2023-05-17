@@ -9,6 +9,11 @@ export const ok = (data: any): HttpResponse => ({
   body: data,
 });
 
+export const authenticated = (data: any): HttpResponse => ({
+  statusCode: 200,
+  body: data,
+});
+
 export const created = (data: any): HttpResponse => ({
   statusCode: 201,
   message: 'Sucessfully Created!',

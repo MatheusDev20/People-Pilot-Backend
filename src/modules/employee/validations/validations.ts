@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { DepartmentsService } from 'src/modules/departments/services/department.service';
 import { EmployeeRepository } from '../repositories/employee.repository';
-import { RegisteredEmail } from 'src/errors';
+import { RegisteredEmail } from 'src/errors/messages';
 import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
 
 @Injectable()

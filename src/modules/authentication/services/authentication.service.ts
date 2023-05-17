@@ -26,15 +26,10 @@ export class AuthenticationService {
 
     if (!findUser) throw new NotFoundException(NotFoundEmail);
 
-    const isPasswordMatch = await this.hashService.compare(
-      password,
-      findUser.password,
-    );
+    const isPasswordMatch = await this.hashService.compare(password, findUser.password);
 
     this.logger.log(
-      `\n Generating a new JWT for user ${
-        findUser.id
-      } \n Date: ${new Date()} \n Expiration: 1h`,
+      `\n Generating a new JWT for user ${findUser.id} \n Date: ${new Date()} \n Expiration: 1h`,
     );
 
     if (isPasswordMatch) {
