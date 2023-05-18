@@ -9,7 +9,7 @@ export class Utils {
     currResponse.cookie('access_token', access_token, {
       httpOnly: true,
       secure: false,
-      expires: new Date(Date.now() + 15 * 1000),
+      expires: new Date(Date.now() + 60 * 60 * 1000), // TODO: Define a standart expiration time
     });
   }
 }

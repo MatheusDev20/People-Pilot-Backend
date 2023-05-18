@@ -33,7 +33,6 @@ export class DepartmentsService {
   }
 
   async getDepartamentByName(name: string): Promise<Department> {
-    console.log('Aqui no repo', await this.departmentRepository.findByName(name));
     return await this.departmentRepository.findByName(name);
   }
 

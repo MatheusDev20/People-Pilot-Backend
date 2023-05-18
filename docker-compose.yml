@@ -1,21 +1,25 @@
 version: '3.8'
-
 services:
-    api:
-        container_name: nestjs_api
-        image: nestjs-api
-        build: .
-        command: npm run start:dev
-        ports:
-            - ${API_PORT}:${API_PORT}
-        volumes:
-            - .:/usr/src/app
-            - /usr/src/app/node_modules
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3001:3001
+    command: npm run start:dev
+  db:
+      image: mysql:latest
+      restart: always
+      environment:
+        MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+        MYSQL_DATABASE: ${DB_NAME}
+      ports:
+        - "3306:3306"
+      volumes: 
+        - db_data:/var/lib/mysql
 
-    db:
-        container_name: employee_management
-        image: mysql
-        environment:
-            -  MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-        ports:
-            - ${DB_PORT}:${DB_PORT}
+volumes:
+  db_data:
