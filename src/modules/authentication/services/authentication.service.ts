@@ -1,22 +1,16 @@
 import { EmployeeService } from 'src/modules/employee/services/employee.service';
 import { LoginDTO } from '../DTOs/login-controller.dto';
-import {
-  Inject,
-  Injectable,
-  Logger,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Hashing } from 'src/modules/security/interfaces/hashing';
 import { InvalidCredentials, NotFoundEmail } from 'src/errors/messages';
 import { JwtManager } from 'src/modules/security/interfaces/jwt';
+import { CustomLogger } from 'src/modules/logger/services/logger.service';
 
 @Injectable()
 export class AuthenticationService {
-  private logger = new Logger();
-
   constructor(
     private employeeService: EmployeeService,
+    private logger: CustomLogger,
     @Inject('HashingService') private hashService: Hashing,
     @Inject('JwtManager') private jwtManager: JwtManager,
   ) {}
@@ -27,10 +21,7 @@ export class AuthenticationService {
     if (!findUser) throw new NotFoundException(NotFoundEmail);
 
     const isPasswordMatch = await this.hashService.compare(password, findUser.password);
-
-    this.logger.log(
-      `\n Generating a new JWT for user ${findUser.id} \n Date: ${new Date()} \n Expiration: 1h`,
-    );
+    this.logger.generateJwtLog(findUser.id);
 
     if (isPasswordMatch) {
       return this.jwtManager.generate({

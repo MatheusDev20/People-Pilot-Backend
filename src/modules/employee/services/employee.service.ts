@@ -102,7 +102,7 @@ export class EmployeeService {
     data: Omit<CreateEmployeeDTO, 'departmentName'>,
   ): Promise<CreateEmployeeResponse> {
     const { password, roles } = data;
-    const defaultDepartment = await this.departmentService.getDepartamentByName('Directory');
+    const defaultDepartment = await this.departmentService.getDepartamentByName('Managers');
     const newEmployeeData: CreateEmployeeRepositoryDTO = {
       ...data,
       password: await this.hashService.hash(password),

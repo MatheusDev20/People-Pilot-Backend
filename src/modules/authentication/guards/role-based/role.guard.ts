@@ -6,7 +6,6 @@ import { EmployeePermissionService } from 'src/modules/employee/services/employe
 
 @Injectable()
 export class RoleGuard implements CanActivate {
-  private logger = new Logger();
   constructor(
     private reflector: Reflector,
     private permissionsService: EmployeePermissionService,

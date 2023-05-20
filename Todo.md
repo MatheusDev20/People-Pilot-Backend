@@ -14,6 +14,5 @@
     Make a generic service class logger.
     Cache.
     Rate Limit.
-    Create an Development enviroment with docker-compose.
     AWS Module.
 

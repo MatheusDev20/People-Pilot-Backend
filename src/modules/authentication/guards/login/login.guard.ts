@@ -4,29 +4,19 @@ import {
   ExecutionContext,
   UnauthorizedException,
   Inject,
-  Logger,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { getClientIp } from 'src/helpers';
-import { unauthLoginLog } from '../../../../helpers/logs-templates';
 import { JwtManager } from 'src/modules/security/interfaces/jwt';
+import { CustomLogger } from 'src/modules/logger/services/logger.service';
 
 @Injectable()
 export class LoginGuard implements CanActivate {
-  private logger = new Logger();
-  constructor(@Inject('JwtManager') private jwtManager: JwtManager) {}
+  constructor(@Inject('JwtManager') private jwtManager: JwtManager, private logger: CustomLogger) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
     if (this.areCookiesExpired(request.cookies)) {
-      this.logger.error(
-        unauthLoginLog({
-          reason: 'Expired Cookie',
-          ipAddress: getClientIp(request),
-          time: new Date(),
-          userAgent: request.headers['user-agent'],
-        }),
-      );
+      this.logger.expiredCookie(request.ip, request['headers']['user-agent']);
       throw new UnauthorizedException('Expired Cookie');
     }
     const token = this.exctractFromCookies(request);
@@ -34,19 +24,13 @@ export class LoginGuard implements CanActivate {
     if (!token) {
       throw new UnauthorizedException('Unauthorized Request');
     }
+
     try {
       const payload = await this.jwtManager.verifyToken(token);
       request['user'] = payload;
-      this.logger.log(`Sucessfull logged user ${payload.id}`);
+      this.logger.sucessFullLogin(payload.id);
     } catch (err) {
-      this.logger.error(
-        unauthLoginLog({
-          reason: err.message,
-          ipAddress: getClientIp(request),
-          time: new Date(),
-          userAgent: request.headers['user-agent'],
-        }),
-      );
+      this.logger.failedAttempt(err.message, request.ip, request['headers']['user-agent']);
       throw new UnauthorizedException('Unauthorized Request');
     }
     return true;
