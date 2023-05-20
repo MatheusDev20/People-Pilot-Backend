@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { BcryptService } from './services/bcrypt.service';
+import { EncryptService } from './services/encrypt.service';
 import { JwtServiceManager } from './services/jwt.service';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtConfigService } from 'src/config/security/jwt.config.service';
@@ -13,7 +13,7 @@ import { JwtConfigService } from 'src/config/security/jwt.config.service';
   providers: [
     {
       provide: 'HashingService',
-      useClass: BcryptService,
+      useClass: EncryptService,
     },
     {
       provide: 'JwtManager',

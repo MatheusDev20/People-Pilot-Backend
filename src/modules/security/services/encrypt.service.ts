@@ -4,7 +4,7 @@ import { hash, compare } from 'bcrypt';
 import { SALT_ROUNDS } from 'src/constants/constants';
 
 @Injectable()
-export class BcryptService implements Hashing {
+export class EncryptService implements Hashing {
   private salt = SALT_ROUNDS;
 
   async hash(plainText: string): Promise<string> {

@@ -12,16 +12,22 @@ import { EmployeePermissionService } from './services/employee-permissions.servi
 import { RolesRepository } from './repositories/roles.repository';
 import { Role } from './entities/roles.entity';
 import { Validations } from './validations/validations';
+import { LoggerModule } from '../logger/logger.module';
+import { CreateEmployeeService } from './services/create-employee.service';
+import { StorageModule } from '../storage/storage.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Employee, Department, Role]),
     SecurityModule,
     DepartmentsModule,
+    LoggerModule,
+    StorageModule,
   ],
   controllers: [EmployeeController],
   providers: [
     EmployeeService,
+    CreateEmployeeService,
     EmployeePermissionService,
     EmployeeRepository,
     RolesRepository,

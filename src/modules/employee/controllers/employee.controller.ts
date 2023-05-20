@@ -20,10 +20,14 @@ import { Roles, Strategy } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
 import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
 import { FindOneDTO } from '../DTOs/find-one.dto';
+import { CreateEmployeeService } from '../services/create-employee.service';
 @Strategy('any')
 @Controller('employee')
 export class EmployeeController {
-  constructor(private employeeService: EmployeeService) {}
+  constructor(
+    private employeeService: EmployeeService,
+    private createService: CreateEmployeeService,
+  ) {}
 
   /**
    * List of all employes by one department paginated
@@ -48,7 +52,7 @@ export class EmployeeController {
 
   @Post()
   async save(@Body() data: CreateEmployeeDTO): Promise<HttpResponse> {
-    const { id } = await this.employeeService.createEmployee(data);
+    const { id } = await this.createService.createEmployee(data);
     return created({ id });
   }
 

@@ -7,12 +7,14 @@ import { DepartmentRepository } from './repositories/department.repository';
 import { SecurityModule } from '../security/security.module';
 import { EmployeeModule } from '../employee/employee.module';
 import { DepartmentValidations } from './validations/validations';
+import { LoggerModule } from '../logger/logger.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Department]),
     SecurityModule,
     forwardRef(() => EmployeeModule),
+    LoggerModule,
   ],
   controllers: [DepartmentsController],
   providers: [DepartmentValidations, DepartmentsService, DepartmentRepository],

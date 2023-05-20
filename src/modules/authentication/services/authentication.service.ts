@@ -21,15 +21,14 @@ export class AuthenticationService {
     if (!findUser) throw new NotFoundException(NotFoundEmail);
 
     const isPasswordMatch = await this.hashService.compare(password, findUser.password);
-    this.logger.generateJwtLog(findUser.id);
 
     if (isPasswordMatch) {
+      this.logger.generateJwtLog(findUser.id);
       return this.jwtManager.generate({
         username: findUser.name,
         sub: String(findUser.id),
       });
     }
-
     throw new UnauthorizedException(InvalidCredentials);
   }
 }
