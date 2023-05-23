@@ -6,8 +6,10 @@ import {
 } from '@aws-sdk/client-s3';
 import { FileAppResources, StorageManager } from 'src/@types';
 import { buildS3Path } from '../helpers';
-import { InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { CustomLogger } from 'src/modules/logger/services/logger.service';
 
+@Injectable()
 export class S3Service implements StorageManager {
   private _client: S3Client;
   private _s3Config: S3ClientConfig = {
@@ -18,7 +20,7 @@ export class S3Service implements StorageManager {
     },
   };
 
-  constructor() {
+  constructor(private customLogger: CustomLogger) {
     this._client = new S3Client(this._s3Config);
   }
   /**
@@ -40,6 +42,7 @@ export class S3Service implements StorageManager {
     try {
       const command = new PutObjectCommand(input);
       await this._client.send(command);
+      this.customLogger.log(`File ${originalname} Uploaded to ${process.env.BUCKET_NAME}`);
     } catch (err) {
       throw new InternalServerErrorException('Internal Server Error');
     } finally {
