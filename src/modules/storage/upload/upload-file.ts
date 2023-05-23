@@ -1,11 +1,11 @@
-import { Inject } from '@nestjs/common';
-import { UploadService } from '../../storage/@types';
+import { Inject, Injectable } from '@nestjs/common';
 import { StorageManager } from 'src/@types';
 
-export class UploadFileService implements UploadService {
+@Injectable()
+export class UploadFileService {
   constructor(@Inject('StorageManager') private manager: StorageManager) {}
 
-  async uploadAvatar(file: string): Promise<string> {
-    return await this.manager.persist(file);
+  async uploadSingleFile(file: Express.Multer.File, resource: string): Promise<string> {
+    return await this.manager.persist(file, resource);
   }
 }

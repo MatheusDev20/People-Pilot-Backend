@@ -1,3 +1,5 @@
 export type StorageManager = {
-  persist(file: string): Promise<string>;
+  persist(file: Express.Multer.File, resource: string): Promise<string>;
 };
+
+export type AvatarProfile = Express.Multer.File;

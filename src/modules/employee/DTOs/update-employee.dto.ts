@@ -29,4 +29,8 @@ export class UpdateEmployeeDTO {
   @IsNotEmpty()
   @IsDateString()
   hire_date: string;
+
+  @IsNotEmpty()
+  @IsString()
+  avatar: string;
 }
