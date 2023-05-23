@@ -4,7 +4,7 @@ import {
   S3Client,
   S3ClientConfig,
 } from '@aws-sdk/client-s3';
-import { StorageManager } from 'src/@types';
+import { FileAppResources, StorageManager } from 'src/@types';
 import { buildS3Path } from '../helpers';
 import { InternalServerErrorException } from '@nestjs/common';
 
@@ -27,7 +27,7 @@ export class S3Service implements StorageManager {
    * @param resource
    * @returns The s3 path to the recent uploaded file
    */
-  async persist(file: Express.Multer.File, resource: string): Promise<string> {
+  async persist(file: Express.Multer.File, resource: FileAppResources): Promise<string> {
     const { originalname, buffer, mimetype } = file;
     const s3Path = buildS3Path(originalname, resource);
     const input: PutObjectCommandInputType = {

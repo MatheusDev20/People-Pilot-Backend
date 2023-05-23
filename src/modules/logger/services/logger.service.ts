@@ -1,6 +1,7 @@
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { unauthLoginLog } from 'src/helpers/logs-templates';
 
+@Injectable()
 export class CustomLogger {
   private readonly logger = new Logger();
 
