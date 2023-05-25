@@ -11,7 +11,7 @@ import { CustomLogger } from 'src/modules/logger/services/logger.service';
 
 @Injectable()
 export class S3Service implements StorageManager {
-  private _client: S3Client;
+  client: S3Client;
   private _s3Config: S3ClientConfig = {
     region: process.env.AWS_REGION,
     credentials: {
@@ -21,7 +21,7 @@ export class S3Service implements StorageManager {
   };
 
   constructor(private customLogger: CustomLogger) {
-    this._client = new S3Client(this._s3Config);
+    this.client = new S3Client(this._s3Config);
   }
   /**
    *
@@ -33,7 +33,7 @@ export class S3Service implements StorageManager {
     const { originalname, buffer, mimetype } = file;
     const s3Path = buildS3Path(originalname, resource);
     const input: PutObjectCommandInputType = {
-      Bucket: process.env.BUCKET_NAME,
+      Bucket: 'stx-system',
       Key: s3Path,
       Body: buffer,
       ContentType: mimetype,
@@ -41,9 +41,10 @@ export class S3Service implements StorageManager {
     };
     try {
       const command = new PutObjectCommand(input);
-      await this._client.send(command);
+      await this.client.send(command);
       this.customLogger.log(`File ${originalname} Uploaded to ${process.env.BUCKET_NAME}`);
     } catch (err) {
+      console.log(err);
       throw new InternalServerErrorException('Internal Server Error');
     } finally {
       return new Promise((resolve) => resolve(`${process.env.BUCKET_URL}${s3Path}`));
