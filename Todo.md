@@ -9,6 +9,7 @@
 
 
 ### Unit Tests.
-    Start writing test for the controller.
+    Serve my disk stored images statically => https://stackoverflow.com/questions/63429380/how-to-serve-static-images-in-nestjs
+    Start writing test for the controller level
 
 
