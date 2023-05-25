@@ -50,4 +50,7 @@ export class Employee {
 
   @Column({ nullable: true })
   hire_date: Date;
+
+  @Column({ nullable: true })
+  avatar: string;
 }

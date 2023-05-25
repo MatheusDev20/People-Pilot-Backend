@@ -12,7 +12,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter()); // Handles all exceptions throw by the App.
   app.use(cookieParser()); // cookie parser middleware
-  // app.useLogger(app.get(CustomLogger));
   await app.listen(process.env.API_PORT);
 }
 

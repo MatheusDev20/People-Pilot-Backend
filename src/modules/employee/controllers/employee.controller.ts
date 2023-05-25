@@ -4,11 +4,14 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   Query,
   Request,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { created, deleted, HttpResponse, ok, updated } from 'src/helpers/http';
 import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
@@ -21,12 +24,18 @@ import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.gua
 import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
 import { FindOneDTO } from '../DTOs/find-one.dto';
 import { CreateEmployeeService } from '../services/create-employee.service';
+import { UploadFileService } from 'src/modules/storage/upload/upload-file';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { pipeInstance } from '../validations/file-validations';
+import { AvatarProfile } from 'src/@types';
+
 @Strategy('any')
 @Controller('employee')
 export class EmployeeController {
   constructor(
     private employeeService: EmployeeService,
     private createService: CreateEmployeeService,
+    private uploadService: UploadFileService,
   ) {}
 
   /**
@@ -81,5 +90,20 @@ export class EmployeeController {
   async delete(@Param() params: FindOneDTO): Promise<HttpResponse> {
     const { uuid } = params;
     return deleted(await this.employeeService.delete(uuid));
+  }
+
+  @UseGuards(LoginGuard, RoleGuard)
+  @Roles('manager')
+  @Patch('/avatar/:uuid')
+  @UseInterceptors(FileInterceptor('employee_avatar'))
+  async uploadAvatar(
+    @UploadedFile(pipeInstance)
+    file: AvatarProfile,
+    @Param() params: FindOneDTO,
+  ): Promise<HttpResponse> {
+    const { uuid } = params;
+    const fileUrl = await this.uploadService.uploadSingleFile(file, 'employee_avatar');
+    const updatedEmployee = await this.employeeService.updateEmployee(uuid, { avatar: fileUrl });
+    return updated(updatedEmployee);
   }
 }

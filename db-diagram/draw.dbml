@@ -1,0 +1,57 @@
+Project stx_db_system {
+  database_type: 'MYSQL'
+  Note: 'Management of Employees'
+}
+
+Table employee {
+  id uuid [pk]
+  name varchar
+  email varchar
+  password varchar
+  phone varchar
+  position varchar
+  updated_at timestamp
+  created_at timestamp
+  hire_date date
+  departmentId uuid [ref: > department.id]
+  avatar varchar
+}
+
+Table department {
+  id uuid [pk]
+  name varchar
+  description varchar
+  isActive boolean
+  created_at timestamp
+  updated_at timestamp
+  managerId varchar [ref: > employee.id]
+}
+Table roles {
+  id integer [pk]
+  name varchar
+}
+
+Table employee_roles {
+  employee_id uuid [ref: > employee.id]
+  role_id interger [ref: > roles.id]
+}
+
+Table task {
+  id: uuid [pk]
+  title: varchar
+  description: varchar
+  assignee_employee: [ref: > employee.id]
+  status: varchar
+  priority: varchar
+  created_date: timestamp
+  updated_date: timestamp
+  start_date: timestamp
+  due Date: timestamp
+  completion_date: timestamp
+  created_by: [ref: employee.id]
+}
+
+Table employee_tasks {
+  task_id: [ref: task.id]
+  employee_id:[ref: > employee.id]
+}

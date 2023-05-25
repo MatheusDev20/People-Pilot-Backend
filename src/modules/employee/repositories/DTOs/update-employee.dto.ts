@@ -7,4 +7,5 @@ export interface UpdateEmployeeRepositoryDTO {
   department: Department;
   position: string;
   hire_date: string;
+  avatar: string;
 }

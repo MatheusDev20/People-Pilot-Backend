@@ -1,18 +1,15 @@
 
-### Starting write unit tests
-
-
-### Starting implement authentication
-    - Starting store password (Encrypted with Bycript) - Done
-    - Create an module for authentication
-
 ### AWS is making me poor
     - Change the host to my digital ocean droplet (Use the current ngnix to redirect to two ports?)
 
-
 ### App things.
-    Make a generic service class logger.
     Cache.
     Rate Limit.
-    AWS Module.
+    Local Upload when the enviroment is "DEV" we only have S3 Manager till now.
+
+
+### Unit Tests.
+    Serve my disk stored images statically => https://stackoverflow.com/questions/63429380/how-to-serve-static-images-in-nestjs
+    Start writing test for the controller level
+
 

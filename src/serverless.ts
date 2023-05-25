@@ -17,11 +17,7 @@ async function bootstrap() {
   return serverlessExpress({ app: expressApp });
 }
 
-export const handler: Handler = async (
-  event: any,
-  context: Context,
-  callback: Callback,
-) => {
+export const handler: Handler = async (event: any, context: Context, callback: Callback) => {
   // Caching the serveless
   // TIL: Nullish Coalescing
   server = server ?? (await bootstrap());

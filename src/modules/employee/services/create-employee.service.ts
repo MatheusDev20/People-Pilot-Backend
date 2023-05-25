@@ -52,7 +52,6 @@ export class CreateEmployeeService {
   ): Promise<CreateEmployeeResponse> {
     const { password, roles } = data;
     const defaultDepartment = await this.departmentService.getDepartamentByName('Managers');
-    console.log(await this.uploadService.uploadAvatar('Arquivo em questão'));
     const newEmployeeData: CreateEmployeeRepositoryDTO = {
       ...data,
       password: await this.hashService.hash(password),
