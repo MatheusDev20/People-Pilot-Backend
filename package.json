@@ -47,7 +47,7 @@
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
-    "@nestjs/testing": "^9.4.0",
+    "@nestjs/testing": "^9.4.2",
     "@types/aws-lambda": "^8.10.114",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
@@ -81,7 +81,6 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
@@ -89,6 +88,8 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
+    "rootDir": "./",
+    "modulePaths": ["<rootDir>"],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }

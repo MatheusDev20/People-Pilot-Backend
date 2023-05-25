@@ -2629,12 +2629,12 @@
   dependencies:
     "path-to-regexp" "0.2.5"
 
-"@nestjs/testing@^9.4.0":
-  "integrity" "sha512-xZWp363P4otcebg++gSjUcdCfTK0RorORzyFq3aLaSAQOlq8kxfFDRIKzEATR4aOUfqTMMsAA8lhnMJWf35N6A=="
-  "resolved" "https://registry.npmjs.org/@nestjs/testing/-/testing-9.4.0.tgz"
-  "version" "9.4.0"
+"@nestjs/testing@^9.4.2":
+  "integrity" "sha512-4WZPJz85zLVZkhmWYq+Unr43MixISelg/TyuX1YFZYOeukIN+O6fRtAAPIKLqRQsiY0rE/h8FAEbYGWhNrRfSA=="
+  "resolved" "https://registry.npmjs.org/@nestjs/testing/-/testing-9.4.2.tgz"
+  "version" "9.4.2"
   dependencies:
-    "tslib" "2.5.0"
+    "tslib" "2.5.2"
 
 "@nestjs/typeorm@^9.0.1":
   "integrity" "sha512-A2BgLIPsMtmMI0bPKEf4bmzgFPsnvHqNBx3KkvaJ7hJrBQy0OqYOb+Rr06ifblKWDWS2tUPNrAFQbZjtk3PI+g=="
@@ -9087,10 +9087,10 @@
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-2.5.0.tgz"
   "version" "2.5.0"
 
-"tslib@2.5.0":
-  "integrity" "sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg=="
-  "resolved" "https://registry.npmjs.org/tslib/-/tslib-2.5.0.tgz"
-  "version" "2.5.0"
+"tslib@2.5.2":
+  "integrity" "sha512-5svOrSA2w3iGFDs1HibEVBGbDrAY82bFQ3HZ3ixB+88nsbsWQoKqDRb5UBYAUPEzbBn6dAp5gRNXglySbx1MlA=="
+  "resolved" "https://registry.npmjs.org/tslib/-/tslib-2.5.2.tgz"
+  "version" "2.5.2"
 
 "tsutils@^3.21.0":
   "integrity" "sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA=="

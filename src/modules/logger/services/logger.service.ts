@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { unauthLoginLog } from 'src/helpers/logs-templates';
+import { unauthLoginLog } from '../../../helpers/logs-templates/unathorized-login';
 
 @Injectable()
 export class CustomLogger extends Logger {
