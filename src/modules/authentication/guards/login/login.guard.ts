@@ -15,7 +15,6 @@ export class LoginGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
-
     if (this.areCookiesExpired(request.cookies)) {
       this.logger.expiredCookie(request.ip, request['headers']['user-agent']);
       throw new UnauthorizedException('Expired Cookie');
@@ -39,12 +38,14 @@ export class LoginGuard implements CanActivate {
     return true;
   }
 
-  exctractFromCookies(request: Request): string | undefined {
+  exctractFromCookies(request: Request): string | null {
     if (request.cookies && request.cookies.access_token) {
       return request.cookies.access_token;
     }
     return null;
   }
 
-  areCookiesExpired = (cookies: any) => Object.keys(cookies).length === 0;
+  areCookiesExpired = (cookies: any) => {
+    return Object.keys(cookies).length === 0;
+  };
 }

@@ -9,6 +9,12 @@ import { LoggerModule } from '../logger/logger.module';
 @Module({
   imports: [EmployeeModule, SecurityModule, LoggerModule],
   controllers: [AuthenticationController],
-  providers: [AuthenticationService, Utils],
+  providers: [
+    {
+      provide: 'Authentication',
+      useClass: AuthenticationService,
+    },
+    Utils,
+  ],
 })
 export class AuthenticationModule {}

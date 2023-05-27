@@ -5,9 +5,10 @@ import { Hashing } from 'src/modules/security/interfaces/hashing';
 import { InvalidCredentials, NotFoundEmail } from 'src/errors/messages';
 import { JwtManager } from 'src/modules/security/interfaces/jwt';
 import { CustomLogger } from 'src/modules/logger/services/logger.service';
+import { Authentication } from 'src/@types';
 
 @Injectable()
-export class AuthenticationService {
+export class AuthenticationService implements Authentication {
   constructor(
     private employeeService: EmployeeService,
     private logger: CustomLogger,

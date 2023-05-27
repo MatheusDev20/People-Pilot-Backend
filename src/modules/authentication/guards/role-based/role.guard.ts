@@ -12,13 +12,10 @@ export class RoleGuard implements CanActivate {
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const requiredRoles = this.reflector.get<string[]>('roles', context.getHandler());
-    const strategy = this.reflector.get<string>('strategy', context.getClass());
-
+    const strategy = this.getStrategy(context);
     if (!requiredRoles) return true;
-
     const request: Request = context.switchToHttp().getRequest();
     const { roles } = await this.getUserRoles(request['user'].id);
-    console.log(strategy);
     switch (strategy) {
       case 'any':
         return this.matchAny(requiredRoles, roles);
@@ -27,7 +24,6 @@ export class RoleGuard implements CanActivate {
         return this.matchAll(requiredRoles, roles);
     }
   }
-
   async getUserRoles(userId: string): Promise<UserRoles> {
     return await this.permissionsService.getEmployeeRoles(userId);
   }
@@ -42,4 +38,6 @@ export class RoleGuard implements CanActivate {
   matchAll = (requiredRoles: string[], userRoles: string[]): boolean => {
     return requiredRoles.every((role) => userRoles.includes(role));
   };
+
+  getStrategy = (ctx: ExecutionContext) => this.reflector.get<string>('strategy', ctx.getClass());
 }

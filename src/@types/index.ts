@@ -1,3 +1,6 @@
+import { LoginDTO } from 'src/modules/authentication/DTOs/login-controller.dto';
+import { JwtData } from 'src/modules/security/DTOs/jwt/jwt-dto';
+
 /**
  * Folders to be created on S3
  */
@@ -8,3 +11,7 @@ export type StorageManager = {
 };
 
 export type AvatarProfile = Express.Multer.File;
+
+export type Authentication = {
+  signIn(data: LoginDTO): Promise<JwtData>;
+};

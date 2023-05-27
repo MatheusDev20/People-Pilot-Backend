@@ -8,6 +8,7 @@ export class EmployeePermissionService {
 
   async getEmployeeRoles(userId: string): Promise<UserRoles> {
     const roles = (await this.employeeRepository.getRoles(userId)).roles;
+
     return {
       roles: roles.map((role) => role.name),
     };

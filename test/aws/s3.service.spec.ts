@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { S3Service } from '../src/modules/aws/s3/s3.service';
-import { CustomLogger } from '../src/modules/logger/services/logger.service';
+import { S3Service } from '../../src/modules/aws/s3/s3.service';
+import { CustomLogger } from '../../src/modules/logger/services/logger.service';
 import { FileAppResources } from 'src/@types';
 import { Test } from '@nestjs/testing';
-import * as helpers from '../src/modules/aws/helpers';
-import { PutObjectCommand, PutObjectCommandInputType, S3Client } from '@aws-sdk/client-s3';
+import * as helpers from '../../src/modules/aws/helpers';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 const makeFileRequest = (): { file: Express.Multer.File; resource: FileAppResources } => {
   return {
