@@ -15,7 +15,14 @@ describe('Role Guard', () => {
   const mockReflector = {
     get: jest.fn(),
   };
+
+  const ctxFactory = () => ({
+    ip: 'fake-ip',
+    cookies: { acess_token: 'valid_token' },
+    headers: {},
+  });
   let guard: RoleGuard;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -26,6 +33,14 @@ describe('Role Guard', () => {
     }).compile();
 
     guard = module.get<RoleGuard>(RoleGuard);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('Should be defined', () => {
+    expect(guard).toBeDefined();
   });
 
   it('Should pass (return true) if required roles is null', async () => {
@@ -40,7 +55,7 @@ describe('Role Guard', () => {
     mockReflector.get.mockImplementationOnce(() => ['admin', 'manager', 'simple-user']);
     const spy = jest.spyOn(guard, 'getUserRoles');
 
-    const cxtOpts = { ip: 'fake-ip', cookies: {}, headers: {} };
+    const cxtOpts = ctxFactory();
     const ctx = makeGenericContext(cxtOpts);
 
     const request: Request = ctx.switchToHttp().getRequest();
@@ -55,8 +70,7 @@ describe('Role Guard', () => {
     const strategySpy = jest.spyOn(guard, 'getStrategy');
     strategySpy.mockImplementationOnce(() => 'any');
     const matchAnySpy = jest.spyOn(guard, 'matchAny');
-    const cxtOpts = { ip: 'fake-ip', cookies: {}, headers: {} };
-    const ctx = makeGenericContext(cxtOpts);
+    const ctx = makeGenericContext(ctxFactory());
     await guard.canActivate(ctx);
     expect(matchAnySpy).toHaveBeenCalled();
   });
@@ -66,9 +80,84 @@ describe('Role Guard', () => {
     const strategySpy = jest.spyOn(guard, 'getStrategy');
     strategySpy.mockImplementationOnce(() => 'all');
     const matchAllSpy = jest.spyOn(guard, 'matchAll');
-    const cxtOpts = { ip: 'fake-ip', cookies: {}, headers: {} };
-    const ctx = makeGenericContext(cxtOpts);
+    const ctx = makeGenericContext(ctxFactory());
     await guard.canActivate(ctx);
+    expect.assertions(1);
     expect(matchAllSpy).toHaveBeenCalled();
+  });
+
+  it('Should return false when the strategy is any and user role does not match any of the required roles', async () => {
+    const strategySpy = jest.spyOn(guard, 'getStrategy');
+    const guardSpy = jest.spyOn(guard, 'canActivate');
+    mockReflector.get.mockImplementationOnce(() => ['admin', 'manager']);
+    const spy = jest.spyOn(mockEmployeePermissionService, 'getEmployeeRoles');
+    spy.mockImplementationOnce(() => {
+      return new Promise((resolve) => resolve({ roles: ['simple-user'] }));
+    });
+    strategySpy.mockReturnValueOnce('any');
+    const anySpy = jest.spyOn(guard, 'matchAny');
+
+    const ctx = makeGenericContext(ctxFactory());
+    const veredict = await guard.canActivate(ctx);
+    expect(anySpy).toHaveBeenCalledWith(['admin', 'manager'], ['simple-user']);
+    expect(veredict).toEqual(false);
+    expect(guardSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should return true when the strategy is any and user role does match any of the required roles', async () => {
+    const strategySpy = jest.spyOn(guard, 'getStrategy');
+    const guardSpy = jest.spyOn(guard, 'canActivate');
+    mockReflector.get.mockImplementationOnce(() => ['admin', 'manager']);
+    const spy = jest.spyOn(mockEmployeePermissionService, 'getEmployeeRoles');
+    spy.mockImplementationOnce(() => {
+      return new Promise((resolve) => resolve({ roles: ['manager', 'simple-user'] }));
+    });
+    strategySpy.mockReturnValueOnce('any');
+    const anySpy = jest.spyOn(guard, 'matchAny');
+
+    const ctx = makeGenericContext(ctxFactory());
+    const veredict = await guard.canActivate(ctx);
+    expect(anySpy).toHaveBeenCalledWith(['admin', 'manager'], ['manager', 'simple-user']);
+    expect(veredict).toEqual(true);
+    expect(guardSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should return false when the strategy is all and user roles does not match all', async () => {
+    const strategySpy = jest.spyOn(guard, 'getStrategy');
+    const guardSpy = jest.spyOn(guard, 'canActivate');
+    mockReflector.get.mockImplementationOnce(() => ['admin', 'manager']);
+    const spy = jest.spyOn(mockEmployeePermissionService, 'getEmployeeRoles');
+    spy.mockImplementationOnce(() => {
+      return new Promise((resolve) => resolve({ roles: ['simple-user'] }));
+    });
+    strategySpy.mockReturnValueOnce('all');
+    const allSpy = jest.spyOn(guard, 'matchAll');
+
+    const ctx = makeGenericContext(ctxFactory());
+    const veredict = await guard.canActivate(ctx);
+    expect(allSpy).toHaveBeenCalledWith(['admin', 'manager'], ['simple-user']);
+    expect(veredict).toEqual(false);
+    expect(guardSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should return true when the strategy is all and user roles does match all', async () => {
+    const strategySpy = jest.spyOn(guard, 'getStrategy');
+    const guardSpy = jest.spyOn(guard, 'canActivate');
+    mockReflector.get.mockImplementationOnce(() => ['admin', 'manager', 'simple-user']);
+    const spy = jest.spyOn(mockEmployeePermissionService, 'getEmployeeRoles');
+    spy.mockImplementationOnce(() => {
+      return new Promise((resolve) => resolve({ roles: ['admin', 'manager', 'simple-user'] }));
+    });
+    strategySpy.mockReturnValueOnce('all');
+    const allSpy = jest.spyOn(guard, 'matchAll');
+
+    const ctx = makeGenericContext(ctxFactory());
+    const veredict = await guard.canActivate(ctx);
+    expect(allSpy).toHaveBeenCalledWith(
+      ['admin', 'manager', 'simple-user'],
+      ['admin', 'manager', 'simple-user'],
+    );
+    expect(veredict).toEqual(true);
+    expect(guardSpy).toHaveBeenCalledTimes(1);
   });
 });

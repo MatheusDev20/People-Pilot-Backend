@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CookieData } from '../DTOs/cookie-data.dto';
 import { Response } from 'express';
+import { COOKIE_EXPIRATION } from 'src/constants/constants';
 
 @Injectable()
 export class Utils {
@@ -9,7 +10,7 @@ export class Utils {
     currResponse.cookie('access_token', access_token, {
       httpOnly: true,
       secure: false,
-      expires: new Date(Date.now() + 60 * 60 * 1000), // TODO: Define a standart expiration time
+      expires: COOKIE_EXPIRATION,
     });
   }
 }
