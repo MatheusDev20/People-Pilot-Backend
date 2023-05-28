@@ -1,10 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { unauthLoginLog } from '../../../helpers/logs-templates/unathorized-login';
+import { COOKIE_EXPIRATION } from 'src/constants/constants';
+import { LoggerFunctions } from 'src/@types';
 
 @Injectable()
-export class CustomLogger extends Logger {
+export class CustomLogger extends Logger implements LoggerFunctions {
   generateJwtLog(userId: string) {
-    this.log(`\n Generating a new JWT for user ${userId} \n Date: ${new Date()} \n Expiration: 1h`);
+    this.log(
+      `\n Generating a new JWT for user ${userId} \n Date: ${new Date()} \n Expiration: ${COOKIE_EXPIRATION}`,
+    );
   }
 
   expiredCookie(ipAddress: any, userAgent: string) {

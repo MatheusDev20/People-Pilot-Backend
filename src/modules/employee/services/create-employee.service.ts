@@ -8,6 +8,7 @@ import { CreateEmployeeResponse } from '../DTOs/responses.dto';
 import { Utils } from '../utils/employee.utils';
 import { Validations } from '../validations/validations';
 import { UploadFileService } from 'src/modules/storage/upload/upload-file';
+import { Department } from 'src/modules/departments/entities/department.entity';
 
 @Injectable()
 export class CreateEmployeeService {
@@ -51,7 +52,12 @@ export class CreateEmployeeService {
     data: Omit<CreateEmployeeDTO, 'departmentName'>,
   ): Promise<CreateEmployeeResponse> {
     const { password, roles } = data;
-    const defaultDepartment = await this.departmentService.getDepartamentByName('Managers');
+    // eslint-disable-next-line prefer-const
+    const managersDepartment = await this.departmentService.getDepartamentByName('Managers');
+
+    const defaultDepartment =
+      managersDepartment ?? (await this.departmentService.createDefaultDepartment());
+
     const newEmployeeData: CreateEmployeeRepositoryDTO = {
       ...data,
       password: await this.hashService.hash(password),

@@ -15,10 +15,11 @@ import { Validations } from './validations/validations';
 import { LoggerModule } from '../logger/logger.module';
 import { CreateEmployeeService } from './services/create-employee.service';
 import { StorageModule } from '../storage/storage.module';
+import { Task } from '../task/entities/task.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Employee, Department, Role]),
+    TypeOrmModule.forFeature([Employee, Department, Role, Task]),
     SecurityModule,
     DepartmentsModule,
     LoggerModule,

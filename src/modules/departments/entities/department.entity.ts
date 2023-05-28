@@ -3,9 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
-  JoinColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Employee } from '../../employee/entities/employee.entity';
@@ -21,9 +19,8 @@ export class Department {
   @Column()
   description: string;
 
-  @OneToOne(() => Employee)
-  @JoinColumn()
-  manager: Employee;
+  @Column()
+  manager: string;
 
   @Column({ default: true })
   isActive: boolean;

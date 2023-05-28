@@ -5,11 +5,13 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Department } from '../../departments/entities/department.entity';
 import { Role } from './roles.entity';
+import { Task } from 'src/modules/task/entities/task.entity';
 
 @Entity()
 export class Employee {
@@ -53,4 +55,10 @@ export class Employee {
 
   @Column({ nullable: true })
   avatar: string;
+
+  @OneToMany(() => Task, (task) => task.assignee)
+  assignee_tasks: Task[];
+
+  @OneToMany(() => Task, (task) => task.created_by)
+  created_tasks: Task[];
 }

@@ -10,6 +10,7 @@ export class MySQLDBConfigService implements TypeOrmOptionsFactory {
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
     this.logger.log(`Connecting to the Database ${this.configService.get<string>('DB_NAME')}`);
+    const entities = this.configService.get<string>('DB_ENTITIES');
     try {
       const options: TypeOrmModuleOptions = {
         type: 'mysql',
@@ -18,7 +19,7 @@ export class MySQLDBConfigService implements TypeOrmOptionsFactory {
         port: this.configService.get<number>('DB_PORT'),
         password: this.configService.get<string>('DB_PASSWORD'),
         database: this.configService.get<string>('DB_NAME'),
-        entities: ['dist/modules/**/*.entity.js'],
+        entities: [entities],
         synchronize: this.configService.get<boolean>('DB_SYNC'),
 
         logging: ['warn', 'info', 'log'],

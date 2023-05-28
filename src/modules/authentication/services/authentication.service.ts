@@ -18,18 +18,18 @@ export class AuthenticationService implements Authentication {
   async signIn(data: LoginDTO) {
     const { email, password } = data;
     const findUser = await this.employeeService.getByEmail(email);
-
     if (!findUser) throw new NotFoundException(NotFoundEmail);
 
-    const isPasswordMatch = await this.hashService.compare(password, findUser.password);
+    const { id, name } = findUser;
 
-    if (isPasswordMatch) {
-      this.logger.generateJwtLog(findUser.id);
+    if (await this.hashService.compare(password, findUser.password)) {
+      this.logger.generateJwtLog(id);
       return this.jwtManager.generate({
-        username: findUser.name,
-        sub: String(findUser.id),
+        username: name,
+        sub: String(id),
       });
     }
+
     throw new UnauthorizedException(InvalidCredentials);
   }
 }

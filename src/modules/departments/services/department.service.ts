@@ -24,9 +24,10 @@ export class DepartmentsService {
   async createDepartment(data: CreateDepartmentDTO): Promise<CreateDepartmentResponseDTO> {
     await this.validations.validateDepartmentEntry(data);
     const { managerMail } = data;
+    const { name } = await this.employeeRepository.findByEmail(managerMail);
     const newDepartment: CreateDepartmentRepositoryDTO = {
       ...data,
-      manager: await this.employeeRepository.findByEmail(managerMail),
+      manager: name,
     };
     const { id } = await this.departmentRepository.saveDepartment(newDepartment);
     return { id };
@@ -39,11 +40,13 @@ export class DepartmentsService {
   async updateDepartment(id: string, data: Partial<UpdateDepartmentDTO>) {
     await this.validations.validateDepartmentEntry(data);
     const { managerMail } = data;
+
     delete data.managerMail;
 
     const newDepartment: Partial<UpdateDepartmentRepositoryDTO> = { ...data };
 
-    if (managerMail) newDepartment.manager = await this.employeeRepository.findByEmail(managerMail);
+    if (managerMail)
+      newDepartment.manager = (await this.employeeRepository.findByEmail(managerMail)).name;
 
     return this.departmentRepository.updateDepartment(id, newDepartment);
   }
@@ -53,5 +56,17 @@ export class DepartmentsService {
       throw new NotFoundException(`Department not found `);
 
     return await this.departmentRepository.delete(id);
+  }
+
+  /**
+   * When entering a manager, they will be attached to the default department "Managers".
+   * If this department does not exist, create!
+   */
+  async createDefaultDepartment(): Promise<Department> {
+    return await this.departmentRepository.saveDepartment({
+      description: 'Managers Department',
+      name: 'Managers',
+      manager: 'Manager',
+    });
   }
 }

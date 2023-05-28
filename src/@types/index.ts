@@ -15,3 +15,10 @@ export type AvatarProfile = Express.Multer.File;
 export type Authentication = {
   signIn(data: LoginDTO): Promise<JwtData>;
 };
+
+export type LoggerFunctions = {
+  generateJwtLog(userId: string): void;
+  expiredCookie(ipAddress: any, userAgent: string): void;
+  sucessFullLogin(id: string): void;
+  failedAttempt(errMsg: any, ipAddress: any, userAgent: string): void;
+};
