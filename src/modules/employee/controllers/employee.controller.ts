@@ -22,7 +22,7 @@ import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard'
 import { Roles, Strategy } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
 import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
-import { FindOneDTO } from '../DTOs/find-one.dto';
+import { FindOneDTO } from '../../../class-validator/find-one.dto';
 import { CreateEmployeeService } from '../services/create-employee.service';
 import { UploadFileService } from 'src/modules/storage/upload/upload-file';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -61,7 +61,7 @@ export class EmployeeController {
 
   @Post()
   async save(@Body() data: CreateEmployeeDTO): Promise<HttpResponse> {
-    const { id } = await this.createService.createEmployee(data);
+    const { id } = await this.createService.execute(data);
     return created({ id });
   }
 

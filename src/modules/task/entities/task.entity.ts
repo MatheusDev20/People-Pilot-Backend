@@ -50,6 +50,6 @@ export class Task {
   @Column()
   due_date: Date;
 
-  @Column()
+  @Column({ default: null })
   completion_date: Date;
 }

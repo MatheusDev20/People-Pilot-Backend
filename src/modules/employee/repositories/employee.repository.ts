@@ -34,7 +34,6 @@ export class EmployeeRepository {
   async saveEmployee(
     newEmployeeData: CreateEmployeeRepositoryDTO,
   ): Promise<CreateEmployeeResponse> {
-    console.log(newEmployeeData);
     const dbResponse = await this.repository.save({ ...newEmployeeData });
     const { id } = dbResponse;
     return { id: String(id) };

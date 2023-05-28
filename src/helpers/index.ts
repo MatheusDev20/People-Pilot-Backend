@@ -9,3 +9,8 @@ export const getClientIp = (request: Request) => {
   }
   return request.ip;
 };
+
+export const formatDateToDbType = (dateStr: string) => {
+  const [day, month, year] = dateStr.split('/');
+  return new Date(Number(year), Number(month) - 1, Number(day));
+};

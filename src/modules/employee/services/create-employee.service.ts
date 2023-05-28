@@ -21,7 +21,7 @@ export class CreateEmployeeService {
     private uploadService: UploadFileService,
   ) {}
 
-  async createEmployee(data: CreateEmployeeDTO): Promise<CreateEmployeeResponse> {
+  async execute(data: CreateEmployeeDTO): Promise<CreateEmployeeResponse> {
     const { departmentName, password, roles } = data;
     /**
      * If the employee is a manager, attach to a default department (Directory)

@@ -21,6 +21,10 @@ export class EmployeeService {
     return await this.employeeRepository.findByEmail(email);
   }
 
+  async getByID(id: string): Promise<Employee> {
+    return await this.employeeRepository.findById(id);
+  }
+
   async getEmployeeByDepartment(
     departmentName: string,
     page: number,
