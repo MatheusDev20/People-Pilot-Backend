@@ -1,22 +1,16 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { TaskPriority, TaskStatus } from '../enums';
 import { IsDateDDMMYYYY } from 'src/class-validator/custom-validators';
 
-export class CreateTaskDTO {
-  @IsNotEmpty()
+export class UpdateTaskDTO {
   @IsString()
-  @MaxLength(65)
   title: string;
 
-  @IsNotEmpty()
   @IsString()
-  @MaxLength(100)
   description: string;
 
-  @IsNotEmpty()
-  @IsString()
   @IsEmail()
-  assignee_email: string;
+  assignee_mail: string;
 
   @IsEnum(TaskStatus, { message: 'Invalid value for status' })
   @IsOptional()
@@ -33,7 +27,4 @@ export class CreateTaskDTO {
   @IsOptional()
   @IsDateDDMMYYYY()
   completion_date: string;
-
-  @IsOptional()
-  createdBy: string;
 }

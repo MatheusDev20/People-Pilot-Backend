@@ -1,19 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Response, response } from 'express';
+
+import { Response } from 'express';
 import { Authentication } from 'src/@types';
 import { CookieData } from 'src/modules/authentication/DTOs/cookie-data.dto';
 import { LoginDTO } from 'src/modules/authentication/DTOs/login-controller.dto';
 import { AuthenticationController } from 'src/modules/authentication/controllers/login.controller';
 import { Utils } from 'src/modules/authentication/utils/authentication.utils';
 import { JwtData } from 'src/modules/security/DTOs/jwt/jwt-dto';
+import { makeFakeUser } from './mocks';
 
 class AuthStub implements Authentication {
-  signIn(data: LoginDTO): Promise<JwtData> {
-    return new Promise((resolve) => resolve({ access_token: 'jwt_valid_token', expiration: '1h' }));
+  login(data: LoginDTO): Promise<JwtData> {
+    return new Promise((resolve) =>
+      resolve({ access_token: 'jwt_valid_token', expiration: '1h', user: makeFakeUser() }),
+    );
   }
 }
 
 let controller: AuthenticationController;
+let service: Authentication;
 
 describe('Login Controller', () => {
   const makeAuthentication = (): Authentication => {
@@ -46,6 +51,7 @@ describe('Login Controller', () => {
       ],
     }).compile();
     controller = module.get<AuthenticationController>(AuthenticationController);
+    service = module.get('Authentication');
   });
 
   it('Should be defined', () => {
@@ -58,6 +64,27 @@ describe('Login Controller', () => {
     const spy = jest.spyOn(controller, 'signIn');
 
     await controller.signIn(res as Response, loginData);
+    expect.assertions(1);
     expect(spy).toHaveBeenCalledWith(res, loginData);
+  });
+
+  it('Should call login service method with the right methods', async () => {
+    const loginData = makeAuthRequest();
+    const res: Partial<Response> = {};
+    const spy = jest.spyOn(service, 'login');
+
+    await controller.signIn(res as Response, loginData);
+    expect.assertions(1);
+    expect(spy).toHaveBeenCalledWith(loginData);
+  });
+
+  it('Should set cookies', async () => {
+    const loginData = makeAuthRequest();
+    const res: Partial<Response> = {};
+    const spy = jest.spyOn(mockUtils, 'setCookies');
+
+    await controller.signIn(res as Response, loginData);
+    expect.assertions(1);
+    expect(spy).toHaveBeenCalledWith(res, { access_token: 'jwt_valid_token' });
   });
 });

@@ -1,58 +1,75 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef,
+} from '@nestjs/common';
 import { Department } from '../entities/department.entity';
 import { CreateDepartmentDTO } from '../DTO/create-department.dto';
 import { DepartmentRepository } from '../repositories/department.repository';
 import { UpdateDepartmentDTO } from '../DTO/update-department.dto';
 import { CreateDepartmentResponseDTO, DeleteDepartmentResponseDTO } from '../DTO/responses.dto';
-import { DepartmentValidations } from '../validations/validations';
-import { EmployeeRepository } from 'src/modules/employee/repositories/employee.repository';
 import { CreateDepartmentRepositoryDTO } from '../repositories/DTO/create-department.dto';
 import { UpdateDepartmentRepositoryDTO } from '../repositories/DTO/update-deparment.dto';
+import { ValidColumn } from 'src/@types';
+import { FindOptionsWhere } from 'typeorm';
+import { EmployeeService } from 'src/modules/employee/services/employee.service';
 
 @Injectable()
 export class DepartmentsService {
   constructor(
     private departmentRepository: DepartmentRepository,
-    private validations: DepartmentValidations,
-    private employeeRepository: EmployeeRepository,
+    @Inject(forwardRef(() => EmployeeService))
+    private employeeService: EmployeeService,
   ) {}
 
-  async getDepartmentById(id: string) {
-    return this.departmentRepository.findDepartment({ where: { id } });
+  async find(property: ValidColumn<Department>, value: string) {
+    const options: FindOptionsWhere<Department> = { [property]: value };
+    return await this.departmentRepository.find({ where: options });
   }
 
   async createDepartment(data: CreateDepartmentDTO): Promise<CreateDepartmentResponseDTO> {
-    await this.validations.validateDepartmentEntry(data);
-    const { managerMail } = data;
-    const { name } = await this.employeeRepository.findByEmail(managerMail);
+    const { name, managerMail } = data;
+    if (await this.find('name', name)) {
+      throw new BadRequestException(`Department ${name} already exists`);
+    }
+
+    const manager = await this.employeeService.find('email', managerMail);
+    if (!manager) {
+      throw new BadRequestException(`Manager ${managerMail} not found in the System`);
+    }
+
     const newDepartment: CreateDepartmentRepositoryDTO = {
       ...data,
-      manager: name,
+      manager: manager.name,
     };
-    const { id } = await this.departmentRepository.saveDepartment(newDepartment);
+    const { id } = await this.departmentRepository.save(newDepartment);
     return { id };
   }
 
-  async getDepartamentByName(name: string): Promise<Department> {
-    return await this.departmentRepository.findByName(name);
-  }
-
   async updateDepartment(id: string, data: Partial<UpdateDepartmentDTO>) {
-    await this.validations.validateDepartmentEntry(data);
-    const { managerMail } = data;
+    const { managerMail, name } = data;
+
+    if (name && (await this.find('name', name))) {
+      throw new BadRequestException(`Department ${name} already exists`);
+    }
+
+    if (managerMail && !(await this.employeeService.find('email', managerMail)))
+      throw new BadRequestException(`Manager Mail ${managerMail} not found in the System`);
 
     delete data.managerMail;
 
-    const newDepartment: Partial<UpdateDepartmentRepositoryDTO> = { ...data };
+    const updateData: Partial<UpdateDepartmentRepositoryDTO> = { ...data };
 
     if (managerMail)
-      newDepartment.manager = (await this.employeeRepository.findByEmail(managerMail)).name;
+      updateData.manager = (await this.employeeService.find('email', managerMail)).name;
 
-    return this.departmentRepository.updateDepartment(id, newDepartment);
+    return this.departmentRepository.updateDepartment(id, updateData);
   }
 
   async delete(id: string): Promise<DeleteDepartmentResponseDTO> {
-    if (!this.departmentRepository.findDepartment({ where: { id } }))
+    if (!this.departmentRepository.find({ where: { id } }))
       throw new NotFoundException(`Department not found `);
 
     return await this.departmentRepository.delete(id);
@@ -63,7 +80,7 @@ export class DepartmentsService {
    * If this department does not exist, create!
    */
   async createDefaultDepartment(): Promise<Department> {
-    return await this.departmentRepository.saveDepartment({
+    return await this.departmentRepository.save({
       description: 'Managers Department',
       name: 'Managers',
       manager: 'Manager',

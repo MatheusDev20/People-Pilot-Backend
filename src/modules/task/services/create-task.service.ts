@@ -12,8 +12,8 @@ export class CreateTaskService {
 
   async execute(data: CreateTaskDTO): Promise<UpdatedTask> {
     const { assignee_email, createdBy } = data;
-    const assignee = await this.employeeService.getByEmail(assignee_email);
-    const creator = await this.employeeService.getByID(createdBy);
+    const assignee = await this.employeeService.find('email', assignee_email);
+    const creator = await this.employeeService.find('id', createdBy);
 
     if (!assignee) throw new BadRequestException(`Assignee ${assignee_email} not found`);
 

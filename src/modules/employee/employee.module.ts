@@ -11,7 +11,6 @@ import { DepartmentsModule } from '../departments/departments.module';
 import { EmployeePermissionService } from './services/employee-permissions.service';
 import { RolesRepository } from './repositories/roles.repository';
 import { Role } from './entities/roles.entity';
-import { Validations } from './validations/validations';
 import { LoggerModule } from '../logger/logger.module';
 import { CreateEmployeeService } from './services/create-employee.service';
 import { StorageModule } from '../storage/storage.module';
@@ -32,7 +31,6 @@ import { Task } from '../task/entities/task.entity';
     EmployeePermissionService,
     EmployeeRepository,
     RolesRepository,
-    Validations,
     Utils,
   ],
   exports: [EmployeeService, EmployeePermissionService, EmployeeRepository],

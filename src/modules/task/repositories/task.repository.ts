@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { Task } from '../entities/task.entity';
 import { CreateTaskRepository } from './DTO';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,6 +12,10 @@ export class TaskRepository {
     @InjectRepository(Task) private repository: Repository<Task>,
     private logger: CustomLogger,
   ) {}
+
+  async findBy(options: FindOneOptions<Task>): Promise<Task> {
+    return this.repository.findOne(options);
+  }
 
   async create(data: CreateTaskRepository): Promise<UpdatedTask> {
     try {

@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from '../entities/employee.entity';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { Department } from 'src/modules/departments/entities/department.entity';
 import {
   CreateEmployeeResponse,
@@ -31,9 +31,7 @@ export class EmployeeRepository {
       .getMany();
   }
 
-  async saveEmployee(
-    newEmployeeData: CreateEmployeeRepositoryDTO,
-  ): Promise<CreateEmployeeResponse> {
+  async save(newEmployeeData: CreateEmployeeRepositoryDTO): Promise<CreateEmployeeResponse> {
     const dbResponse = await this.repository.save({ ...newEmployeeData });
     const { id } = dbResponse;
     return { id: String(id) };
@@ -76,15 +74,13 @@ export class EmployeeRepository {
   /**
    Find methods
    */
-  async findByEmail(email: string): Promise<Employee> {
-    return await this.repository.findOne({ where: { email } });
-  }
-  async findById(id: string): Promise<Employee> {
-    return await this.repository.findOne({ where: { id } });
+
+  async find(options: FindOneOptions<Employee>): Promise<Employee> {
+    return await this.repository.findOne(options);
   }
 
   async getRoles(userId: string): Promise<Employee> {
-    return this.repository.findOne({
+    return await this.repository.findOne({
       where: { id: userId },
       relations: ['roles'],
     });

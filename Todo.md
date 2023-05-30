@@ -1,15 +1,17 @@
 
-### AWS is making me poor
+### Infra
     - Change the host to my digital ocean droplet (Use the current ngnix to redirect to two ports?)
+    - Check another possibilites using AWS ( EC2 Free tier ?)
 
-### App things.
-    Cache.
-    Rate Limit.
-    Local Upload when the enviroment is "DEV" we only have S3 Manager till now.
+### General App Things.
+    Cache
+    Rate Limit (429)
 
 
 ### Unit Tests.
-    Serve my disk stored images statically => https://stackoverflow.com/questions/63429380/how-to-serve-static-images-in-nestjs
-    Start writing test for the controller level
+    Finish Write Unit tests for the whole Authentication Module
+
+### Tasks Module.
+    Finish the CRUD operations for tasks module ( Edit Task and Read Tasks )
 
 

@@ -26,7 +26,7 @@ import { FindOneDTO } from '../../../class-validator/find-one.dto';
 import { CreateEmployeeService } from '../services/create-employee.service';
 import { UploadFileService } from 'src/modules/storage/upload/upload-file';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { pipeInstance } from '../validations/file-validations';
+import { pipeInstance } from '../../storage/file-validations';
 import { AvatarProfile } from 'src/@types';
 
 @Strategy('any')
@@ -80,7 +80,7 @@ export class EmployeeController {
     @Body() data: Partial<UpdateEmployeeDTO>,
   ): Promise<HttpResponse> {
     const { uuid } = params;
-    const { id } = await this.employeeService.updateEmployee(uuid, data);
+    const { id } = await this.employeeService.update(uuid, data);
     return updated({ id });
   }
 
@@ -103,7 +103,7 @@ export class EmployeeController {
   ): Promise<HttpResponse> {
     const { uuid } = params;
     const fileUrl = await this.uploadService.uploadSingleFile(file, 'employee_avatar');
-    const updatedEmployee = await this.employeeService.updateEmployee(uuid, { avatar: fileUrl });
+    const updatedEmployee = await this.employeeService.update(uuid, { avatar: fileUrl });
     return updated(updatedEmployee);
   }
 }
