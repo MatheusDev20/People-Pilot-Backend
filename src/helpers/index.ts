@@ -11,6 +11,9 @@ export const getClientIp = (request: Request) => {
 };
 
 export const formatDateToDbType = (dateStr: string) => {
-  const [day, month, year] = dateStr.split('/');
+  const dtStr = dateStr as string;
+  const [day, month, year] = dtStr.split('/');
   return new Date(Number(year), Number(month) - 1, Number(day));
 };
+
+export const isoToLocale = (date: Date) => date.toLocaleDateString('pt-BR');

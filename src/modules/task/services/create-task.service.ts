@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateTaskDTO } from '../DTO';
 import { TaskRepository } from '../repositories/task.repository';
 import { EmployeeService } from 'src/modules/employee/services/employee.service';
-import { CreateTaskRepository } from '../repositories/DTO';
+import { CreateTaskRepositoryDTO } from '../repositories/DTO';
 import { formatDateToDbType } from 'src/helpers';
 import { UpdatedTask } from '../DTO/responses.dto';
 
@@ -17,7 +17,7 @@ export class CreateTaskService {
 
     if (!assignee) throw new BadRequestException(`Assignee ${assignee_email} not found`);
 
-    const newTaskData: CreateTaskRepository = {
+    const newTaskData: CreateTaskRepositoryDTO = {
       ...data,
       due_date: formatDateToDbType(data.due_date),
       assignee,

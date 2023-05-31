@@ -1,4 +1,17 @@
-import { Body, Controller, Delete, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
+import { ok } from './../../../helpers/http/http-responses-helpers';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Request,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard';
 import { Roles, Strategy } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
@@ -32,11 +45,16 @@ export class TaskController {
   @UseGuards(LoginGuard, RoleGuard)
   @Roles('admin', 'manager')
   @Put(':uuid')
-  async update(
-    @Param() params: FindOneDTO,
-    @Body() data: Partial<UpdateTaskDTO>,
-  ): Promise<HttpResponse> {
+  async update(@Param() params: FindOneDTO, @Body() data: UpdateTaskDTO): Promise<HttpResponse> {
     const { uuid } = params;
     return updated(await this.taskService.update(uuid, data));
+  }
+
+  @UseGuards(LoginGuard)
+  @Get(':uuid')
+  @UseInterceptors(ClassSerializerInterceptor)
+  async read(@Param() params: FindOneDTO): Promise<HttpResponse> {
+    const { uuid } = params;
+    return ok(await this.taskService.read(uuid));
   }
 }

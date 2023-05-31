@@ -12,6 +12,8 @@ import {
 import { Department } from '../../departments/entities/department.entity';
 import { Role } from './roles.entity';
 import { Task } from 'src/modules/task/entities/task.entity';
+import { Exclude, Expose, Transform } from 'class-transformer';
+import { isoToLocale } from 'src/helpers';
 
 @Entity()
 export class Employee {
@@ -25,6 +27,7 @@ export class Employee {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column()
@@ -33,9 +36,11 @@ export class Employee {
   @Column()
   position: string;
 
+  @Transform(({ value }) => isoToLocale(value))
   @UpdateDateColumn()
   updated_at: Date;
 
+  @Transform(({ value }) => isoToLocale(value))
   @CreateDateColumn()
   created_at: Date;
 
@@ -50,6 +55,7 @@ export class Employee {
   })
   roles: Role[];
 
+  @Transform(({ value }) => isoToLocale(value))
   @Column({ nullable: true })
   hire_date: Date;
 

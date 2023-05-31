@@ -3,24 +3,27 @@ import { TaskPriority, TaskStatus } from '../enums';
 import { IsDateDDMMYYYY } from 'src/class-validator/custom-validators';
 
 export class UpdateTaskDTO {
+  @IsOptional()
   @IsString()
   title: string;
 
+  @IsOptional()
   @IsString()
   description: string;
 
-  @IsEmail()
-  assignee_mail: string;
-
-  @IsEnum(TaskStatus, { message: 'Invalid value for status' })
   @IsOptional()
+  @IsEmail()
+  assignee_email: string;
+
+  @IsOptional()
+  @IsEnum(TaskStatus, { message: 'Invalid value for status' })
   status: TaskStatus;
 
+  @IsOptional()
   @IsEnum(TaskPriority, { message: 'Invalid value for priority' })
-  @IsNotEmpty()
   priority: TaskPriority;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDateDDMMYYYY()
   due_date: string;
 

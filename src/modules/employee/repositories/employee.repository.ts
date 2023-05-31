@@ -41,7 +41,6 @@ export class EmployeeRepository {
     id: string,
     updateEmployeeData: Partial<UpdateEmployeeRepositoryDTO>,
   ): Promise<UpdateEmployeeResponse> {
-    console.log(updateEmployeeData);
     try {
       await this.repository
         .createQueryBuilder('employee')
