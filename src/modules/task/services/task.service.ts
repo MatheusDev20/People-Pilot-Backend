@@ -25,6 +25,7 @@ export class TaskService {
 
   async update(id: string, data: Partial<UpdateTaskDTO>): Promise<UpdatedTask> {
     const task = await this.find('id', id);
+
     if (!task) throw new NotFoundException('Task not found');
 
     const updatedData = await this.checkPropertiyes(data);

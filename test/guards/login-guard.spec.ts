@@ -97,7 +97,6 @@ describe('Login Guard', () => {
     try {
       await guard.canActivate(ctx);
     } catch (e) {
-      console.log(e);
       expect(e).toBeInstanceOf(UnauthorizedException);
     }
   });

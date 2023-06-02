@@ -74,7 +74,10 @@ export class EmployeeRepository {
    Find methods
    */
 
-  async find(options: FindOneOptions<Employee>): Promise<Employee> {
+  async find(options: FindOneOptions<Employee>, pushRelations = ''): Promise<Employee> {
+    if (pushRelations)
+      options = { ...options, ...{ relations: { assignee_tasks: true, created_tasks: true } } };
+
     return await this.repository.findOne(options);
   }
 

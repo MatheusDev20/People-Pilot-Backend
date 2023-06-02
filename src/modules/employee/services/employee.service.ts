@@ -67,4 +67,8 @@ export class EmployeeService {
     if (!(await this.find('id', id))) throw new NotFoundException('Employee not found');
     return await this.employeeRepository.delete(id);
   }
+
+  async getDetails(id: string): Promise<Employee> {
+    return await this.employeeRepository.find({ where: { id } }, 'pushRelations');
+  }
 }

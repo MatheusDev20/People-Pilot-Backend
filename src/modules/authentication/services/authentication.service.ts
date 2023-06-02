@@ -22,7 +22,6 @@ export class AuthenticationService implements Authentication {
     if (!findUser) throw new NotFoundException(NotFoundEmail);
 
     const { id, name } = findUser;
-
     if (await this.hashService.compare(password, findUser.password)) {
       this.logger.generateJwtLog(id);
       const jwtData = await this.jwtManager.generate({
