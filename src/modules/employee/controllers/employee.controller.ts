@@ -68,10 +68,7 @@ export class EmployeeController {
   @UseGuards(LoginGuard, RoleGuard)
   @Roles('admin', 'manager', 'simple-user')
   @Get('details/:uuid')
-  async getDetails(
-    @Request() request: Request,
-    @Param() params: FindOneDTO,
-  ): Promise<HttpResponse> {
+  async getDetails(@Param() params: FindOneDTO): Promise<HttpResponse> {
     return ok(await this.employeeService.getDetails(params.uuid));
   }
 
