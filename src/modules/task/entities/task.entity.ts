@@ -8,6 +8,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { TaskPriority, TaskStatus } from '../enums';
+import { isoToLocale } from 'src/helpers';
+import { Transform } from 'class-transformer';
 
 @Entity()
 export class Task {
@@ -41,12 +43,15 @@ export class Task {
   })
   priority: TaskPriority;
 
+  @Transform(({ value }) => isoToLocale(value))
   @CreateDateColumn()
   created_at: Date;
 
+  @Transform(({ value }) => isoToLocale(value))
   @UpdateDateColumn()
   update_at: Date;
 
+  @Transform(({ value }) => isoToLocale(value))
   @Column()
   due_date: Date;
 

@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -8,7 +9,6 @@ import {
   Post,
   Put,
   Query,
-  Request,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -68,6 +68,7 @@ export class EmployeeController {
   @UseGuards(LoginGuard, RoleGuard)
   @Roles('admin', 'manager', 'simple-user')
   @Get('details/:uuid')
+  @UseInterceptors(ClassSerializerInterceptor)
   async getDetails(@Param() params: FindOneDTO): Promise<HttpResponse> {
     return ok(await this.employeeService.getDetails(params.uuid));
   }

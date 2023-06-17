@@ -7,10 +7,6 @@
     Cache
     Rate Limit (429)
 
-
-### Unit Tests.
-    Finish Write Unit tests for the whole Authentication Module
-
 ### Tasks Module.
     Finish the CRUD operations for tasks module ( Edit Task and Read Tasks )
 

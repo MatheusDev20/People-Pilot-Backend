@@ -11,6 +11,7 @@ export class MySQLDBConfigService implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
     this.logger.log(`Connecting to the Database ${this.configService.get<string>('DB_NAME')}`);
     const entities = this.configService.get<string>('DB_ENTITIES');
+
     try {
       const options: TypeOrmModuleOptions = {
         type: 'mysql',

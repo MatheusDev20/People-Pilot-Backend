@@ -12,7 +12,7 @@ import {
 import { Department } from '../../departments/entities/department.entity';
 import { Role } from './roles.entity';
 import { Task } from 'src/modules/task/entities/task.entity';
-import { Exclude, Expose, Transform } from 'class-transformer';
+import { Exclude, Transform } from 'class-transformer';
 import { isoToLocale } from 'src/helpers';
 
 @Entity()

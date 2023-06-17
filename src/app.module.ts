@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { EmployeeModule } from './modules/employee/employee.module';
 import { DepartmentsModule } from './modules/departments/departments.module';
-import { MySQLDBConfigService } from './config/MysqlConfig.service';
+import { MySQLDBConfigService } from './config/db/MysqlConfig.service';
 import { APP_FILTER } from '@nestjs/core';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { TaskModule } from './modules/task/task.module';
