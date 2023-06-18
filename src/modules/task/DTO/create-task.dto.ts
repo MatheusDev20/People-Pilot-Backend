@@ -1,6 +1,6 @@
 import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 import { TaskPriority, TaskStatus } from '../enums';
-import { IsDateDDMMYYYY } from 'src/class-validator/custom-validators';
+import { IsDateYYYYMMDD } from 'src/class-validator/dates-validators';
 
 export class CreateTaskDTO {
   @IsNotEmpty()
@@ -27,11 +27,11 @@ export class CreateTaskDTO {
   priority: TaskPriority;
 
   @IsNotEmpty()
-  @IsDateDDMMYYYY()
+  @IsDateYYYYMMDD()
   due_date: string;
 
   @IsOptional()
-  @IsDateDDMMYYYY()
+  @IsDateYYYYMMDD()
   completion_date: string;
 
   @IsOptional()

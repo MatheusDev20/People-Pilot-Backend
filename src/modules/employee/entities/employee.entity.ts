@@ -33,14 +33,20 @@ export class Employee {
   @Column()
   phone: string;
 
+  @Column({ type: 'date', nullable: true })
+  birthDate: string;
+
+  @Column({ type: 'date', nullable: true })
+  hire_date: string;
+
   @Column()
   position: string;
 
-  @Transform(({ value }) => isoToLocale(value))
+  @Transform(({ value }) => isoToLocale(value, 'en-US'))
   @UpdateDateColumn()
   updated_at: Date;
 
-  @Transform(({ value }) => isoToLocale(value))
+  @Transform(({ value }) => isoToLocale(value, 'en-US'))
   @CreateDateColumn()
   created_at: Date;
 
@@ -54,10 +60,6 @@ export class Employee {
     inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
   })
   roles: Role[];
-
-  @Transform(({ value }) => isoToLocale(value))
-  @Column({ nullable: true })
-  hire_date: Date;
 
   @Column({ nullable: true })
   avatar: string;

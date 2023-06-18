@@ -1,12 +1,5 @@
-import {
-  IsDateString,
-  IsEmail,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsDateYYYYMMDD } from 'src/class-validator/dates-validators';
 
 export class CreateEmployeeDTO {
   @IsNotEmpty()
@@ -41,10 +34,14 @@ export class CreateEmployeeDTO {
   position: string;
 
   @IsNotEmpty()
-  @IsDateString()
+  @IsDateYYYYMMDD()
   hire_date: string;
 
   @IsNotEmpty()
   @MaxLength(21)
   roles: string;
+
+  @IsNotEmpty()
+  @IsDateYYYYMMDD()
+  birthDate: string;
 }

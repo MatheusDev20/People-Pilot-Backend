@@ -7,7 +7,7 @@ export type CreateTaskRepositoryDTO = {
   assignee: Employee;
   status: TaskStatus;
   priority: TaskPriority;
-  due_date: Date;
+  due_date: string;
   created_by: Employee;
 };
 
@@ -17,5 +17,5 @@ export type UpdateTaskRepositoryDTO = {
   assignee: Employee;
   status: TaskStatus;
   priority: TaskPriority;
-  due_date: Date;
+  due_date: string;
 };

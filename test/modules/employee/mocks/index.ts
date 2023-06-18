@@ -14,6 +14,7 @@ export const makeFakeEmployee = (): CreateEmployeeDTO => {
   return {
     name: 'fake-input',
     departmentName: 'fake-department-name',
+    birthDate: '1999-09-09',
     email: 'fake-email',
     hire_date: 'fake-hire-date',
     password: 'fake-password',
