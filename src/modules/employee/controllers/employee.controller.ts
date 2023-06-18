@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -8,7 +9,6 @@ import {
   Post,
   Put,
   Query,
-  Request,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -22,11 +22,11 @@ import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard'
 import { Roles, Strategy } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
 import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
-import { FindOneDTO } from '../DTOs/find-one.dto';
+import { FindOneDTO } from '../../../class-validator/find-one.dto';
 import { CreateEmployeeService } from '../services/create-employee.service';
 import { UploadFileService } from 'src/modules/storage/upload/upload-file';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { pipeInstance } from '../validations/file-validations';
+import { pipeInstance } from '../../storage/file-validations';
 import { AvatarProfile } from 'src/@types';
 
 @Strategy('any')
@@ -61,15 +61,16 @@ export class EmployeeController {
 
   @Post()
   async save(@Body() data: CreateEmployeeDTO): Promise<HttpResponse> {
-    const { id } = await this.createService.createEmployee(data);
+    const { id } = await this.createService.execute(data);
     return created({ id });
   }
 
   @UseGuards(LoginGuard, RoleGuard)
   @Roles('admin', 'manager', 'simple-user')
-  @Get('details')
-  async getDetails(@Request() request: Request): Promise<HttpResponse> {
-    return ok(`Employee Logged ${request['user'].id}`);
+  @Get('details/:uuid')
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getDetails(@Param() params: FindOneDTO): Promise<HttpResponse> {
+    return ok(await this.employeeService.getDetails(params.uuid));
   }
 
   @UseGuards(LoginGuard, RoleGuard)
@@ -80,7 +81,7 @@ export class EmployeeController {
     @Body() data: Partial<UpdateEmployeeDTO>,
   ): Promise<HttpResponse> {
     const { uuid } = params;
-    const { id } = await this.employeeService.updateEmployee(uuid, data);
+    const { id } = await this.employeeService.update(uuid, data);
     return updated({ id });
   }
 
@@ -103,7 +104,7 @@ export class EmployeeController {
   ): Promise<HttpResponse> {
     const { uuid } = params;
     const fileUrl = await this.uploadService.uploadSingleFile(file, 'employee_avatar');
-    const updatedEmployee = await this.employeeService.updateEmployee(uuid, { avatar: fileUrl });
+    const updatedEmployee = await this.employeeService.update(uuid, { avatar: fileUrl });
     return updated(updatedEmployee);
   }
 }

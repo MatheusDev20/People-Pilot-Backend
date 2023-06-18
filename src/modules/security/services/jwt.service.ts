@@ -12,7 +12,7 @@ export class JwtServiceManager implements JwtManager {
     @Inject('JWTConfigService') private jwtConfig: JwtConfigService,
   ) {}
 
-  async generate(payload: CreateJwtData): Promise<JwtData> {
+  async generate(payload: CreateJwtData): Promise<Omit<JwtData, 'user'>> {
     const jwtOptions = this.jwtConfig.getJwtOptions();
     const access_token = await this.jwtService.signAsync(payload, {
       secret: jwtOptions.secret,

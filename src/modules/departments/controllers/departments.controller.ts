@@ -27,7 +27,7 @@ export class DepartmentsController {
   @Get(':id')
   @Roles('admin', 'manager', 'simple-user')
   async getDepartmentByID(@Param('id', ParseUUIDPipe) uuid: string) {
-    return ok(await this.service.getDepartmentById(uuid));
+    return ok(await this.service.find('id', uuid));
   }
 
   @Post()

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { LoginDTO } from '../DTOs/login-controller.dto';
@@ -10,9 +11,11 @@ export class AuthenticationController {
   constructor(@Inject('Authentication') private service: Authentication, private utils: Utils) {}
   @Post('/login')
   async signIn(@Res({ passthrough: true }) response: Response, @Body() loginData: LoginDTO) {
-    const { access_token } = await this.service.signIn(loginData);
+    const { access_token, user } = await this.service.login(loginData);
     this.utils.setCookies(response, { access_token });
-    // TODO: Better response to auth
-    return authenticated({ message: 'ok' });
+    // TODO: Make this better
+    const { password, ...sendUser } = user;
+
+    return authenticated({ user: sendUser });
   }
 }

@@ -10,8 +10,9 @@ import { LoggerModule } from 'src/modules/logger/logger.module';
 import { CreateJwtData } from 'src/modules/security/DTOs/jwt/jwt-payload';
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
+import { makeFakeUser } from 'test/modules/authentication/mocks';
 
-const jwtMockData = { access_token: 'any_token', expiration: '1h' };
+const jwtMockData = { access_token: 'any_token', expiration: '1h', user: makeFakeUser() };
 const jwtMockPayload = { id: 'claim_user_id' };
 
 const makeGenericContext = (cookies: object, ip: string, headers: object) => {
@@ -96,7 +97,6 @@ describe('Login Guard', () => {
     try {
       await guard.canActivate(ctx);
     } catch (e) {
-      console.log(e);
       expect(e).toBeInstanceOf(UnauthorizedException);
     }
   });

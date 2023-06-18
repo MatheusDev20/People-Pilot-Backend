@@ -44,7 +44,6 @@ export class S3Service implements StorageManager {
       await this.client.send(command);
       this.customLogger.log(`File ${originalname} Uploaded to ${process.env.BUCKET_NAME}`);
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException('Internal Server Error');
     } finally {
       return new Promise((resolve) => resolve(`${process.env.BUCKET_URL}${s3Path}`));
