@@ -3,7 +3,6 @@ import { CreateTaskDTO } from '../DTO';
 import { TaskRepository } from '../repositories/task.repository';
 import { EmployeeService } from 'src/modules/employee/services/employee.service';
 import { CreateTaskRepositoryDTO } from '../repositories/DTO';
-import { formatDateToDbType } from 'src/helpers';
 import { UpdatedTask } from '../DTO/responses.dto';
 
 @Injectable()
@@ -19,7 +18,6 @@ export class CreateTaskService {
 
     const newTaskData: CreateTaskRepositoryDTO = {
       ...data,
-      due_date: formatDateToDbType(data.due_date),
       assignee,
       created_by: creator,
     };

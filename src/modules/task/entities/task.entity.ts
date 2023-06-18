@@ -43,18 +43,17 @@ export class Task {
   })
   priority: TaskPriority;
 
-  @Transform(({ value }) => isoToLocale(value))
+  @Transform(({ value }) => isoToLocale(value, 'en-US'))
   @CreateDateColumn()
   created_at: Date;
 
-  @Transform(({ value }) => isoToLocale(value))
+  @Transform(({ value }) => isoToLocale(value, 'en-US'))
   @UpdateDateColumn()
   update_at: Date;
 
-  @Transform(({ value }) => isoToLocale(value))
-  @Column()
-  due_date: Date;
+  @Column({ type: 'date', nullable: true })
+  due_date: string;
 
-  @Column({ default: null })
-  completion_date: Date;
+  @Column({ type: 'date', default: null })
+  completion_date: string;
 }

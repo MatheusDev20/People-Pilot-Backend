@@ -7,7 +7,6 @@ import { Task } from '../entities/task.entity';
 import { FindOptionsWhere } from 'typeorm';
 import { ValidColumn } from 'src/@types';
 import { UpdateTaskRepositoryDTO } from '../repositories/DTO';
-import { formatDateToDbType } from 'src/helpers';
 
 @Injectable()
 export class TaskService {
@@ -52,9 +51,6 @@ export class TaskService {
             const assignee = await this.employeeService.find('email', value as string);
             if (!assignee) throw new NotFoundException('Assignee destiny not found');
             return ['assignee', assignee];
-          case 'due_date':
-            return ['due_date', formatDateToDbType(value as string)];
-
           default:
             return [key, value];
         }
