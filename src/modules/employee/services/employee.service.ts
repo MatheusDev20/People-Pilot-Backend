@@ -15,7 +15,6 @@ export class EmployeeService {
   constructor(
     private departmentService: DepartmentsService,
     private employeeRepository: EmployeeRepository,
-    @Inject('HashingService') private hashService: Hashing,
   ) {}
 
   async find(property: ValidColumn<Employee>, value: string) {
@@ -41,26 +40,9 @@ export class EmployeeService {
 
   async update(id: string, data: Partial<UpdateEmployeeDTO>): Promise<UpdateEmployeeResponse> {
     if (!(await this.find('id', id))) throw new NotFoundException(`Employee ${id} not found`);
-    const { email, departmentName } = data;
+    const updatedData = await this.checkPropertiyes(data);
 
-    // Validar se você vai atualizar pra um Email já existente.
-    if (email && (await this.find('email', email))) {
-      throw new BadRequestException(RegisteredEmail);
-    }
-    // Validar se você vai atualizar para um departamento não existente.
-    if (departmentName && !(await this.departmentService.find('name', departmentName))) {
-      throw new NotFoundException(`Departament ${departmentName} not found`);
-    }
-
-    delete data.departmentName;
-
-    const newEmployeeData: Partial<UpdateEmployeeRepositoryDTO> = {
-      ...data,
-    };
-    if (departmentName)
-      newEmployeeData.department = await this.departmentService.find('name', departmentName);
-
-    return await this.employeeRepository.updateEmployee(id, newEmployeeData);
+    return await this.employeeRepository.updateEmployee(id, updatedData);
   }
 
   async delete(id: string): Promise<DeleteEmployeeResponse> {
@@ -71,4 +53,33 @@ export class EmployeeService {
   async getDetails(id: string): Promise<Employee> {
     return await this.employeeRepository.find({ where: { id } }, 'pushRelations');
   }
+
+  /**
+   *
+   * @param propertyes
+   * @returns An object mutated to update only the required values of specifc keys
+   */
+  private checkPropertiyes = async (
+    propertyes: Partial<UpdateEmployeeDTO>,
+  ): Promise<Partial<UpdateEmployeeRepositoryDTO>> => {
+    const entries = await Promise.all(
+      Object.entries(propertyes).map(async ([key, value]) => {
+        switch (key as keyof UpdateEmployeeDTO) {
+          case 'email':
+            const existedEmail = await this.find('email', value);
+            if (existedEmail) throw new BadRequestException('Email already registered');
+            return ['email', value];
+
+          case 'departmentName':
+            const department = await this.departmentService.find('name', value);
+            if (!department) throw new NotFoundException('Department not found');
+            return ['department', department];
+
+          default:
+            return [key, value];
+        }
+      }),
+    );
+    return Object.fromEntries(entries);
+  };
 }

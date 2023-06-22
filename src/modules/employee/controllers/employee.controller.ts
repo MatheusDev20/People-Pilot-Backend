@@ -46,7 +46,6 @@ export class EmployeeController {
   @Get()
   async getByDepartament(@Query() queryParams: GetEmployeeByDepartmentDTO): Promise<HttpResponse> {
     const { name, page, limit } = queryParams;
-
     const pagination = page ?? DEFAULT_APP_PAGINATION;
     const appLimit = limit ?? DEFAULT_APP_LIMIT;
 
