@@ -13,7 +13,6 @@ export class AuthenticationController {
   async signIn(@Res({ passthrough: true }) response: Response, @Body() loginData: LoginDTO) {
     const { access_token, user } = await this.service.login(loginData);
     this.utils.setCookies(response, { access_token });
-    // TODO: Make this better
     const { password, ...sendUser } = user;
 
     return authenticated({ user: sendUser });

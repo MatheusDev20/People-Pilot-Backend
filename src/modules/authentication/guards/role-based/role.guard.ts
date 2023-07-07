@@ -24,20 +24,21 @@ export class RoleGuard implements CanActivate {
         return this.matchAll(requiredRoles, roles);
     }
   }
-  async getUserRoles(userId: string): Promise<UserRoles> {
+  private async getUserRoles(userId: string): Promise<UserRoles> {
     return await this.permissionsService.getEmployeeRoles(userId);
   }
 
-  matchAny = (requiredRoles: string[], userRoles: string[]): boolean => {
+  private matchAny = (requiredRoles: string[], userRoles: string[]): boolean => {
     for (const role of userRoles) {
       if (requiredRoles.includes(role)) return true;
     }
     return false;
   };
 
-  matchAll = (requiredRoles: string[], userRoles: string[]): boolean => {
+  private matchAll = (requiredRoles: string[], userRoles: string[]): boolean => {
     return requiredRoles.every((role) => userRoles.includes(role));
   };
 
-  getStrategy = (ctx: ExecutionContext) => this.reflector.get<string>('strategy', ctx.getClass());
+  private getStrategy = (ctx: ExecutionContext) =>
+    this.reflector.get<string>('strategy', ctx.getClass());
 }

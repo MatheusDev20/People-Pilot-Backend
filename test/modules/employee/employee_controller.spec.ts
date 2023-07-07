@@ -112,10 +112,11 @@ describe('Employee Controller', () => {
     const params: FindOneDTO = { uuid };
     await sut.getDetails(params);
 
-    expect.assertions(3);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith({ uuid });
     expect(serviceSpy).toHaveBeenCalled();
+
+    expect.assertions(3);
   });
 
   it('Should call update with the right arguments', async () => {
@@ -126,10 +127,11 @@ describe('Employee Controller', () => {
     const fakeUpdateData = makeFakeupdateEmployee();
     await sut.update(params, fakeUpdateData);
 
-    expect.assertions(3);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(params, fakeUpdateData);
     expect(serviceSpy).toHaveBeenCalled();
+
+    expect.assertions(3);
   });
 
   it('Should call delete with the right arguments', async () => {
@@ -139,9 +141,10 @@ describe('Employee Controller', () => {
     const params: FindOneDTO = { uuid };
     await sut.delete(params);
 
-    expect.assertions(3);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith({ uuid });
     expect(serviceSpy).toHaveBeenCalled();
+
+    expect.assertions(3);
   });
 });
