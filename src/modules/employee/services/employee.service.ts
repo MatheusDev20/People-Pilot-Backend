@@ -8,7 +8,6 @@ import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
 import { UpdateEmployeeRepositoryDTO } from '../repositories/DTOs/update-employee.dto';
 import { FindOptionsWhere } from 'typeorm';
 import { ValidColumn } from 'src/@types';
-import { RegisteredEmail } from 'src/errors/messages';
 
 @Injectable()
 export class EmployeeService {

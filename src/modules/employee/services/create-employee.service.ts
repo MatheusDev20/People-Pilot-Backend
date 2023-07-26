@@ -6,24 +6,29 @@ import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
 import { EmployeeRepository } from '../repositories/employee.repository';
 import { CreateEmployeeResponse } from '../DTOs/responses.dto';
 import { Utils } from '../utils/employee.utils';
+import { EmployeeService } from './employee.service';
 
 @Injectable()
 export class CreateEmployeeService {
   constructor(
     private departmentService: DepartmentsService,
+    private employeeService: EmployeeService,
     private employeeRepository: EmployeeRepository,
     private utils: Utils,
     @Inject('HashingService') private hashService: Hashing,
   ) {}
 
   async execute(data: CreateEmployeeDTO): Promise<CreateEmployeeResponse> {
-    const { departmentName, password, roles } = data;
+    const { departmentName, ...newUserData } = data;
+    const existedUser = await this.employeeService.find('email', newUserData.email);
+    if (existedUser) throw new BadRequestException('Email Already in use');
     /**
      * If the employee is a manager, attach to a default department (Managers)
      */
-    if (await this.utils.isManager(roles)) {
+    if (await this.utils.isManager(newUserData.roles)) {
       return await this.createManager(data);
     }
+
     /**
      * If the employee is not a manager you have to specify the department
      */
@@ -32,12 +37,11 @@ export class CreateEmployeeService {
     const selectedDepartment = await this.departmentService.find('name', departmentName);
     if (!selectedDepartment) throw new NotFoundException(`Departament ${departmentName} not found`);
 
-    delete data.departmentName;
     const newEmployeeData: CreateEmployeeRepositoryDTO = {
-      ...data,
-      password: await this.hashService.hash(password),
+      ...newUserData,
+      password: await this.hashService.hash(newUserData.password),
       department: selectedDepartment,
-      roles: await this.utils.pushRoles(roles),
+      roles: await this.utils.pushRoles(newUserData.roles),
     };
 
     return await this.employeeRepository.save(newEmployeeData);
