@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, Logger } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { UserRoles } from '../../DTOs/user-roles';
@@ -16,6 +16,7 @@ export class RoleGuard implements CanActivate {
     if (!requiredRoles) return true;
     const request: Request = context.switchToHttp().getRequest();
     const { roles } = await this.getUserRoles(request['user'].id);
+
     switch (strategy) {
       case 'any':
         return this.matchAny(requiredRoles, roles);
@@ -24,21 +25,21 @@ export class RoleGuard implements CanActivate {
         return this.matchAll(requiredRoles, roles);
     }
   }
-  private async getUserRoles(userId: string): Promise<UserRoles> {
+  public async getUserRoles(userId: string): Promise<UserRoles> {
     return await this.permissionsService.getEmployeeRoles(userId);
   }
 
-  private matchAny = (requiredRoles: string[], userRoles: string[]): boolean => {
+  public matchAny = (requiredRoles: string[], userRoles: string[]): boolean => {
     for (const role of userRoles) {
       if (requiredRoles.includes(role)) return true;
     }
     return false;
   };
 
-  private matchAll = (requiredRoles: string[], userRoles: string[]): boolean => {
+  public matchAll = (requiredRoles: string[], userRoles: string[]): boolean => {
     return requiredRoles.every((role) => userRoles.includes(role));
   };
 
-  private getStrategy = (ctx: ExecutionContext) =>
+  public getStrategy = (ctx: ExecutionContext) =>
     this.reflector.get<string>('strategy', ctx.getClass());
 }

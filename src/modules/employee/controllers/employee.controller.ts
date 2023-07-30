@@ -65,7 +65,7 @@ export class EmployeeController {
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('admin', 'manager', 'simple-user')
+  @Roles('admin', 'manager', 'employee')
   @Get('details/:uuid')
   @UseInterceptors(ClassSerializerInterceptor)
   async getDetails(@Param() params: FindOneDTO): Promise<HttpResponse> {
@@ -85,7 +85,7 @@ export class EmployeeController {
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('admin')
+  @Roles('admin', 'manager')
   @Delete(':uuid')
   async delete(@Param() params: FindOneDTO): Promise<HttpResponse> {
     const { uuid } = params;

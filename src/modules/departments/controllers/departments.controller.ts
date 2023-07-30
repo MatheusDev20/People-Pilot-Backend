@@ -25,7 +25,7 @@ export class DepartmentsController {
   constructor(private service: DepartmentsService) {}
 
   @Get(':id')
-  @Roles('admin', 'manager', 'simple-user')
+  @Roles('admin', 'manager', 'employee')
   async getDepartmentByID(@Param('id', ParseUUIDPipe) uuid: string) {
     return ok(await this.service.find('id', uuid));
   }
