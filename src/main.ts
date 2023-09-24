@@ -12,6 +12,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter()); // Handles all exceptions throw by the App.
   app.use(cookieParser()); // cookie parser middleware
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  });
   await app.listen(process.env.API_PORT);
 }
 

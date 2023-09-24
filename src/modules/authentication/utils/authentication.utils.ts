@@ -10,6 +10,7 @@ export class Utils {
     currResponse.cookie('access_token', access_token, {
       httpOnly: true,
       secure: false,
+      sameSite: 'lax',
       expires: COOKIE_EXPIRATION,
     });
   }
