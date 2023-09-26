@@ -1,5 +1,4 @@
-import { Hashing } from '../../security/interfaces/hashing';
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { DepartmentsService } from '../../departments/services/department.service';
 import { Employee } from '../entities/employee.entity';
 import { EmployeeRepository } from '../repositories/employee.repository';

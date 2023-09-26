@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -41,6 +42,15 @@ export class EmployeeController {
   /**
    * List of all employes by one department paginated
    */
+
+  @UseGuards(LoginGuard)
+  @Get('me')
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getMe(@Req() request): Promise<HttpResponse> {
+    const { id } = request.user;
+    const me = await this.employeeService.find('id', id);
+    return ok(me);
+  }
 
   @UseGuards(LoginGuard)
   @Get()

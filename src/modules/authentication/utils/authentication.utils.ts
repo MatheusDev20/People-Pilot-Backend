@@ -5,7 +5,7 @@ import { COOKIE_EXPIRATION } from 'src/constants/constants';
 
 @Injectable()
 export class Utils {
-  setCookies(currResponse: Response, cookieData: CookieData) {
+  setCookies(currResponse: Response, cookieData: CookieData): void {
     const { access_token } = cookieData;
     currResponse.cookie('access_token', access_token, {
       httpOnly: true,

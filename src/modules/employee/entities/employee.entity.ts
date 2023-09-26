@@ -42,11 +42,11 @@ export class Employee {
   @Column()
   position: string;
 
-  @Transform(({ value }) => isoToLocale(value, 'en-US'))
+  @Transform(({ value }) => isoToLocale(value, 'pt-BR'))
   @UpdateDateColumn()
   updated_at: Date;
 
-  @Transform(({ value }) => isoToLocale(value, 'en-US'))
+  @Transform(({ value }) => isoToLocale(value, 'pt-BR'))
   @CreateDateColumn()
   created_at: Date;
 
