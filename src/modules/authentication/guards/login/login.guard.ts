@@ -15,7 +15,6 @@ export class LoginGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
-    console.log('Cookies from the Browser', request.cookies);
     if (this.areCookiesExpired(request.cookies)) {
       this.logger.expiredCookie(request.ip, request['headers']['user-agent']);
       throw new UnauthorizedException('Expired Cookie');

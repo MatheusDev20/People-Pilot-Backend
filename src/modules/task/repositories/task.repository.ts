@@ -13,9 +13,8 @@ export class TaskRepository {
     private logger: CustomLogger,
   ) {}
 
-  async findBy(options: FindOneOptions<Task>, pushRelations = ''): Promise<Task> {
-    if (pushRelations)
-      options = { ...options, ...{ relations: { assignee: true, created_by: true } } };
+  async findBy(options: FindOneOptions<Task>, pushRelations = null): Promise<Task> {
+    if (pushRelations) options = { ...options, ...{ relations: pushRelations } };
 
     return this.repository.findOne(options);
   }

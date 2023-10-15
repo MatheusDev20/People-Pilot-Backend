@@ -14,6 +14,7 @@ export type AvatarProfile = Express.Multer.File;
 
 export type Authentication = {
   login(data: LoginDTO): Promise<JwtData>;
+  refresh(refreshToken: string): Promise<JwtData>;
 };
 
 export type LoggerFunctions = {

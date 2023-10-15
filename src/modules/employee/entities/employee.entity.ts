@@ -6,6 +6,7 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -14,6 +15,7 @@ import { Role } from './roles.entity';
 import { Task } from 'src/modules/task/entities/task.entity';
 import { Exclude, Transform } from 'class-transformer';
 import { isoToLocale } from 'src/helpers';
+import { RefreshTokens } from './refresh-token.entity';
 
 @Entity()
 export class Employee {
@@ -69,4 +71,10 @@ export class Employee {
 
   @OneToMany(() => Task, (task) => task.created_by)
   created_tasks: Task[];
+
+  @Column()
+  status: string;
+
+  @OneToOne(() => RefreshTokens, (refreshToken) => refreshToken.userId)
+  refreshToken: RefreshTokens;
 }

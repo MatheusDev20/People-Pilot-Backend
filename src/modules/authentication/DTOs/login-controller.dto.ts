@@ -9,3 +9,9 @@ export class LoginDTO {
   @MinLength(8)
   password: string;
 }
+
+export class RefreshPayload {
+  @IsNotEmpty()
+  // @IS_JWT()
+  refreshToken: string;
+}

@@ -15,10 +15,12 @@ import { LoggerModule } from '../logger/logger.module';
 import { CreateEmployeeService } from './services/create-employee.service';
 import { StorageModule } from '../storage/storage.module';
 import { Task } from '../task/entities/task.entity';
+import { RefreshTokens } from './entities/refresh-token.entity';
+import { RefreshTokenRepository } from './repositories/refresh-token.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Employee, Department, Role, Task]),
+    TypeOrmModule.forFeature([Employee, Department, Role, Task, RefreshTokens]),
     SecurityModule,
     DepartmentsModule,
     LoggerModule,
@@ -31,6 +33,7 @@ import { Task } from '../task/entities/task.entity';
     EmployeePermissionService,
     EmployeeRepository,
     RolesRepository,
+    RefreshTokenRepository,
     Utils,
   ],
   exports: [EmployeeService, EmployeePermissionService, EmployeeRepository],

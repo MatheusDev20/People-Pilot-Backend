@@ -16,6 +16,7 @@ export class AuthenticationService implements Authentication {
     @Inject('HashingService') private hashService: Hashing,
     @Inject('JwtManager') private jwtManager: JwtManager,
   ) {}
+
   async login(data: LoginDTO): Promise<JwtData> {
     const { email, password } = data;
     const findUser = await this.employeeService.find('email', email);
@@ -28,9 +29,41 @@ export class AuthenticationService implements Authentication {
         username: name,
         sub: String(id),
       });
-      return { ...jwtData, user: findUser };
+
+      const { refreshToken } = jwtData;
+
+      await this.employeeService.storeRefreshToken(findUser, refreshToken);
+
+      return { ...jwtData, user: findUser, refreshToken };
     }
 
     throw new UnauthorizedException(InvalidCredentials);
+  }
+
+  async refresh(token: string): Promise<JwtData> {
+    try {
+      await this.jwtManager.verifyToken(token, { refresh: true });
+      const existedToken = await this.employeeService.getRefreshToken(token);
+      if (!existedToken) {
+        throw new UnauthorizedException('Unauthorized Request');
+      }
+
+      const user = existedToken.userId;
+      console.log(user);
+
+      const jwtData = await this.jwtManager.generate({
+        username: user.name,
+        sub: String(user.id),
+      });
+
+      const { refreshToken } = jwtData;
+
+      await this.employeeService.storeRefreshToken(user, refreshToken);
+
+      return { ...jwtData, user, refreshToken };
+    } catch (err) {
+      console.log(err);
+      throw new UnauthorizedException('Unauthorized Request');
+    }
   }
 }

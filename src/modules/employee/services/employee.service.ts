@@ -4,15 +4,18 @@ import { Employee } from '../entities/employee.entity';
 import { EmployeeRepository } from '../repositories/employee.repository';
 import { DeleteEmployeeResponse, UpdateEmployeeResponse } from '../DTOs/responses.dto';
 import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
-import { UpdateEmployeeRepositoryDTO } from '../repositories/DTOs/update-employee.dto';
 import { FindOptionsWhere } from 'typeorm';
 import { ValidColumn } from 'src/@types';
+import { RefreshTokenRepository } from '../repositories/refresh-token.repository';
+import { UpdateEmployeeRepositoryDTO } from '../repositories/DTOs/employe.dto';
+import { RefreshTokens } from '../entities/refresh-token.entity';
 
 @Injectable()
 export class EmployeeService {
   constructor(
     private departmentService: DepartmentsService,
     private employeeRepository: EmployeeRepository,
+    private refreshTokenRepository: RefreshTokenRepository,
   ) {}
 
   async find(property: ValidColumn<Employee>, value: string) {
@@ -49,7 +52,10 @@ export class EmployeeService {
   }
 
   async getDetails(id: string): Promise<Employee> {
-    return await this.employeeRepository.find({ where: { id } }, 'pushRelations');
+    return await this.employeeRepository.find(
+      { where: { id } },
+      { assignee_tasks: true, created_tasks: true },
+    );
   }
 
   /**
@@ -80,4 +86,27 @@ export class EmployeeService {
     );
     return Object.fromEntries(entries);
   };
+
+  /** Store Refresh token on the Database */
+  async storeRefreshToken(user: Employee, token: string): Promise<void> {
+    const { refreshToken } = await this.employeeRepository.find(
+      { where: { id: user.id } },
+      { refreshToken: true },
+    );
+
+    if (refreshToken) {
+      await this.refreshTokenRepository.save({ ...refreshToken, token });
+      return;
+    }
+
+    await this.refreshTokenRepository.save({ expiration: '7d', token, userId: user });
+  }
+
+  async getRefreshToken(token: string): Promise<RefreshTokens | null> {
+    const refreshToken = await this.refreshTokenRepository.find({
+      where: { token },
+      relations: { userId: true },
+    });
+    return refreshToken;
+  }
 }

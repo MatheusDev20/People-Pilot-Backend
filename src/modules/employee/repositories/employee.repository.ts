@@ -8,9 +8,11 @@ import {
   DeleteEmployeeResponse,
   UpdateEmployeeResponse,
 } from '../DTOs/responses.dto';
-import { CreateEmployeeRepositoryDTO } from './DTOs/create-employee.dto';
-import { GetDtoByDepartment } from './DTOs/get-employee-by-department.dto';
-import { UpdateEmployeeRepositoryDTO } from './DTOs/update-employee.dto';
+import {
+  CreateEmployeeRepositoryDTO,
+  GetDtoByDepartment,
+  UpdateEmployeeRepositoryDTO,
+} from './DTOs/employe.dto';
 
 @Injectable()
 export class EmployeeRepository {
@@ -74,9 +76,8 @@ export class EmployeeRepository {
    Find methods
    */
 
-  async find(options: FindOneOptions<Employee>, pushRelations = ''): Promise<Employee> {
-    if (pushRelations)
-      options = { ...options, ...{ relations: { assignee_tasks: true, created_tasks: true } } };
+  async find(options: FindOneOptions<Employee>, pushRelations = null): Promise<Employee> {
+    if (pushRelations) options = { ...options, ...{ relations: pushRelations } };
 
     return await this.repository.findOne(options);
   }

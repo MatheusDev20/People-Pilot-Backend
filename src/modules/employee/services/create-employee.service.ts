@@ -1,5 +1,4 @@
 import { Hashing } from '../../security/interfaces/hashing';
-import { CreateEmployeeRepositoryDTO } from '../repositories/DTOs/create-employee.dto';
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DepartmentsService } from '../../departments/services/department.service';
 import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
@@ -7,6 +6,7 @@ import { EmployeeRepository } from '../repositories/employee.repository';
 import { CreateEmployeeResponse } from '../DTOs/responses.dto';
 import { Utils } from '../utils/employee.utils';
 import { EmployeeService } from './employee.service';
+import { CreateEmployeeRepositoryDTO } from '../repositories/DTOs/employe.dto';
 
 @Injectable()
 export class CreateEmployeeService {
@@ -42,6 +42,7 @@ export class CreateEmployeeService {
       password: await this.hashService.hash(newUserData.password),
       department: selectedDepartment,
       roles: await this.utils.pushRoles(newUserData.roles),
+      status: 'Active',
     };
 
     return await this.employeeRepository.save(newEmployeeData);
@@ -61,6 +62,7 @@ export class CreateEmployeeService {
       password: await this.hashService.hash(password),
       department: defaultDepartment,
       roles: await this.utils.pushRoles(roles),
+      status: 'Active',
     };
 
     return await this.employeeRepository.save(newEmployeeData);
