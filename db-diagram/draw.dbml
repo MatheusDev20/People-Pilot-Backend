@@ -37,21 +37,32 @@ Table employee_roles {
 }
 
 Table task {
-  id: uuid [pk]
-  title: varchar
-  description: varchar
-  assignee_employee: [ref: > employee.id]
-  status: varchar
-  priority: varchar
-  created_date: timestamp
-  updated_date: timestamp
-  start_date: timestamp
-  due Date: timestamp
-  completion_date: timestamp
-  created_by: [ref: employee.id]
+  id uuid [pk]
+  title varchar
+  description varchar
+  assignee_employee varchar [ref: > employee.id]
+  status varchar
+  priority varchar
+  created_date timestamp
+  updated_date timestamp
+  start_date timestamp
+  due_date timestamp
+  completion_date timestamp
+  created_by varchar [ref: > employee.id]
 }
 
 Table employee_tasks {
-  task_id: [ref: task.id]
-  employee_id:[ref: > employee.id]
+  task_id integer [ref: > task.id]
+  employee_id integer [ref: > employee.id]
 }
+
+Table refresh_tokens {
+  id integer
+  userId integer [ref: > employee.id]
+  token varchar
+  expiration varchar
+}
+
+Ref: "employee"."name" < "employee"."email"
+
+Ref: "employee"."id" < "employee"."name"

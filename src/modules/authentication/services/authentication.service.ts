@@ -49,8 +49,6 @@ export class AuthenticationService implements Authentication {
       }
 
       const user = existedToken.userId;
-      console.log(user);
-
       const jwtData = await this.jwtManager.generate({
         username: user.name,
         sub: String(user.id),
@@ -58,11 +56,11 @@ export class AuthenticationService implements Authentication {
 
       const { refreshToken } = jwtData;
 
+      /* Update the Refresh Token on the DB - Invalidate the old one */
       await this.employeeService.storeRefreshToken(user, refreshToken);
 
       return { ...jwtData, user, refreshToken };
     } catch (err) {
-      console.log(err);
       throw new UnauthorizedException('Unauthorized Request');
     }
   }
