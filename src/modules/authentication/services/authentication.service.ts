@@ -4,7 +4,6 @@ import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@n
 import { Hashing } from 'src/modules/security/interfaces/hashing';
 import { InvalidCredentials, NotFoundEmail } from 'src/errors/messages';
 import { JwtManager } from 'src/modules/security/interfaces/jwt';
-import { CustomLogger } from 'src/modules/logger/services/logger.service';
 import { Authentication } from 'src/@types';
 import { JwtData } from 'src/modules/security/DTOs/jwt/jwt-dto';
 
@@ -12,7 +11,6 @@ import { JwtData } from 'src/modules/security/DTOs/jwt/jwt-dto';
 export class AuthenticationService implements Authentication {
   constructor(
     private employeeService: EmployeeService,
-    private logger: CustomLogger,
     @Inject('HashingService') private hashService: Hashing,
     @Inject('JwtManager') private jwtManager: JwtManager,
   ) {}
@@ -20,18 +18,17 @@ export class AuthenticationService implements Authentication {
   async login(data: LoginDTO): Promise<JwtData> {
     const { email, password } = data;
     const findUser = await this.employeeService.find('email', email);
+
     if (!findUser) throw new NotFoundException(NotFoundEmail);
 
     const { id, name } = findUser;
     if (await this.hashService.compare(password, findUser.password)) {
-      this.logger.generateJwtLog(id);
       const jwtData = await this.jwtManager.generate({
         username: name,
         sub: String(id),
       });
 
       const { refreshToken } = jwtData;
-
       await this.employeeService.storeRefreshToken(findUser, refreshToken);
 
       return { ...jwtData, user: findUser, refreshToken };
@@ -44,7 +41,9 @@ export class AuthenticationService implements Authentication {
     try {
       await this.jwtManager.verifyToken(token, { refresh: true });
       const existedToken = await this.employeeService.getRefreshToken(token);
+
       if (!existedToken) {
+        console.log('claro');
         throw new UnauthorizedException('Unauthorized Request');
       }
 

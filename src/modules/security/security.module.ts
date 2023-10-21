@@ -3,12 +3,14 @@ import { EncryptService } from './services/encrypt.service';
 import { JwtServiceManager } from './services/jwt.service';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtConfigService } from 'src/config/security/jwt.config.service';
+import { LoggerModule } from '../logger/logger.module';
 
 @Module({
   imports: [
     JwtModule.register({
       global: true,
     }),
+    LoggerModule,
   ],
   providers: [
     {

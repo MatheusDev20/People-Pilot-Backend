@@ -18,7 +18,7 @@ export type Authentication = {
 };
 
 export type LoggerFunctions = {
-  generateJwtLog(userId: string): void;
+  generateJwtLog(username: string, expiresIn: string): void;
   expiredCookie(ipAddress: any, userAgent: string): void;
   sucessFullLogin(id: string): void;
   failedAttempt(errMsg: any, ipAddress: any, userAgent: string): void;

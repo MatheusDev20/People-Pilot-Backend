@@ -10,7 +10,7 @@ export class Utils {
       httpOnly: true,
       secure: false,
       // expires: COOKIE_EXPIRATION_NEW,
-      maxAge: 60 * 1000,
+      maxAge: 60 * 1000 * 1000,
     });
 
     currResponse.cookie('refreshToken', cookieData.refreshToken, {

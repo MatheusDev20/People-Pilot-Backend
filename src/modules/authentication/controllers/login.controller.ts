@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Body, Controller, HttpCode, Inject, Post, Res } from '@nestjs/common';
-import { Response } from 'express';
+import { Body, Controller, HttpCode, Inject, Post, Req, Res } from '@nestjs/common';
+import { Response, Request } from 'express';
 import { LoginDTO, RefreshPayload } from '../DTOs/login-controller.dto';
 import { authenticated } from 'src/helpers/http';
 import { Utils } from '../utils/authentication.utils';
@@ -21,13 +21,10 @@ export class AuthenticationController {
 
   @Post('/refresh')
   @HttpCode(200)
-  async refresh(
-    @Res({ passthrough: true }) response: Response,
-    @Body() refreshPayload: RefreshPayload,
-  ) {
-    const { access_token, refreshToken, user } = await this.service.refresh(
-      refreshPayload.refreshToken,
-    );
+  async refresh(@Res({ passthrough: true }) response: Response, @Req() req: Request) {
+    const token = req.cookies['refreshToken'];
+    console.log(token);
+    const { access_token, refreshToken, user } = await this.service.refresh(token);
     this.utils.setCookies(response, { access_token, refreshToken });
     const { password, ...sendUser } = user;
     return authenticated({

@@ -4,12 +4,13 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtData } from '../DTOs/jwt/jwt-dto';
 import { CreateJwtData, JwtPayload } from '../DTOs/jwt/jwt-payload';
 import { JwtConfigService } from 'src/config/security/jwt.config.service';
+import { CustomLogger } from 'src/modules/logger/services/logger.service';
 
 @Injectable()
 export class JwtServiceManager implements JwtManager {
   constructor(
     private jwtService: JwtService,
-
+    private logger: CustomLogger,
     @Inject('JWTConfigService') private jwtConfig: JwtConfigService,
   ) {}
 
@@ -25,6 +26,8 @@ export class JwtServiceManager implements JwtManager {
       expiresIn: jwtOptions.refreshTokenExpiration,
     });
 
+    this.logger.generateJwtLog(payload.username, jwtOptions.expiration);
+
     return {
       access_token,
       refreshToken,
@@ -33,6 +36,7 @@ export class JwtServiceManager implements JwtManager {
   }
 
   async verifyToken(token: string, options?: VerifyOptions): Promise<JwtPayload> {
+    console.log(options);
     const { refresh } = options;
     const jwtOptions = this.jwtConfig.getJwtOptions();
     const payload = await this.jwtService.verifyAsync(token, {
