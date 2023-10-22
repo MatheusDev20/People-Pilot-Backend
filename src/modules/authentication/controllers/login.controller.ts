@@ -23,7 +23,6 @@ export class AuthenticationController {
   @HttpCode(200)
   async refresh(@Res({ passthrough: true }) response: Response, @Req() req: Request) {
     const token = req.cookies['refreshToken'];
-    console.log(token);
     const { access_token, refreshToken, user } = await this.service.refresh(token);
     this.utils.setCookies(response, { access_token, refreshToken });
     const { password, ...sendUser } = user;
