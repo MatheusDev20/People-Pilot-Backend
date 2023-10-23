@@ -26,13 +26,15 @@ export class LoginGuard implements CanActivate {
       throw new UnauthorizedException('Unauthorized Request');
     }
 
+    /* JWT Signature Verifycation */
     try {
       const payload = await this.jwtManager.verifyToken(token, { refresh: false });
       request['user'] = payload;
       this.logger.sucessFullLogin(payload.id);
     } catch (err) {
+      console.log(err);
       this.logger.failedAttempt(err.message, request.ip, request['headers']['user-agent']);
-      throw new UnauthorizedException('Unauthorized Request');
+      throw new UnauthorizedException(err);
     }
 
     return true;
