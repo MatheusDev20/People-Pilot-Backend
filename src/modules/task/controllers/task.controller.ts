@@ -31,7 +31,12 @@ export class TaskController {
   @Roles('admin', 'manager')
   @Post('/')
   async create(@Request() request: Req, @Body() data: CreateTaskDTO): Promise<HttpResponse> {
-    return created(await this.createService.execute({ ...data, createdBy: request['user'].id }));
+    return created(
+      await this.createService.execute({
+        ...data,
+        createdBy: request['user'].id,
+      }),
+    );
   }
 
   @UseGuards(LoginGuard, RoleGuard)

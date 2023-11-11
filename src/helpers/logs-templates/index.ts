@@ -1,1 +1,1 @@
-export * from './unathorized-login';
+export * from "./unathorized-login";

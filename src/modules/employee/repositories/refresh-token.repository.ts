@@ -6,7 +6,10 @@ import { CreateRefreshTokenDTO } from './DTOs/refresh-token.dto';
 
 @Injectable()
 export class RefreshTokenRepository {
-  constructor(@InjectRepository(RefreshTokens) private repository: Repository<RefreshTokens>) {}
+  constructor(
+    @InjectRepository(RefreshTokens)
+    private repository: Repository<RefreshTokens>,
+  ) {}
 
   async save(data: CreateRefreshTokenDTO) {
     this.repository.save(data);

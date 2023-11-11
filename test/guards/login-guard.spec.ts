@@ -64,7 +64,9 @@ describe('Login Guard', () => {
 
   it('Should return false and throws when cookie is expired', async () => {
     const expiredCheckSpy = jest.spyOn(guard, 'areCookiesExpired');
-    const ctx = makeGenericContext({}, 'fake-ip', { 'user-agent': 'fake-user-agent' });
+    const ctx = makeGenericContext({}, 'fake-ip', {
+      'user-agent': 'fake-user-agent',
+    });
     const request: Request = ctx.switchToHttp().getRequest();
     expect.assertions(3);
     await expect(guard.canActivate(ctx)).rejects.toThrow(UnauthorizedException);

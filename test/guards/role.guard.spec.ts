@@ -8,7 +8,7 @@ import { Request } from 'express';
 
 describe('Role Guard', () => {
   const mockEmployeePermissionService = {
-    async getEmployeeRoles(id: string): Promise<UserRoles> {
+    async getEmployeeRoles(): Promise<UserRoles> {
       return new Promise((resolve) => resolve({ roles: ['admin', 'manager'] }));
     },
   };
@@ -28,7 +28,10 @@ describe('Role Guard', () => {
       providers: [
         RoleGuard,
         { provide: Reflector, useValue: mockReflector },
-        { provide: EmployeePermissionService, useValue: mockEmployeePermissionService },
+        {
+          provide: EmployeePermissionService,
+          useValue: mockEmployeePermissionService,
+        },
       ],
     }).compile();
 

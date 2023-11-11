@@ -6,7 +6,10 @@ import { Test } from '@nestjs/testing';
 import * as helpers from '../../src/modules/aws/helpers';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
-const makeFileRequest = (): { file: Express.Multer.File; resource: FileAppResources } => {
+const makeFileRequest = (): {
+  file: Express.Multer.File;
+  resource: FileAppResources;
+} => {
   return {
     file: {
       encoding: 'image/jpg',
@@ -29,7 +32,7 @@ const makeSdkInput = (file: Express.Multer.File, resource: FileAppResources): Pu
     Key: helpers.buildS3Path(file.originalname, resource),
     Body: file.buffer,
     ContentType: file.mimetype,
-    ACL: 'public-read',
+    ACL: 'public-read' as any,
   };
   return new PutObjectCommand(input);
 };

@@ -99,7 +99,11 @@ export class EmployeeService {
       return;
     }
 
-    await this.refreshTokenRepository.save({ expiration: '7d', token, userId: user });
+    await this.refreshTokenRepository.save({
+      expiration: '7d',
+      token,
+      userId: user,
+    });
   }
 
   async getRefreshToken(token: string): Promise<RefreshTokens | null> {

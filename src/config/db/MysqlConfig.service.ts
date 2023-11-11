@@ -7,7 +7,7 @@ import path from 'path';
 @Injectable()
 export class MySQLDBConfigService implements TypeOrmOptionsFactory {
   private logger = new Logger();
-  constructor(private configService: ConfigService) { }
+  constructor(private configService: ConfigService) {}
   createTypeOrmOptions(): TypeOrmModuleOptions {
     const entities = this.configService.get<string>('DB_ENTITIES');
     try {

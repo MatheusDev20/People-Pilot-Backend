@@ -3,12 +3,12 @@ import {
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
-} from 'class-validator';
+} from "class-validator";
 
 @ValidatorConstraint({ async: false })
 export class IsDateYYYYMMDDConstraint implements ValidatorConstraintInterface {
   validate(date: any) {
-    if (typeof date !== 'string') {
+    if (typeof date !== "string") {
       return false;
     }
 
@@ -21,7 +21,7 @@ export class IsDateYYYYMMDDConstraint implements ValidatorConstraintInterface {
   }
 
   defaultMessage() {
-    return 'Date format is not valid';
+    return "Date format is not valid";
   }
 }
 

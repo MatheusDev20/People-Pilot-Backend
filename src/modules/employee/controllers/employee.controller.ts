@@ -13,30 +13,33 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
-} from '@nestjs/common';
-import { created, deleted, HttpResponse, ok, updated } from 'src/helpers/http';
-import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
-import { EmployeeService } from '../services/employee.service';
-import { DEFAULT_APP_LIMIT, DEFAULT_APP_PAGINATION } from 'src/constants/constants';
-import { GetEmployeeByDepartmentDTO } from '../DTOs/get-employees-by-department';
-import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard';
-import { Roles, Strategy } from 'src/modules/authentication/guards/role-based';
-import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
-import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
-import { FindOneDTO } from '../../../class-validator/find-one.dto';
-import { CreateEmployeeService } from '../services/create-employee.service';
-import { UploadFileService } from 'src/modules/storage/upload/upload-file';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { pipeInstance } from '../../storage/file-validations';
-import { AvatarProfile } from 'src/@types';
+} from "@nestjs/common";
+import { created, deleted, HttpResponse, ok, updated } from "src/helpers/http";
+import { CreateEmployeeDTO } from "../DTOs/create-employee-dto";
+import { EmployeeService } from "../services/employee.service";
+import {
+  DEFAULT_APP_LIMIT,
+  DEFAULT_APP_PAGINATION,
+} from "src/constants/constants";
+import { GetEmployeeByDepartmentDTO } from "../DTOs/get-employees-by-department";
+import { LoginGuard } from "src/modules/authentication/guards/login/login.guard";
+import { Roles, Strategy } from "src/modules/authentication/guards/role-based";
+import { RoleGuard } from "src/modules/authentication/guards/role-based/role.guard";
+import { UpdateEmployeeDTO } from "../DTOs/update-employee.dto";
+import { FindOneDTO } from "../../../class-validator/find-one.dto";
+import { CreateEmployeeService } from "../services/create-employee.service";
+import { UploadFileService } from "src/modules/storage/upload/upload-file";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { pipeInstance } from "../../storage/file-validations";
+import { AvatarProfile } from "src/@types";
 
-@Strategy('any')
-@Controller('employee')
+@Strategy("any")
+@Controller("employee")
 export class EmployeeController {
   constructor(
     private employeeService: EmployeeService,
     private createService: CreateEmployeeService,
-    private uploadService: UploadFileService,
+    private uploadService: UploadFileService
   ) {}
 
   /**
@@ -44,17 +47,19 @@ export class EmployeeController {
    */
 
   @UseGuards(LoginGuard)
-  @Get('me')
+  @Get("me")
   @UseInterceptors(ClassSerializerInterceptor)
   async getMe(@Req() request): Promise<HttpResponse> {
     const { id } = request.user;
-    const me = await this.employeeService.find('id', id);
+    const me = await this.employeeService.find("id", id);
     return ok(me);
   }
 
   @UseGuards(LoginGuard)
   @Get()
-  async getByDepartament(@Query() queryParams: GetEmployeeByDepartmentDTO): Promise<HttpResponse> {
+  async getByDepartament(
+    @Query() queryParams: GetEmployeeByDepartmentDTO
+  ): Promise<HttpResponse> {
     const { name, page, limit } = queryParams;
     const pagination = page ?? DEFAULT_APP_PAGINATION;
     const appLimit = limit ?? DEFAULT_APP_LIMIT;
@@ -62,7 +67,7 @@ export class EmployeeController {
     const employess = await this.employeeService.getEmployeeByDepartment(
       name,
       pagination,
-      appLimit,
+      appLimit
     );
 
     return ok(employess);
@@ -75,19 +80,19 @@ export class EmployeeController {
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('admin', 'manager', 'employee')
-  @Get('details/:uuid')
+  @Roles("admin", "manager", "employee")
+  @Get("details/:uuid")
   @UseInterceptors(ClassSerializerInterceptor)
   async getDetails(@Param() params: FindOneDTO): Promise<HttpResponse> {
     return ok(await this.employeeService.getDetails(params.uuid));
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('admin', 'manager')
-  @Put(':uuid')
+  @Roles("admin", "manager")
+  @Put(":uuid")
   async update(
     @Param() params: FindOneDTO,
-    @Body() data: Partial<UpdateEmployeeDTO>,
+    @Body() data: Partial<UpdateEmployeeDTO>
   ): Promise<HttpResponse> {
     const { uuid } = params;
     const { id } = await this.employeeService.update(uuid, data);
@@ -95,25 +100,30 @@ export class EmployeeController {
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('admin', 'manager')
-  @Delete(':uuid')
+  @Roles("admin", "manager")
+  @Delete(":uuid")
   async delete(@Param() params: FindOneDTO): Promise<HttpResponse> {
     const { uuid } = params;
     return deleted(await this.employeeService.delete(uuid));
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('manager')
-  @Patch('/avatar/:uuid')
-  @UseInterceptors(FileInterceptor('employee_avatar'))
+  @Roles("manager")
+  @Patch("/avatar/:uuid")
+  @UseInterceptors(FileInterceptor("employee_avatar"))
   async uploadAvatar(
     @UploadedFile(pipeInstance)
     file: AvatarProfile,
-    @Param() params: FindOneDTO,
+    @Param() params: FindOneDTO
   ): Promise<HttpResponse> {
     const { uuid } = params;
-    const fileUrl = await this.uploadService.uploadSingleFile(file, 'employee_avatar');
-    const updatedEmployee = await this.employeeService.update(uuid, { avatar: fileUrl });
+    const fileUrl = await this.uploadService.uploadSingleFile(
+      file,
+      "employee_avatar"
+    );
+    const updatedEmployee = await this.employeeService.update(uuid, {
+      avatar: fileUrl,
+    });
     return updated(updatedEmployee);
   }
 }
