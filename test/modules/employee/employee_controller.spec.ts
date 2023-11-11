@@ -4,7 +4,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EmployeeController } from 'src/modules/employee/controllers/employee.controller';
 import { makeFakeUser } from '../authentication/mocks';
 import { Employee } from 'src/modules/employee/entities/employee.entity';
-import { CreateEmployeeDTO } from 'src/modules/employee/DTOs/create-employee-dto';
 import { SecurityModule } from 'src/modules/security/security.module';
 import { LoggerModule } from 'src/modules/logger/logger.module';
 import { ConfigModule } from '@nestjs/config';
@@ -36,7 +35,7 @@ describe('Employee Controller', () => {
     }
   }
   class CreateServiceStub {
-    async execute(data: CreateEmployeeDTO) {
+    async execute() {
       return new Promise((resolve) => resolve('OK'));
     }
   }

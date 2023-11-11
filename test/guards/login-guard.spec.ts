@@ -7,12 +7,16 @@ import { LoginGuard } from './../../src/modules/authentication/guards/login/logi
 import { ConfigModule } from '@nestjs/config';
 import { JwtConfigService } from 'src/config/security/jwt.config.service';
 import { LoggerModule } from 'src/modules/logger/logger.module';
-import { CreateJwtData } from 'src/modules/security/DTOs/jwt/jwt-payload';
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 import { makeFakeUser } from 'test/modules/authentication/mocks';
 
-const jwtMockData = { access_token: 'any_token', expiration: '1h', user: makeFakeUser() };
+const jwtMockData = {
+  access_token: 'any_token',
+  expiration: '1h',
+  user: makeFakeUser(),
+  refreshToken: 'any_refresh_token',
+};
 const jwtMockPayload = { id: 'claim_user_id' };
 
 const makeGenericContext = (cookies: object, ip: string, headers: object) => {
@@ -27,10 +31,10 @@ const makeGenericContext = (cookies: object, ip: string, headers: object) => {
   } as ExecutionContext;
 };
 class JwtManagerStub implements JwtManager {
-  async generate(payload: CreateJwtData): Promise<JwtData> {
+  async generate(): Promise<JwtData> {
     return new Promise((resolve) => resolve(jwtMockData));
   }
-  async verifyToken(token: string): Promise<JwtPayload> {
+  async verifyToken(): Promise<JwtPayload> {
     return new Promise((resolve) => resolve(jwtMockPayload));
   }
 }

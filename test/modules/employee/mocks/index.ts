@@ -1,6 +1,8 @@
 import { CreateEmployeeDTO } from 'src/modules/employee/DTOs/create-employee-dto';
 import { GetEmployeeByDepartmentDTO } from './../../../../src/modules/employee/DTOs/get-employees-by-department';
 import { UpdateEmployeeDTO } from 'src/modules/employee/DTOs/update-employee.dto';
+import { RefreshTokens } from 'src/modules/employee/entities/refresh-token.entity';
+import { Employee } from 'src/modules/employee/entities/employee.entity';
 
 export const makeFakeGetDepartmentRequest = (): GetEmployeeByDepartmentDTO => {
   return {
@@ -29,3 +31,10 @@ export const makeFakeupdateEmployee = (): Partial<UpdateEmployeeDTO> => {
     email: 'MakeFakeEmail',
   };
 };
+
+export const makeRefreshToken = (): RefreshTokens => ({
+  expiration: '7d',
+  id: 'uuid',
+  token: 'random_refresh_token',
+  userId: new Employee(),
+});

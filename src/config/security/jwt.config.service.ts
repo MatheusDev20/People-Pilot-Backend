@@ -18,7 +18,6 @@ export class JwtConfigService {
 
     const refreshTokenSecret = this.configService.get<string>('JWT_REFRESH_SECRET');
     const refreshTokenExpiration = this.configService.get<string>('JWT_REFRESH_EXPIRATION');
-
     return {
       secret: jwtSecret,
       expiration: jwtExpiration,

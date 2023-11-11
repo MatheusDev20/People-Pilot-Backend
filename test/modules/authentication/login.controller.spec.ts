@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { Response } from 'express';
 import { Authentication } from 'src/@types';
-import { CookieData } from 'src/modules/authentication/DTOs/cookie-data.dto';
 import { LoginDTO } from 'src/modules/authentication/DTOs/login-controller.dto';
 import { AuthenticationController } from 'src/modules/authentication/controllers/login.controller';
 import { Utils } from 'src/modules/authentication/utils/authentication.utils';
@@ -10,9 +9,24 @@ import { JwtData } from 'src/modules/security/DTOs/jwt/jwt-dto';
 import { makeFakeUser } from './mocks';
 
 class AuthStub implements Authentication {
-  login(data: LoginDTO): Promise<JwtData> {
+  login(): Promise<JwtData> {
     return new Promise((resolve) =>
-      resolve({ access_token: 'jwt_valid_token', expiration: '1h', user: makeFakeUser() }),
+      resolve({
+        access_token: 'jwt_valid_token',
+        expiration: '1h',
+        user: makeFakeUser(),
+        refreshToken: 'jwt_refresh_token',
+      }),
+    );
+  }
+  refresh(): Promise<JwtData> {
+    return new Promise((resolve) =>
+      resolve({
+        access_token: 'jwt_valid_token',
+        expiration: '1h',
+        user: makeFakeUser(),
+        refreshToken: 'jwt_new_refresh_token',
+      }),
     );
   }
 }
@@ -26,7 +40,7 @@ describe('Login Controller', () => {
   };
 
   const mockUtils = {
-    setCookies(currResponse: Response, cookieData: CookieData): Promise<string> {
+    setCookies(): Promise<string> {
       return new Promise((resolve) => resolve('Set cookies'));
     },
   };
@@ -85,6 +99,9 @@ describe('Login Controller', () => {
 
     await controller.signIn(res as Response, loginData);
     expect.assertions(1);
-    expect(spy).toHaveBeenCalledWith(res, { access_token: 'jwt_valid_token' });
+    expect(spy).toHaveBeenCalledWith(res, {
+      access_token: 'jwt_valid_token',
+      refreshToken: 'jwt_refresh_token',
+    });
   });
 });

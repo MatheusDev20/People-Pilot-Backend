@@ -16,7 +16,7 @@ export class Utils {
     currResponse.cookie('refreshToken', cookieData.refreshToken, {
       httpOnly: true,
       secure: false,
-      maxAge: 60 * 60 * 1000,
+      maxAge: 60 * 1000 * 1000,
     });
   }
 }

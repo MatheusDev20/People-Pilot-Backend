@@ -4,7 +4,7 @@ import { Authentication } from 'src/@types';
 import { JwtData } from 'src/modules/security/DTOs/jwt/jwt-dto';
 import { JwtManager } from 'src/modules/security/interfaces/jwt';
 import { makeFakeUser } from './mocks';
-import { CreateJwtData, JwtPayload } from 'src/modules/security/DTOs/jwt/jwt-payload';
+import { JwtPayload } from 'src/modules/security/DTOs/jwt/jwt-payload';
 import { JwtConfigService } from 'src/config/security/jwt.config.service';
 import { AuthenticationService } from 'src/modules/authentication/services/authentication.service';
 import { LoginDTO } from 'src/modules/authentication/DTOs/login-controller.dto';
@@ -15,7 +15,12 @@ import { Hashing } from 'src/modules/security/interfaces/hashing';
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InvalidCredentials, NotFoundEmail } from 'src/errors/messages';
 
-const jwtMockData = { access_token: 'any_token', expiration: '1h', user: makeFakeUser() };
+const jwtMockData = {
+  access_token: 'any_token',
+  expiration: '1h',
+  user: makeFakeUser(),
+  refreshToken: 'any_refresh_token',
+};
 const jwtMockPayload = { id: 'claim_user_id' };
 
 describe('Authentication Service', () => {
@@ -23,18 +28,18 @@ describe('Authentication Service', () => {
   let employeeService: EmployeeServiceStub;
   let hashService: Hashing;
   let jwtManager: JwtManager;
-  let logger: CustomLogger;
 
   class EmployeeServiceStub {
     async find(): Promise<Employee> {
-      return new Promise((resolve, reject) => resolve(makeFakeUser()));
+      return new Promise((resolve) => resolve(makeFakeUser()));
     }
+    async storeRefreshToken(): Promise<void> {}
   }
   class HashingStub implements Hashing {
-    hash(plainText: string): Promise<string> {
+    hash(): Promise<string> {
       return new Promise((resolve) => resolve('hashing_plain_text'));
     }
-    compare(value: string, hash: string): Promise<boolean> {
+    compare(): Promise<boolean> {
       return new Promise((resolve) => resolve(true));
     }
   }
@@ -42,10 +47,10 @@ describe('Authentication Service', () => {
     return { email: 'fakemail@mail.com', password: 'fake-login-trial' };
   };
   class JwtManagerStub implements JwtManager {
-    async generate(payload: CreateJwtData): Promise<JwtData> {
+    async generate(): Promise<JwtData> {
       return new Promise((resolve) => resolve(jwtMockData));
     }
-    async verifyToken(token: string): Promise<JwtPayload> {
+    async verifyToken(): Promise<JwtPayload> {
       return new Promise((resolve) => resolve(jwtMockPayload));
     }
   }
@@ -78,7 +83,6 @@ describe('Authentication Service', () => {
     employeeService = module.get(EmployeeService);
     hashService = module.get('HashingService');
     jwtManager = module.get('JwtManager');
-    logger = module.get(CustomLogger);
   });
 
   it('Should be defined', () => {
@@ -123,14 +127,12 @@ describe('Authentication Service', () => {
 
   it('Should call generate jwt method if hash compare succeed', async () => {
     const jwtSpy = jest.spyOn(jwtManager, 'generate');
-    const logSpy = jest.spyOn(logger, 'generateJwtLog');
     const { name, id } = makeFakeUser();
     const fakeLogin = makeFakeLoginRequest();
     await service.login(fakeLogin);
-    expect.assertions(3);
+
     expect(jwtSpy).toHaveBeenCalled();
     expect(jwtSpy).toHaveBeenCalledWith({ username: name, sub: String(id) });
-    expect(logSpy).toHaveBeenCalled();
   });
 
   it('Should Throw Unathorized Expection if compare fails', async () => {
@@ -142,22 +144,26 @@ describe('Authentication Service', () => {
 
   it('Should return the jwt and the logged user if the comparison succeed', async () => {
     const jwtSpy = jest.spyOn(jwtManager, 'generate');
-    const logSpy = jest.spyOn(logger, 'generateJwtLog');
     const { name, id } = makeFakeUser();
     jwtSpy.mockImplementationOnce(
       (): Promise<Omit<JwtData, 'user'>> =>
-        new Promise((resolve) => resolve({ access_token: 'valid_token', expiration: '1h' })),
+        new Promise((resolve) =>
+          resolve({
+            access_token: 'valid_token',
+            expiration: '1h',
+            refreshToken: 'valid_refresh_token',
+          }),
+        ),
     );
     const fakeLogin = makeFakeLoginRequest();
     const loginData = await service.login(fakeLogin);
-    expect.assertions(4);
     expect(jwtSpy).toHaveBeenCalled();
     expect(jwtSpy).toHaveBeenCalledWith({ username: name, sub: String(id) });
-    expect(logSpy).toHaveBeenCalled();
     expect(loginData).toEqual({
       access_token: 'valid_token',
       expiration: '1h',
       user: loginData.user,
+      refreshToken: 'valid_refresh_token',
     });
   });
 });

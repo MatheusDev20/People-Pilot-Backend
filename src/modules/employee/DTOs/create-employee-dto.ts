@@ -20,7 +20,7 @@ export class CreateEmployeeDTO {
 
   @IsNotEmpty()
   @IsString()
-  @MaxLength(14)
+  @MaxLength(22)
   phone: string;
 
   @MaxLength(30)

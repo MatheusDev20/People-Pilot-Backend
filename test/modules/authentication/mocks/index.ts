@@ -1,9 +1,11 @@
 import { Department } from 'src/modules/departments/entities/department.entity';
 import { Employee } from 'src/modules/employee/entities/employee.entity';
+import { RefreshTokens } from 'src/modules/employee/entities/refresh-token.entity';
 import { Role } from 'src/modules/employee/entities/roles.entity';
 
 const department = new Department();
 const roles = [new Role(), new Role()];
+const refreshToken = new RefreshTokens();
 
 export const makeFakeUser = (): Employee => {
   const user: Employee = {
@@ -22,6 +24,8 @@ export const makeFakeUser = (): Employee => {
     updated_at: new Date(),
     assignee_tasks: [],
     created_tasks: [],
+    refreshToken,
+    status: 'active',
   };
   return user;
 };

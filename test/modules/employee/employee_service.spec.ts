@@ -7,7 +7,9 @@ import { EmployeeService } from 'src/modules/employee/services/employee.service'
 import { FindOptionsWhere } from 'typeorm';
 import { makeFakeUser } from '../authentication/mocks';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { makeFakeupdateEmployee } from './mocks';
+import { makeFakeupdateEmployee, makeRefreshToken } from './mocks';
+import { RefreshTokenRepository } from 'src/modules/employee/repositories/refresh-token.repository';
+import { RefreshTokens } from 'src/modules/employee/entities/refresh-token.entity';
 
 jest.mock('src/modules/departments/services/department.service');
 
@@ -40,6 +42,13 @@ describe('Employee Service', () => {
       return new Promise((resolve) => resolve({ id: 1 }));
     }
   }
+  class RefreshTokenRepositoryStub {
+    async save(): Promise<void> {}
+
+    async find(): Promise<RefreshTokens> {
+      return new Promise((resolve) => resolve(makeRefreshToken()));
+    }
+  }
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [
@@ -50,6 +59,10 @@ describe('Employee Service', () => {
         {
           provide: EmployeeRepository,
           useClass: EmployeeRepositoryStub,
+        },
+        {
+          provide: RefreshTokenRepository,
+          useClass: RefreshTokenRepositoryStub,
         },
         EmployeeService,
       ],
@@ -209,7 +222,10 @@ describe('Employee Service', () => {
     await sut.getDetails(fake_id);
 
     expect(repositorySpy).toHaveBeenCalled();
-    expect(repositorySpy).toHaveBeenCalledWith({ where: { id: fake_id } }, 'pushRelations');
+    expect(repositorySpy).toHaveBeenCalledWith(
+      { where: { id: fake_id } },
+      { assignee_tasks: true, created_tasks: true, department: true },
+    );
     expect.assertions(2);
   });
 

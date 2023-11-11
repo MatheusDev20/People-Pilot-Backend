@@ -22,6 +22,7 @@ export class AuthenticationService implements Authentication {
     if (!findUser) throw new NotFoundException(NotFoundEmail);
 
     const { id, name } = findUser;
+
     if (await this.hashService.compare(password, findUser.password)) {
       const jwtData = await this.jwtManager.generate({
         username: name,
@@ -41,9 +42,7 @@ export class AuthenticationService implements Authentication {
     try {
       await this.jwtManager.verifyToken(token, { refresh: true });
       const existedToken = await this.employeeService.getRefreshToken(token);
-
       if (!existedToken) {
-        console.log('claro');
         throw new UnauthorizedException('Unauthorized Request');
       }
 

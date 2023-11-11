@@ -54,7 +54,7 @@ export class EmployeeService {
   async getDetails(id: string): Promise<Employee> {
     return await this.employeeRepository.find(
       { where: { id } },
-      { assignee_tasks: true, created_tasks: true },
+      { assignee_tasks: true, created_tasks: true, department: true },
     );
   }
 

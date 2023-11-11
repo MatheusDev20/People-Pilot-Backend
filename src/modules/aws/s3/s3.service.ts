@@ -1,6 +1,6 @@
 import {
   PutObjectCommand,
-  PutObjectCommandInputType,
+  PutObjectCommandInput,
   S3Client,
   S3ClientConfig,
 } from '@aws-sdk/client-s3';
@@ -32,7 +32,7 @@ export class S3Service implements StorageManager {
   async persist(file: Express.Multer.File, resource: FileAppResources): Promise<string> {
     const { originalname, buffer, mimetype } = file;
     const s3Path = buildS3Path(originalname, resource);
-    const input: PutObjectCommandInputType = {
+    const input: PutObjectCommandInput = {
       Bucket: 'stx-system',
       Key: s3Path,
       Body: buffer,
@@ -43,10 +43,9 @@ export class S3Service implements StorageManager {
       const command = new PutObjectCommand(input);
       await this.client.send(command);
       this.customLogger.log(`File ${originalname} Uploaded to ${process.env.BUCKET_NAME}`);
+      return new Promise((resolve) => resolve(`${process.env.BUCKET_URL}${s3Path}`));
     } catch (err) {
       throw new InternalServerErrorException('Internal Server Error');
-    } finally {
-      return new Promise((resolve) => resolve(`${process.env.BUCKET_URL}${s3Path}`));
     }
   }
 }
