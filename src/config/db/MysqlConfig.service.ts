@@ -25,7 +25,9 @@ export class MySQLDBConfigService implements TypeOrmOptionsFactory {
       };
       return options;
     } catch (err) {
-      this.logger.error(`Unhandled exception in createTypeOrmOptions: ${err.message}`);
+      this.logger.error(
+        `Unhandled exception in createTypeOrmOptions: ${err.message}`,
+      );
     }
   }
 }

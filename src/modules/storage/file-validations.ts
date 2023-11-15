@@ -1,4 +1,9 @@
-import { FileTypeValidator, HttpStatus, MaxFileSizeValidator, ParseFilePipe } from '@nestjs/common';
+import {
+  FileTypeValidator,
+  HttpStatus,
+  MaxFileSizeValidator,
+  ParseFilePipe,
+} from '@nestjs/common';
 
 export const fileValidations = [
   new FileTypeValidator({ fileType: /^image\/(jpeg|png)$/ }),

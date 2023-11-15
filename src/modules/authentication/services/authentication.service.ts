@@ -1,6 +1,11 @@
 import { EmployeeService } from 'src/modules/employee/services/employee.service';
 import { LoginDTO } from '../DTOs/login-controller.dto';
-import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Hashing } from 'src/modules/security/interfaces/hashing';
 import { InvalidCredentials, NotFoundEmail } from 'src/errors/messages';
 import { JwtManager } from 'src/modules/security/interfaces/jwt';

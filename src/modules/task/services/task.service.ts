@@ -10,7 +10,10 @@ import { UpdateTaskRepositoryDTO } from '../repositories/DTO';
 
 @Injectable()
 export class TaskService {
-  constructor(private repository: TaskRepository, private employeeService: EmployeeService) {}
+  constructor(
+    private repository: TaskRepository,
+    private employeeService: EmployeeService,
+  ) {}
 
   async find(property: ValidColumn<Task>, value: string): Promise<Task> {
     const options: FindOptionsWhere<Task> = { [property]: value };
@@ -18,7 +21,8 @@ export class TaskService {
   }
 
   async delete(taskId: string): Promise<UpdatedTask> {
-    if (!(await this.find('id', taskId))) throw new NotFoundException('Task not found');
+    if (!(await this.find('id', taskId)))
+      throw new NotFoundException('Task not found');
     return await this.repository.delete(taskId);
   }
 
@@ -32,8 +36,12 @@ export class TaskService {
   }
 
   async read(id: string): Promise<any> {
-    if (!(await this.find('id', id))) throw new NotFoundException('Task not found');
-    return await this.repository.findBy({ where: { id } }, { assignee: true, created_by: true });
+    if (!(await this.find('id', id)))
+      throw new NotFoundException('Task not found');
+    return await this.repository.findBy(
+      { where: { id } },
+      { assignee: true, created_by: true },
+    );
   }
 
   /**
@@ -48,8 +56,12 @@ export class TaskService {
       Object.entries(propertyes).map(async ([key, value]) => {
         switch (key as keyof UpdateTaskDTO) {
           case 'assignee_email':
-            const assignee = await this.employeeService.find('email', value as string);
-            if (!assignee) throw new NotFoundException('Assignee destiny not found');
+            const assignee = await this.employeeService.find(
+              'email',
+              value as string,
+            );
+            if (!assignee)
+              throw new NotFoundException('Assignee destiny not found');
             return ['assignee', assignee];
           default:
             return [key, value];

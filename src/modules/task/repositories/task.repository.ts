@@ -13,8 +13,12 @@ export class TaskRepository {
     private logger: CustomLogger,
   ) {}
 
-  async findBy(options: FindOneOptions<Task>, pushRelations = null): Promise<Task> {
-    if (pushRelations) options = { ...options, ...{ relations: pushRelations } };
+  async findBy(
+    options: FindOneOptions<Task>,
+    pushRelations = null,
+  ): Promise<Task> {
+    if (pushRelations)
+      options = { ...options, ...{ relations: pushRelations } };
 
     return this.repository.findOne(options);
   }
@@ -45,7 +49,10 @@ export class TaskRepository {
     }
   }
 
-  async update(id: string, updatedData: Partial<UpdateTaskRepositoryDTO>): Promise<UpdatedTask> {
+  async update(
+    id: string,
+    updatedData: Partial<UpdateTaskRepositoryDTO>,
+  ): Promise<UpdatedTask> {
     try {
       if (!(await this.findBy({ where: { id } }))) {
         throw new Error('Not found task on DB');

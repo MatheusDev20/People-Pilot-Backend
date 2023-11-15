@@ -13,10 +13,17 @@ export class DiskService implements StorageManager {
    * @param resource
    * @returns The local upload path to the recent uploaded file
    */
-  async persist(file: Express.Multer.File, resource: FileAppResources): Promise<string> {
+  async persist(
+    file: Express.Multer.File,
+    resource: FileAppResources,
+  ): Promise<string> {
     const filename = file.fieldname + '-' + Date.now() + file.originalname;
 
-    const filePath = join(process.env.LOCAL_UPLOAD_FOLDER, `${resource}`, filename);
+    const filePath = join(
+      process.env.LOCAL_UPLOAD_FOLDER,
+      `${resource}`,
+      filename,
+    );
 
     await fs.writeFile(filePath, file.buffer);
 

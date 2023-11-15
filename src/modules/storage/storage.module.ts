@@ -12,7 +12,10 @@ import { CustomLogger } from '../logger/services/logger.service';
     UploadFileService,
     {
       provide: 'StorageManager',
-      useFactory: (configService: ConfigService, customLogger: CustomLogger) => {
+      useFactory: (
+        configService: ConfigService,
+        customLogger: CustomLogger,
+      ) => {
         const env = configService.get<string>('NODE_ENV');
         // TODO: Must be a better style way to do that.
         if (env === 'development') {

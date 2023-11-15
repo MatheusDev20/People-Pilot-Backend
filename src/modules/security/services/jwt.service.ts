@@ -35,7 +35,10 @@ export class JwtServiceManager implements JwtManager {
     };
   }
 
-  async verifyToken(token: string, options?: VerifyOptions): Promise<JwtPayload> {
+  async verifyToken(
+    token: string,
+    options?: VerifyOptions,
+  ): Promise<JwtPayload> {
     const { refresh } = options;
     const jwtOptions = this.jwtConfig.getJwtOptions();
     const payload = await this.jwtService.verifyAsync(token, {

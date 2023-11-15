@@ -26,11 +26,17 @@ import { UpdateTaskDTO } from '../DTO/update-task.dto';
 @Strategy('any')
 @Controller('/task')
 export class TaskController {
-  constructor(private createService: CreateTaskService, private taskService: TaskService) {}
+  constructor(
+    private createService: CreateTaskService,
+    private taskService: TaskService,
+  ) {}
   @UseGuards(LoginGuard, RoleGuard)
   @Roles('admin', 'manager')
   @Post('/')
-  async create(@Request() request: Req, @Body() data: CreateTaskDTO): Promise<HttpResponse> {
+  async create(
+    @Request() request: Req,
+    @Body() data: CreateTaskDTO,
+  ): Promise<HttpResponse> {
     return created(
       await this.createService.execute({
         ...data,
@@ -50,7 +56,10 @@ export class TaskController {
   @UseGuards(LoginGuard, RoleGuard)
   @Roles('admin', 'manager')
   @Put(':uuid')
-  async update(@Param() params: FindOneDTO, @Body() data: UpdateTaskDTO): Promise<HttpResponse> {
+  async update(
+    @Param() params: FindOneDTO,
+    @Body() data: UpdateTaskDTO,
+  ): Promise<HttpResponse> {
     const { uuid } = params;
     return updated(await this.taskService.update(uuid, data));
   }

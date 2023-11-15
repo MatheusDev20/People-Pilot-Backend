@@ -5,7 +5,10 @@ import { FileAppResources, StorageManager } from 'src/@types';
 export class UploadFileService {
   constructor(@Inject('StorageManager') private manager: StorageManager) {}
 
-  async uploadSingleFile(file: Express.Multer.File, resource: FileAppResources): Promise<string> {
+  async uploadSingleFile(
+    file: Express.Multer.File,
+    resource: FileAppResources,
+  ): Promise<string> {
     return await this.manager.persist(file, resource);
   }
 }

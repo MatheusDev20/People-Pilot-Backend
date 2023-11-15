@@ -26,7 +26,10 @@ const makeFileRequest = (): {
     resource: 'employee_avatar',
   };
 };
-const makeSdkInput = (file: Express.Multer.File, resource: FileAppResources): PutObjectCommand => {
+const makeSdkInput = (
+  file: Express.Multer.File,
+  resource: FileAppResources,
+): PutObjectCommand => {
   const input = {
     Bucket: 'stx-system',
     Key: helpers.buildS3Path(file.originalname, resource),
@@ -61,9 +64,14 @@ describe('S3Service', () => {
       const s3Path = helpers.buildS3Path(file.filename, resource);
 
       expect.assertions(2);
-      expect(buildPathSpy).toHaveBeenCalledWith('filename-test', 'employee_avatar');
+      expect(buildPathSpy).toHaveBeenCalledWith(
+        'filename-test',
+        'employee_avatar',
+      );
       expect(s3Path).toEqual(
-        `stx-s3-storage-employee_avatar/${date.getFullYear()}/${date.getMonth() + 1}/filename-test`,
+        `stx-s3-storage-employee_avatar/${date.getFullYear()}/${
+          date.getMonth() + 1
+        }/filename-test`,
       );
     });
 

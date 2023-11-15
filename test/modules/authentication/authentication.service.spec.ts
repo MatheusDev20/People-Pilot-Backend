@@ -113,7 +113,9 @@ describe('Authentication Service', () => {
     const spy = jest.spyOn(employeeService, 'find');
     expect.assertions(1);
     spy.mockImplementationOnce(() => new Promise((resolve) => resolve(null)));
-    expect(service.login(fakeLogin)).rejects.toThrow(new NotFoundException(NotFoundEmail));
+    expect(service.login(fakeLogin)).rejects.toThrow(
+      new NotFoundException(NotFoundEmail),
+    );
   });
 
   it('Should call hash compare method with the right arguments', async () => {
@@ -122,7 +124,10 @@ describe('Authentication Service', () => {
 
     await service.login(fakeLogin);
     expect.assertions(2);
-    expect(hashSpy).toHaveBeenCalledWith(fakeLogin.password, makeFakeUser().password);
+    expect(hashSpy).toHaveBeenCalledWith(
+      fakeLogin.password,
+      makeFakeUser().password,
+    );
     expect(hashSpy).toHaveBeenCalledTimes(1);
   });
 
@@ -139,8 +144,12 @@ describe('Authentication Service', () => {
   it('Should Throw Unathorized Expection if compare fails', async () => {
     const hashSpy = jest.spyOn(hashService, 'compare');
     const fakeLogin = makeFakeLoginRequest();
-    hashSpy.mockImplementationOnce(() => new Promise((resolve) => resolve(false)));
-    expect(service.login(fakeLogin)).rejects.toThrow(new UnauthorizedException(InvalidCredentials));
+    hashSpy.mockImplementationOnce(
+      () => new Promise((resolve) => resolve(false)),
+    );
+    expect(service.login(fakeLogin)).rejects.toThrow(
+      new UnauthorizedException(InvalidCredentials),
+    );
   });
 
   it('Should return the jwt and the logged user if the comparison succeed', async () => {
