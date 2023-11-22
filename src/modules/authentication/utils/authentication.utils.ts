@@ -19,4 +19,19 @@ export class Utils {
       maxAge: 60 * 1000 * 1000,
     });
   }
+
+  invalidateCookies(currResponse: Response): void {
+    currResponse.cookie('access_token', '', {
+      httpOnly: true,
+      secure: false,
+
+      maxAge: 5000,
+    });
+
+    currResponse.cookie('refreshToken', '', {
+      httpOnly: true,
+      secure: false,
+      maxAge: 5000,
+    });
+  }
 }

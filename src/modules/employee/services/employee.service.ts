@@ -1,8 +1,15 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { DepartmentsService } from '../../departments/services/department.service';
 import { Employee } from '../entities/employee.entity';
 import { EmployeeRepository } from '../repositories/employee.repository';
-import { DeleteEmployeeResponse, UpdateEmployeeResponse } from '../DTOs/responses.dto';
+import {
+  DeleteEmployeeResponse,
+  UpdateEmployeeResponse,
+} from '../DTOs/responses.dto';
 import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
 import { FindOptionsWhere } from 'typeorm';
 import { ValidColumn } from 'src/@types';
@@ -28,8 +35,12 @@ export class EmployeeService {
     page: number,
     limit: number,
   ): Promise<Employee[]> {
-    const department = await this.departmentService.find('name', departmentName);
-    if (!department) throw new NotFoundException(`Department ${departmentName} not found`);
+    const department = await this.departmentService.find(
+      'name',
+      departmentName,
+    );
+    if (!department)
+      throw new NotFoundException(`Department ${departmentName} not found`);
 
     const { id } = department;
     return await this.employeeRepository.getEmployeesByDepartment({
@@ -39,15 +50,20 @@ export class EmployeeService {
     });
   }
 
-  async update(id: string, data: Partial<UpdateEmployeeDTO>): Promise<UpdateEmployeeResponse> {
-    if (!(await this.find('id', id))) throw new NotFoundException(`Employee ${id} not found`);
+  async update(
+    id: string,
+    data: Partial<UpdateEmployeeDTO>,
+  ): Promise<UpdateEmployeeResponse> {
+    if (!(await this.find('id', id)))
+      throw new NotFoundException(`Employee ${id} not found`);
     const updatedData = await this.checkPropertiyes(data);
 
     return await this.employeeRepository.updateEmployee(id, updatedData);
   }
 
   async delete(id: string): Promise<DeleteEmployeeResponse> {
-    if (!(await this.find('id', id))) throw new NotFoundException('Employee not found');
+    if (!(await this.find('id', id)))
+      throw new NotFoundException('Employee not found');
     return await this.employeeRepository.delete(id);
   }
 
@@ -71,12 +87,14 @@ export class EmployeeService {
         switch (key as keyof UpdateEmployeeDTO) {
           case 'email':
             const existedEmail = await this.find('email', value);
-            if (existedEmail) throw new BadRequestException('Email already registered');
+            if (existedEmail)
+              throw new BadRequestException('Email already registered');
             return ['email', value];
 
           case 'departmentName':
             const department = await this.departmentService.find('name', value);
-            if (!department) throw new NotFoundException('Department not found');
+            if (!department)
+              throw new NotFoundException('Department not found');
             return ['department', department];
 
           default:

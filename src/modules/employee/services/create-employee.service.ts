@@ -1,5 +1,10 @@
 import { Hashing } from '../../security/interfaces/hashing';
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { DepartmentsService } from '../../departments/services/department.service';
 import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
 import { EmployeeRepository } from '../repositories/employee.repository';
@@ -20,7 +25,10 @@ export class CreateEmployeeService {
 
   async execute(data: CreateEmployeeDTO): Promise<CreateEmployeeResponse> {
     const { departmentName, ...newUserData } = data;
-    const existedUser = await this.employeeService.find('email', newUserData.email);
+    const existedUser = await this.employeeService.find(
+      'email',
+      newUserData.email,
+    );
     if (existedUser) throw new BadRequestException('Email Already in use');
     /**
      * If the employee is a manager, attach to a default department (Managers)
@@ -33,9 +41,14 @@ export class CreateEmployeeService {
      * If the employee is not a manager you have to specify the department
      */
 
-    if (!departmentName) throw new BadRequestException('You must specify the Department');
-    const selectedDepartment = await this.departmentService.find('name', departmentName);
-    if (!selectedDepartment) throw new NotFoundException(`Departament ${departmentName} not found`);
+    if (!departmentName)
+      throw new BadRequestException('You must specify the Department');
+    const selectedDepartment = await this.departmentService.find(
+      'name',
+      departmentName,
+    );
+    if (!selectedDepartment)
+      throw new NotFoundException(`Departament ${departmentName} not found`);
 
     const newEmployeeData: CreateEmployeeRepositoryDTO = {
       ...newUserData,
@@ -53,9 +66,13 @@ export class CreateEmployeeService {
   ): Promise<CreateEmployeeResponse> {
     const { password, roles } = data;
     // eslint-disable-next-line prefer-const
-    const managersDepartment = await this.departmentService.find('name', 'Managers');
+    const managersDepartment = await this.departmentService.find(
+      'name',
+      'Managers',
+    );
     const defaultDepartment =
-      managersDepartment ?? (await this.departmentService.createDefaultDepartment());
+      managersDepartment ??
+      (await this.departmentService.createDefaultDepartment());
 
     const newEmployeeData: CreateEmployeeRepositoryDTO = {
       ...data,

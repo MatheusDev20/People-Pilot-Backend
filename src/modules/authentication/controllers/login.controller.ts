@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { LoginDTO, RefreshPayload } from '../DTOs/login-controller.dto';
-import { authenticated } from 'src/helpers/http';
+import { authenticated, ok } from 'src/helpers/http';
 import { Utils } from '../utils/authentication.utils';
 import { Authentication } from 'src/@types';
 
@@ -33,6 +33,12 @@ export class AuthenticationController {
     const { password, ...sendUser } = user;
 
     return authenticated({ user: sendUser });
+  }
+
+  @Post('/logout')
+  async signOut(@Res({ passthrough: true }) response: Response) {
+    this.utils.invalidateCookies(response);
+    return ok({ logoutTime: new Date() });
   }
 
   @Post('/refresh')
