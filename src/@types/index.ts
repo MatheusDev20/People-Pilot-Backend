@@ -1,3 +1,4 @@
+import { Role } from 'src/modules/employee/entities/roles.entity';
 import { LoginDTO } from 'src/modules/authentication/DTOs/login-controller.dto';
 import { JwtData } from 'src/modules/security/DTOs/jwt/jwt-dto';
 
@@ -28,3 +29,5 @@ export type LoggerFunctions = {
 };
 
 export type ValidColumn<T> = keyof T;
+
+export type RoleType = 'admin' | 'manager' | 'employee';

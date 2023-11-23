@@ -23,22 +23,23 @@ import {
 } from 'src/constants/constants';
 import { GetEmployeeByDepartmentDTO } from '../DTOs/get-employees-by-department';
 import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard';
-import { Roles, Strategy } from 'src/modules/authentication/guards/role-based';
+import { Roles } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
 import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
 import { FindOneDTO } from '../../../class-validator/find-one.dto';
-import { CreateEmployeeService } from '../services/create-employee.service';
 import { UploadFileService } from 'src/modules/storage/upload/upload-file';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { pipeInstance } from '../../storage/file-validations';
 import { AvatarProfile } from 'src/@types';
+import { CreateEmployeeUseCase } from '../use-cases/create-employee-use-case';
+import { CreateManagerUseCase } from '../use-cases/create-manager-use-case';
 
-@Strategy('any')
 @Controller('employee')
 export class EmployeeController {
   constructor(
     private employeeService: EmployeeService,
-    private createService: CreateEmployeeService,
+    private createEmployeeUseCase: CreateEmployeeUseCase,
+    private createManagerUseCase: CreateManagerUseCase,
     private uploadService: UploadFileService,
   ) {}
 
@@ -75,12 +76,18 @@ export class EmployeeController {
 
   @Post()
   async save(@Body() data: CreateEmployeeDTO): Promise<HttpResponse> {
-    const { id } = await this.createService.execute(data);
+    const { role } = data;
+    if (role === 'manager' || role === 'admin') {
+      const { id } = await this.createManagerUseCase.execute(data);
+      return created({ id });
+    }
+
+    const { id } = await this.createEmployeeUseCase.execute(data);
     return created({ id });
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('admin', 'manager', 'employee')
+  @Roles('manager')
   @Get('details/:uuid')
   @UseInterceptors(ClassSerializerInterceptor)
   async getDetails(@Param() params: FindOneDTO): Promise<HttpResponse> {
@@ -88,7 +95,7 @@ export class EmployeeController {
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('admin', 'manager')
+  @Roles('manager')
   @Put(':uuid')
   async update(
     @Param() params: FindOneDTO,
@@ -100,7 +107,7 @@ export class EmployeeController {
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('admin', 'manager')
+  @Roles('manager')
   @Delete(':uuid')
   async delete(@Param() params: FindOneDTO): Promise<HttpResponse> {
     const { uuid } = params;

@@ -13,25 +13,24 @@ import { HttpResponse, created, deleted, ok, updated } from 'src/helpers/http';
 import { DepartmentsService } from '../services/department.service';
 import { CreateDepartmentDTO } from '../DTO/create-department.dto';
 import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard';
-import { Roles, Strategy } from 'src/modules/authentication/guards/role-based';
+import { Roles } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
 import { UpdateDepartmentDTO } from '../DTO/update-department.dto';
 import { FindOneDepartmentDTO } from '../DTO/find-one-department.dto';
 
-@Strategy('any')
 @Controller('departments')
 @UseGuards(LoginGuard, RoleGuard)
 export class DepartmentsController {
   constructor(private service: DepartmentsService) {}
 
   @Get(':id')
-  @Roles('admin', 'manager', 'employee')
+  @Roles('manager')
   async getDepartmentByID(@Param('id', ParseUUIDPipe) uuid: string) {
     return ok(await this.service.find('id', uuid));
   }
 
   @Post()
-  @Roles('admin', 'manager')
+  @Roles('admin')
   async post(@Body() data: CreateDepartmentDTO) {
     return created(await this.service.createDepartment(data));
   }

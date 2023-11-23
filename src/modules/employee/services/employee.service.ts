@@ -50,6 +50,7 @@ export class EmployeeService {
     });
   }
 
+  // Caso de Uso
   async update(
     id: string,
     data: Partial<UpdateEmployeeDTO>,

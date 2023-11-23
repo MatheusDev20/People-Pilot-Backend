@@ -9,7 +9,10 @@ import { Department } from '../entities/department.entity';
 import { CreateDepartmentDTO } from '../DTO/create-department.dto';
 import { DepartmentRepository } from '../repositories/department.repository';
 import { UpdateDepartmentDTO } from '../DTO/update-department.dto';
-import { CreateDepartmentResponseDTO, DeleteDepartmentResponseDTO } from '../DTO/responses.dto';
+import {
+  CreateDepartmentResponseDTO,
+  DeleteDepartmentResponseDTO,
+} from '../DTO/responses.dto';
 import { CreateDepartmentRepositoryDTO } from '../repositories/DTO/create-department.dto';
 import { UpdateDepartmentRepositoryDTO } from '../repositories/DTO/update-deparment.dto';
 import { ValidColumn } from 'src/@types';
@@ -29,7 +32,9 @@ export class DepartmentsService {
     return await this.departmentRepository.find({ where: options });
   }
 
-  async createDepartment(data: CreateDepartmentDTO): Promise<CreateDepartmentResponseDTO> {
+  async createDepartment(
+    data: CreateDepartmentDTO,
+  ): Promise<CreateDepartmentResponseDTO> {
     const { name, managerMail } = data;
     if (await this.find('name', name)) {
       throw new BadRequestException(`Department ${name} already exists`);
@@ -37,7 +42,9 @@ export class DepartmentsService {
 
     const manager = await this.employeeService.find('email', managerMail);
     if (!manager) {
-      throw new BadRequestException(`Manager ${managerMail} not found in the System`);
+      throw new BadRequestException(
+        `Manager ${managerMail} not found in the System`,
+      );
     }
 
     const newDepartment: CreateDepartmentRepositoryDTO = {
@@ -56,14 +63,18 @@ export class DepartmentsService {
     }
 
     if (managerMail && !(await this.employeeService.find('email', managerMail)))
-      throw new BadRequestException(`Manager Mail ${managerMail} not found in the System`);
+      throw new BadRequestException(
+        `Manager Mail ${managerMail} not found in the System`,
+      );
 
     delete data.managerMail;
 
     const updateData: Partial<UpdateDepartmentRepositoryDTO> = { ...data };
 
     if (managerMail)
-      updateData.manager = (await this.employeeService.find('email', managerMail)).name;
+      updateData.manager = (
+        await this.employeeService.find('email', managerMail)
+      ).name;
 
     return this.departmentRepository.updateDepartment(id, updateData);
   }

@@ -22,7 +22,7 @@ export const makeFakeEmployee = (): CreateEmployeeDTO => {
     password: 'fake-password',
     phone: 'fake-phone',
     position: 'fake-position',
-    roles: 'fake-user-roles',
+    role: 'fake-role',
   };
 };
 

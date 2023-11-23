@@ -43,7 +43,11 @@ describe('Login Guard', () => {
   let jwtManager: JwtManager;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [LoggerModule, SecurityModule, ConfigModule.forRoot({ isGlobal: true })],
+      imports: [
+        LoggerModule,
+        SecurityModule,
+        ConfigModule.forRoot({ isGlobal: true }),
+      ],
       providers: [
         LoginGuard,
         { provide: 'JWTConfigService', useClass: JwtConfigService },

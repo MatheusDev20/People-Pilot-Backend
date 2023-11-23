@@ -15,8 +15,12 @@ export class RefreshTokenRepository {
     this.repository.save(data);
   }
 
-  async find(options: FindOneOptions<RefreshTokens>, pushRelations = null): Promise<RefreshTokens> {
-    if (pushRelations) options = { ...options, ...{ relations: pushRelations } };
+  async find(
+    options: FindOneOptions<RefreshTokens>,
+    pushRelations = null,
+  ): Promise<RefreshTokens> {
+    if (pushRelations)
+      options = { ...options, ...{ relations: pushRelations } };
     return await this.repository.findOne(options);
   }
 }

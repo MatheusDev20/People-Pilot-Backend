@@ -2,8 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -28,7 +26,7 @@ export class Employee {
   @Column()
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   @Exclude()
   password: string;
 
@@ -55,13 +53,8 @@ export class Employee {
   @ManyToOne(() => Department, (department) => department.employees)
   department: Department;
 
-  @ManyToMany(() => Role, (role) => role.employees)
-  @JoinTable({
-    name: 'employee_roles', // Specify the table name
-    joinColumn: { name: 'employee_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
-  })
-  roles: Role[];
+  @ManyToOne(() => Role, (role) => role.employees)
+  role: Role;
 
   @Column({ nullable: true })
   avatar: string;

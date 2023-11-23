@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Test } from '@nestjs/testing';
 import { ValidColumn } from 'src/@types';
 import { DepartmentsService } from 'src/modules/departments/services/department.service';
@@ -102,7 +103,9 @@ describe('Employee Service', () => {
     const value = 'any_value';
     const repositoryFindSpy = jest.spyOn(repository, 'find');
     const fakeEmployee = makeFakeUser();
-    repositoryFindSpy.mockImplementationOnce(() => new Promise((resolve) => resolve(fakeEmployee)));
+    repositoryFindSpy.mockImplementationOnce(
+      () => new Promise((resolve) => resolve(fakeEmployee)),
+    );
 
     expect(sut.find(column, value)).resolves.toEqual(fakeEmployee);
   });
@@ -124,9 +127,13 @@ describe('Employee Service', () => {
     const page = 1;
     const limit = 5;
     const serviceSpy = jest.spyOn(departmentServiceSpy, 'find');
-    serviceSpy.mockImplementationOnce(() => new Promise((resolve) => resolve(null)));
+    serviceSpy.mockImplementationOnce(
+      () => new Promise((resolve) => resolve(null)),
+    );
 
-    expect(sut.getEmployeeByDepartment(department, page, limit)).rejects.toThrow(NotFoundException);
+    expect(
+      sut.getEmployeeByDepartment(department, page, limit),
+    ).rejects.toThrow(NotFoundException);
     expect.assertions(1);
   });
 
@@ -141,10 +148,9 @@ describe('Employee Service', () => {
       () => new Promise((resolve) => resolve([fakeEmployee, fakeEmployee])),
     );
 
-    expect(sut.getEmployeeByDepartment(department, page, limit)).resolves.toEqual([
-      fakeEmployee,
-      fakeEmployee,
-    ]);
+    expect(
+      sut.getEmployeeByDepartment(department, page, limit),
+    ).resolves.toEqual([fakeEmployee, fakeEmployee]);
 
     expect.assertions(1);
   });
@@ -158,7 +164,11 @@ describe('Employee Service', () => {
     const repositorySpy = jest.spyOn(repository, 'getEmployeesByDepartment');
     repositorySpy.mockResolvedValue(employees);
 
-    const returnedEmployees = await sut.getEmployeeByDepartment(department, page, limit);
+    const returnedEmployees = await sut.getEmployeeByDepartment(
+      department,
+      page,
+      limit,
+    );
     expect(returnedEmployees.length).toBeLessThanOrEqual(limit);
     expect.assertions(1);
   });
@@ -189,7 +199,9 @@ describe('Employee Service', () => {
     const fake_id = 'any_id';
     const repositorySpy = jest.spyOn(repository, 'delete');
 
-    repositorySpy.mockImplementationOnce(() => new Promise((resolve) => resolve({ id: fake_id })));
+    repositorySpy.mockImplementationOnce(
+      () => new Promise((resolve) => resolve({ id: fake_id })),
+    );
 
     const response = await sut.delete(fake_id);
     expect(response).toEqual({ id: fake_id });
@@ -199,7 +211,9 @@ describe('Employee Service', () => {
   it('Should throw if the id not find the correspondent user', async () => {
     const non_existent_id = 'any_id';
     const findSpy = jest.spyOn(repository, 'find');
-    findSpy.mockImplementationOnce(() => new Promise((resolve) => resolve(null)));
+    findSpy.mockImplementationOnce(
+      () => new Promise((resolve) => resolve(null)),
+    );
 
     expect(sut.delete(non_existent_id)).rejects.toThrow(NotFoundException);
     expect.assertions(1);
@@ -233,7 +247,9 @@ describe('Employee Service', () => {
     const fake_id = 'any_id';
     const fakeEmployee = makeFakeUser();
     const repositorySpy = jest.spyOn(repository, 'find');
-    repositorySpy.mockImplementationOnce(() => new Promise((resolve) => resolve(fakeEmployee)));
+    repositorySpy.mockImplementationOnce(
+      () => new Promise((resolve) => resolve(fakeEmployee)),
+    );
 
     const employee_details = await sut.getDetails(fake_id);
     expect(employee_details).toBe(fakeEmployee);
@@ -277,7 +293,9 @@ describe('Employee Service', () => {
       .mockImplementationOnce(() => Promise.resolve(makeFakeUser()))
       .mockImplementationOnce(() => Promise.resolve(makeFakeUser()));
 
-    expect(sut.update(fake_id, updateData)).rejects.toThrow(BadRequestException);
+    expect(sut.update(fake_id, updateData)).rejects.toThrow(
+      BadRequestException,
+    );
     expect.assertions(1);
   });
 });

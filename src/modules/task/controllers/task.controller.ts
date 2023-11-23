@@ -13,7 +13,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard';
-import { Roles, Strategy } from 'src/modules/authentication/guards/role-based';
+import { Roles } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
 import { CreateTaskDTO } from '../DTO';
 import { CreateTaskService } from '../services/create-task.service';
@@ -23,7 +23,6 @@ import { FindOneDTO } from 'src/class-validator/find-one.dto';
 import { HttpResponse, created, deleted, updated } from 'src/helpers/http';
 import { UpdateTaskDTO } from '../DTO/update-task.dto';
 
-@Strategy('any')
 @Controller('/task')
 export class TaskController {
   constructor(
@@ -31,7 +30,7 @@ export class TaskController {
     private taskService: TaskService,
   ) {}
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('admin', 'manager')
+  @Roles('manager')
   @Post('/')
   async create(
     @Request() request: Req,
@@ -46,7 +45,7 @@ export class TaskController {
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('admin', 'manager')
+  @Roles('manager')
   @Delete(':uuid')
   async delete(@Param() params: FindOneDTO): Promise<HttpResponse> {
     const { uuid } = params;
@@ -54,7 +53,7 @@ export class TaskController {
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('admin', 'manager')
+  @Roles('manager')
   @Put(':uuid')
   async update(
     @Param() params: FindOneDTO,

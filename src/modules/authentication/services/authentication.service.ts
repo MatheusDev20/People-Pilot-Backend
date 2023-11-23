@@ -23,11 +23,9 @@ export class AuthenticationService implements Authentication {
   async login(data: LoginDTO): Promise<JwtData> {
     const { email, password } = data;
     const findUser = await this.employeeService.find('email', email);
-
     if (!findUser) throw new NotFoundException(NotFoundEmail);
 
     const { id, name } = findUser;
-
     if (await this.hashService.compare(password, findUser.password)) {
       const jwtData = await this.jwtManager.generate({
         username: name,

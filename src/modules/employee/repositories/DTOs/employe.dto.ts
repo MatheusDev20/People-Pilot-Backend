@@ -9,7 +9,7 @@ export class CreateEmployeeRepositoryDTO {
   phone: string;
   department: Department;
   position: string;
-  roles: Role[];
+  role: Role;
   hire_date?: string;
   status: string;
 }

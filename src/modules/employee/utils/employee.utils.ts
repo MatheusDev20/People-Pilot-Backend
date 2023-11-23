@@ -6,16 +6,13 @@ import { Role } from '../entities/roles.entity';
 export class Utils {
   constructor(private rolesRepository: RolesRepository) {}
 
-  async pushRoles(roles: string): Promise<Role[]> {
-    const userRoles: Role[] = [];
-    for (const role of roles.split(',')) {
-      const findRole = await this.rolesRepository.findRole(role);
-      if (!findRole) {
-        throw new BadRequestException('Desired role not found');
-      }
-      userRoles.push(findRole);
+  async pushRoles(role: string): Promise<Role> {
+    const findRole = await this.rolesRepository.findRole(role);
+    if (!findRole) {
+      throw new BadRequestException('Desired role not found');
     }
-    return userRoles;
+
+    return findRole;
   }
 
   async isManager(roles: string): Promise<boolean> {

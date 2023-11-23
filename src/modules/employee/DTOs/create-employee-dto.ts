@@ -1,5 +1,6 @@
 import {
   IsEmail,
+  IsIn,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -19,7 +20,7 @@ export class CreateEmployeeDTO {
   @IsEmail()
   email: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @MinLength(8)
   // @IsStrongPassword()
@@ -46,7 +47,8 @@ export class CreateEmployeeDTO {
 
   @IsNotEmpty()
   @MaxLength(21)
-  roles: string;
+  @IsIn(['employee', 'manager', 'admin'])
+  role: string;
 
   @IsNotEmpty()
   @IsDateYYYYMMDD()

@@ -1,5 +1,6 @@
+import { CreateManagerUseCase } from './../../../src/modules/employee/use-cases/create-manager-use-case';
+import { EmployeeRepository } from 'src/modules/employee/repositories/employee.repository';
 import { EmployeeService } from './../../../src/modules/employee/services/employee.service';
-import { CreateEmployeeService } from './../../../src/modules/employee/services/create-employee.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EmployeeController } from 'src/modules/employee/controllers/employee.controller';
 import { makeFakeUser } from '../authentication/mocks';
@@ -7,21 +8,28 @@ import { Employee } from 'src/modules/employee/entities/employee.entity';
 import { SecurityModule } from 'src/modules/security/security.module';
 import { LoggerModule } from 'src/modules/logger/logger.module';
 import { ConfigModule } from '@nestjs/config';
-import { EmployeePermissionService } from 'src/modules/employee/services/employee-permissions.service';
+
 import { StorageModule } from 'src/modules/storage/storage.module';
-import { makeFakeEmployee, makeFakeGetDepartmentRequest, makeFakeupdateEmployee } from './mocks';
+import {
+  makeFakeEmployee,
+  makeFakeGetDepartmentRequest,
+  makeFakeupdateEmployee,
+} from './mocks';
 import { v4 } from 'uuid';
 import { FindOneDTO } from 'src/class-validator/find-one.dto';
 import { UpdateEmployeeResponse } from 'src/modules/employee/DTOs/responses.dto';
+import { CreateEmployeeUseCase } from 'src/modules/employee/use-cases/create-employee-use-case';
 
 describe('Employee Controller', () => {
   let sut: EmployeeController;
   let employeeService: EmployeeService;
-  let createService: CreateEmployeeService;
+  let useCase: CreateEmployeeUseCase;
 
   class ServiceStub {
     async getEmployeeByDepartment(): Promise<Employee[]> {
-      return new Promise((resolve) => resolve([makeFakeUser(), makeFakeUser()]));
+      return new Promise((resolve) =>
+        resolve([makeFakeUser(), makeFakeUser()]),
+      );
     }
     async getDetails(): Promise<Employee> {
       return new Promise((resolve) => resolve(makeFakeUser()));
@@ -34,15 +42,19 @@ describe('Employee Controller', () => {
       return new Promise((resolve) => resolve('Deleted'));
     }
   }
-  class CreateServiceStub {
+  class CreateEmployeeUseCaseStub {
     async execute() {
       return new Promise((resolve) => resolve('OK'));
     }
   }
-
-  class PermissionServiceStub {
-    async getRoles() {
-      return new Promise((resolve) => resolve('userRoles'));
+  class CreateManagerUseCaseStub {
+    async execute() {
+      return new Promise((resolve) => resolve('OK'));
+    }
+  }
+  class EmployeeRepositoryStub {
+    async find() {
+      return new Promise((resolve) => resolve(makeFakeUser()));
     }
   }
 
@@ -57,23 +69,27 @@ describe('Employee Controller', () => {
       controllers: [EmployeeController],
       providers: [
         {
-          provide: CreateEmployeeService,
-          useClass: CreateServiceStub,
+          provide: CreateEmployeeUseCase,
+          useClass: CreateEmployeeUseCaseStub,
+        },
+        {
+          provide: CreateManagerUseCase,
+          useClass: CreateManagerUseCaseStub,
         },
         {
           provide: EmployeeService,
           useClass: ServiceStub,
         },
         {
-          provide: EmployeePermissionService,
-          useClass: PermissionServiceStub,
+          provide: EmployeeRepository,
+          useClass: EmployeeRepositoryStub,
         },
       ],
     }).compile();
 
     sut = module.get<EmployeeController>(EmployeeController);
     employeeService = module.get<EmployeeService>(EmployeeService);
-    createService = module.get<CreateEmployeeService>(CreateEmployeeService);
+    useCase = module.get<CreateEmployeeUseCase>(CreateEmployeeUseCase);
   });
 
   it('Should be defined', () => {
@@ -95,13 +111,13 @@ describe('Employee Controller', () => {
   it('Should call save with the right arguments', async () => {
     const fakeData = makeFakeEmployee();
     const spy = jest.spyOn(sut, 'save');
-    const serviceSpy = jest.spyOn(createService, 'execute');
+    const useCaseSpy = jest.spyOn(useCase, 'execute');
     await sut.save(fakeData);
 
     expect.assertions(3);
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy).toHaveBeenCalledWith(fakeData);
-    expect(serviceSpy).toHaveBeenCalled();
+    expect(useCaseSpy).toHaveBeenCalled();
   });
 
   it('Should call getDetails with the right arguments', async () => {
