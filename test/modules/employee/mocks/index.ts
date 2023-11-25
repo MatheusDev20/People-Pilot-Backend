@@ -1,12 +1,12 @@
 import { CreateEmployeeDTO } from 'src/modules/employee/DTOs/create-employee-dto';
-import { GetEmployeeByDepartmentDTO } from './../../../../src/modules/employee/DTOs/get-employees-by-department';
 import { UpdateEmployeeDTO } from 'src/modules/employee/DTOs/update-employee.dto';
 import { RefreshTokens } from 'src/modules/employee/entities/refresh-token.entity';
 import { Employee } from 'src/modules/employee/entities/employee.entity';
+import { GetEmployeeListDTO } from 'src/modules/employee/DTOs/get-employees-by-department';
 
-export const makeFakeGetDepartmentRequest = (): GetEmployeeByDepartmentDTO => {
+export const makeFakeGetDepartmentRequest = (): GetEmployeeListDTO => {
   return {
-    name: 'fake-department',
+    departmentName: 'fake-department',
     limit: 10,
     page: 1,
   };

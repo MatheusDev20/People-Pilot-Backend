@@ -46,7 +46,7 @@ export class EmployeeService {
     return await this.employeeRepository.getEmployeesByDepartment({
       page,
       limit,
-      id,
+      departmentId: id,
     });
   }
 

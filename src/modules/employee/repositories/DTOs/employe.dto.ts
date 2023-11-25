@@ -13,12 +13,14 @@ export class CreateEmployeeRepositoryDTO {
   hire_date?: string;
   status: string;
 }
-
-export interface GetDtoByDepartment {
+export type GetAllEmployesDTO = {
   page: number;
   limit: number;
-  id: string;
-}
+};
+
+export type GetDtoByDepartment = GetAllEmployesDTO & {
+  departmentId: string;
+};
 
 export interface UpdateEmployeeRepositoryDTO {
   name: string;

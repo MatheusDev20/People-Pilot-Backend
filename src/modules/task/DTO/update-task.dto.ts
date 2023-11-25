@@ -1,6 +1,6 @@
 import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 import { TaskPriority, TaskStatus } from '../enums';
-import { IsDateYYYYMMDD } from 'src/class-validator/dates-validators';
+import { IsDateYYYYMMDD } from 'src/class-validator/dates-constraint';
 
 export class UpdateTaskDTO {
   @IsOptional()

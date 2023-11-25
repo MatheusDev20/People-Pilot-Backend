@@ -3,6 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // import { CustomLogger } from './modules/logger/services/logger.service';
 
 async function bootstrap() {
@@ -16,6 +17,14 @@ async function bootstrap() {
     origin: 'http://localhost:3000',
     credentials: true,
   });
+  const config = new DocumentBuilder()
+    .setTitle('STX-APIs')
+    .setDescription('APIs and resources to manage STX entities')
+    .setVersion('1.0')
+    .addTag('stx')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
   await app.listen(process.env.API_PORT);
 }
 

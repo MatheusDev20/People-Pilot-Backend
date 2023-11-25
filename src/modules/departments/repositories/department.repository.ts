@@ -7,7 +7,9 @@ import { CreateDepartmentRepositoryDTO } from './DTO/create-department.dto';
 
 @Injectable()
 export class DepartmentRepository {
-  constructor(@InjectRepository(Department) private repository: Repository<Department>) {}
+  constructor(
+    @InjectRepository(Department) private repository: Repository<Department>,
+  ) {}
 
   async save(newDepartmentData: CreateDepartmentRepositoryDTO) {
     return await this.repository.save(newDepartmentData);
@@ -17,7 +19,10 @@ export class DepartmentRepository {
     return await this.repository.findOne(property);
   }
 
-  async updateDepartment(id: string, data: Partial<CreateDepartmentRepositoryDTO>) {
+  async updateDepartment(
+    id: string,
+    data: Partial<CreateDepartmentRepositoryDTO>,
+  ) {
     try {
       await this.repository
         .createQueryBuilder('employee')
@@ -28,7 +33,9 @@ export class DepartmentRepository {
 
       return { id };
     } catch (err: any) {
-      throw new InternalServerErrorException(`Error updating department ${err}`);
+      throw new InternalServerErrorException(
+        `Error updating department ${err}`,
+      );
     }
   }
 

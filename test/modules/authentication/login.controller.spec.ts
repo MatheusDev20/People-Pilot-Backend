@@ -1,3 +1,4 @@
+import { RefreshTokenUseCase } from './../../../src/modules/authentication/use-cases/refresh-token-use-case';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { Response } from 'express';
@@ -7,6 +8,7 @@ import { AuthenticationController } from 'src/modules/authentication/controllers
 import { Utils } from 'src/modules/authentication/utils/authentication.utils';
 import { JwtData } from 'src/modules/security/DTOs/jwt/jwt-dto';
 import { makeFakeUser } from './mocks';
+import { LoginUseCase } from 'src/modules/authentication/use-cases/login-use-case';
 
 class AuthStub implements Authentication {
   login(): Promise<JwtData> {
@@ -30,9 +32,25 @@ class AuthStub implements Authentication {
     );
   }
 }
+class LoginUseCaseStub {
+  async execute() {
+    return new Promise((resolve) =>
+      resolve({
+        access_token: 'jwt_valid_token',
+        refreshToken: 'jwt_refresh_token',
+        user: makeFakeUser(),
+      }),
+    );
+  }
+}
+class RefreshTokenUseCaseStub {
+  async execute() {
+    return new Promise((resolve) => resolve('OK'));
+  }
+}
 
 let controller: AuthenticationController;
-let service: Authentication;
+let useCase: LoginUseCase;
 
 describe('Login Controller', () => {
   const makeAuthentication = (): Authentication => {
@@ -55,17 +73,25 @@ describe('Login Controller', () => {
       controllers: [AuthenticationController],
       providers: [
         {
-          provide: 'Authentication',
-          useValue: makeAuthentication(),
+          provide: LoginUseCase,
+          useClass: LoginUseCaseStub,
         },
         {
           provide: Utils,
           useValue: mockUtils,
         },
+        {
+          provide: RefreshTokenUseCase,
+          useClass: RefreshTokenUseCaseStub,
+        },
+        {
+          provide: 'Authentication',
+          useFactory: makeAuthentication,
+        },
       ],
     }).compile();
     controller = module.get<AuthenticationController>(AuthenticationController);
-    service = module.get('Authentication');
+    useCase = module.get<LoginUseCase>(LoginUseCase);
   });
 
   it('Should be defined', () => {
@@ -82,10 +108,10 @@ describe('Login Controller', () => {
     expect(spy).toHaveBeenCalledWith(res, loginData);
   });
 
-  it('Should call login service method with the right methods', async () => {
+  it('Should call login use case method with the right methods', async () => {
     const loginData = makeAuthRequest();
     const res: Partial<Response> = {};
-    const spy = jest.spyOn(service, 'login');
+    const spy = jest.spyOn(useCase, 'execute');
 
     await controller.signIn(res as Response, loginData);
     expect.assertions(1);

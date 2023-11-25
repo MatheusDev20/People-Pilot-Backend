@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EmployeeModule } from '../employee/employee.module';
 import { SecurityModule } from '../security/security.module';
 import { LoggerModule } from '../logger/logger.module';
-import { CreateTaskService } from './services/create-task.service';
+import { CreateTaskUseCase } from './services/create-task-use-case';
 import { TaskRepository } from './repositories/task.repository';
 import { TaskService } from './services/task.service';
 
@@ -16,7 +16,7 @@ import { TaskService } from './services/task.service';
     SecurityModule,
     LoggerModule,
   ],
-  providers: [CreateTaskService, TaskRepository, TaskService],
+  providers: [CreateTaskUseCase, TaskRepository, TaskService],
   controllers: [TaskController],
 })
 export class TaskModule {}

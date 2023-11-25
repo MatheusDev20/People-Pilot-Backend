@@ -17,6 +17,6 @@ import { LoggerModule } from '../logger/logger.module';
   ],
   controllers: [DepartmentsController],
   providers: [DepartmentsService, DepartmentRepository],
-  exports: [DepartmentsService, DepartmentRepository], // I have to export this classes to use them in another module
+  exports: [DepartmentsService, DepartmentRepository],
 })
 export class DepartmentsModule {}

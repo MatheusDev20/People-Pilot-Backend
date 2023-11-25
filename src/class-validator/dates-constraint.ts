@@ -4,6 +4,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
+import { isDateValid } from 'src/helpers/dates';
 
 @ValidatorConstraint({ async: false })
 export class IsDateYYYYMMDDConstraint implements ValidatorConstraintInterface {
@@ -12,7 +13,7 @@ export class IsDateYYYYMMDDConstraint implements ValidatorConstraintInterface {
       return false;
     }
 
-    if (date.length !== 10) {
+    if (!isDateValid(date)) {
       return false;
     }
 

@@ -6,7 +6,7 @@ import { CreateTaskRepositoryDTO } from '../repositories/DTO';
 import { UpdatedTask } from '../DTO/responses.dto';
 
 @Injectable()
-export class CreateTaskService {
+export class CreateTaskUseCase {
   constructor(
     private repository: TaskRepository,
     private employeeService: EmployeeService,

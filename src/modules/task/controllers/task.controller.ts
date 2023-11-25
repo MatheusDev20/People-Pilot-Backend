@@ -16,7 +16,7 @@ import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard'
 import { Roles } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
 import { CreateTaskDTO } from '../DTO';
-import { CreateTaskService } from '../services/create-task.service';
+import { CreateTaskUseCase } from '../services/create-task-use-case';
 import { Request as Req } from 'express';
 import { TaskService } from '../services/task.service';
 import { FindOneDTO } from 'src/class-validator/find-one.dto';
@@ -26,7 +26,7 @@ import { UpdateTaskDTO } from '../DTO/update-task.dto';
 @Controller('/task')
 export class TaskController {
   constructor(
-    private createService: CreateTaskService,
+    private createTaskUseCase: CreateTaskUseCase,
     private taskService: TaskService,
   ) {}
   @UseGuards(LoginGuard, RoleGuard)
@@ -37,7 +37,7 @@ export class TaskController {
     @Body() data: CreateTaskDTO,
   ): Promise<HttpResponse> {
     return created(
-      await this.createService.execute({
+      await this.createTaskUseCase.execute({
         ...data,
         createdBy: request['user'].id,
       }),

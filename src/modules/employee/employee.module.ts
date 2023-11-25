@@ -17,6 +17,7 @@ import { RefreshTokens } from './entities/refresh-token.entity';
 import { RefreshTokenRepository } from './repositories/refresh-token.repository';
 import { CreateEmployeeUseCase } from './use-cases/create-employee-use-case';
 import { CreateManagerUseCase } from './use-cases/create-manager-use-case';
+import { GetEmployeeListUseCase } from './use-cases/get-employee-list-use-case';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { CreateManagerUseCase } from './use-cases/create-manager-use-case';
     Utils,
     CreateEmployeeUseCase,
     CreateManagerUseCase,
+    GetEmployeeListUseCase,
   ],
   exports: [EmployeeService, EmployeeRepository],
 })

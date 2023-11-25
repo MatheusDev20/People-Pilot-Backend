@@ -9,23 +9,32 @@ import {
 import { Hashing } from 'src/modules/security/interfaces/hashing';
 import { InvalidCredentials, NotFoundEmail } from 'src/errors/messages';
 import { JwtManager } from 'src/modules/security/interfaces/jwt';
-import { Authentication } from 'src/@types';
 import { JwtData } from 'src/modules/security/DTOs/jwt/jwt-dto';
+import { EmployeeRepository } from 'src/modules/employee/repositories/employee.repository';
 
 @Injectable()
-export class AuthenticationService implements Authentication {
+export class LoginUseCase {
   constructor(
     private employeeService: EmployeeService,
+    private employeeRepository: EmployeeRepository,
     @Inject('HashingService') private hashService: Hashing,
     @Inject('JwtManager') private jwtManager: JwtManager,
   ) {}
 
-  async login(data: LoginDTO): Promise<JwtData> {
+  async execute(data: LoginDTO): Promise<JwtData> {
     const { email, password } = data;
-    const findUser = await this.employeeService.find('email', email);
-    if (!findUser) throw new NotFoundException(NotFoundEmail);
 
-    const { id, name } = findUser;
+    const findUser = await this.employeeRepository.find(
+      { where: { email } },
+      { role: true },
+    );
+
+    if (!findUser) throw new NotFoundException(NotFoundEmail);
+    const { role, name, id } = findUser;
+
+    if (role.name === 'employee')
+      throw new UnauthorizedException('Unauthorized Request');
+
     if (await this.hashService.compare(password, findUser.password)) {
       const jwtData = await this.jwtManager.generate({
         username: name,
@@ -39,30 +48,5 @@ export class AuthenticationService implements Authentication {
     }
 
     throw new UnauthorizedException(InvalidCredentials);
-  }
-
-  async refresh(token: string): Promise<JwtData> {
-    try {
-      await this.jwtManager.verifyToken(token, { refresh: true });
-      const existedToken = await this.employeeService.getRefreshToken(token);
-      if (!existedToken) {
-        throw new UnauthorizedException('Unauthorized Request');
-      }
-
-      const user = existedToken.userId;
-      const jwtData = await this.jwtManager.generate({
-        username: user.name,
-        sub: String(user.id),
-      });
-
-      const { refreshToken } = jwtData;
-
-      /* Update the Refresh Token on the DB - Invalidate the old one */
-      await this.employeeService.storeRefreshToken(user, refreshToken);
-
-      return { ...jwtData, user, refreshToken };
-    } catch (err) {
-      throw new UnauthorizedException('Unauthorized Request');
-    }
   }
 }

@@ -2,7 +2,7 @@ import { DepartmentsService } from 'src/modules/departments/services/department.
 import { Utils } from '../utils/employee.utils';
 import { EmployeeRepository } from '../repositories/employee.repository';
 import { Hashing } from 'src/modules/security/interfaces/hashing';
-import { Inject } from '@nestjs/common';
+import { BadRequestException, Inject } from '@nestjs/common';
 import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
 import { CreateEmployeeRepositoryDTO } from '../repositories/DTOs/employe.dto';
 
@@ -16,6 +16,11 @@ export class CreateManagerUseCase {
 
   async execute(data: CreateEmployeeDTO) {
     const { password, role } = data;
+    if (!password)
+      throw new BadRequestException(
+        'Password is required to register a new Manager or ADMIN level',
+      );
+
     const managersDepartment = await this.departmentService.find(
       'name',
       'Managers',

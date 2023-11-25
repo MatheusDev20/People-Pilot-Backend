@@ -1,10 +1,10 @@
-import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class GetEmployeeByDepartmentDTO {
-  @IsNotEmpty()
+export class GetEmployeeListDTO {
+  @IsOptional()
   @IsString()
   @MaxLength(12)
-  name: string;
+  departmentName: string;
 
   @IsOptional()
   page: number;

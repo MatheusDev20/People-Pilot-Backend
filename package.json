@@ -30,6 +30,7 @@
     "@nestjs/jwt": "^10.0.3",
     "@nestjs/platform-express": "9.4.2",
     "@nestjs/serve-static": "^3.0.1",
+    "@nestjs/swagger": "7.1.16",
     "@nestjs/typeorm": "^9.0.1",
     "bcrypt": "^5.1.0",
     "class-transformer": "0.5.1",

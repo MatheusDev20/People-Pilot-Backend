@@ -10,6 +10,7 @@ import {
 } from '../DTOs/responses.dto';
 import {
   CreateEmployeeRepositoryDTO,
+  GetAllEmployesDTO,
   GetDtoByDepartment,
   UpdateEmployeeRepositoryDTO,
 } from './DTOs/employe.dto';
@@ -19,6 +20,14 @@ export class EmployeeRepository {
   constructor(
     @InjectRepository(Employee) private repository: Repository<Employee>,
   ) {}
+
+  async getAll({ limit, page }: GetAllEmployesDTO): Promise<Employee[]> {
+    return await this.repository
+      .createQueryBuilder('employee')
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getMany();
+  }
   /**
    * @param {Number} page - Current page
    * @param {Number} limit - Limit of records per page
@@ -28,16 +37,12 @@ export class EmployeeRepository {
   async getEmployeesByDepartment({
     page,
     limit,
-    id,
+    departmentId,
   }: GetDtoByDepartment): Promise<Employee[]> {
     return await this.repository
       .createQueryBuilder('employee')
-      .leftJoin(
-        Department,
-        'department',
-        'employee.departmentId = department.id',
-      )
-      .where('department.id = departmentId', { id })
+      .leftJoinAndSelect('employee.department', 'department.id')
+      .where('employee.department = :id', { id: departmentId })
       .skip((page - 1) * limit)
       .take(limit)
       .getMany();

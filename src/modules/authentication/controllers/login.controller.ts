@@ -9,16 +9,18 @@ import {
   Res,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { LoginDTO, RefreshPayload } from '../DTOs/login-controller.dto';
+import { LoginDTO } from '../DTOs/login-controller.dto';
 import { authenticated, ok } from 'src/helpers/http';
 import { Utils } from '../utils/authentication.utils';
-import { Authentication } from 'src/@types';
+import { LoginUseCase } from '../use-cases/login-use-case';
+import { RefreshTokenUseCase } from '../use-cases/refresh-token-use-case';
 
 @Controller('auth')
 export class AuthenticationController {
   constructor(
-    @Inject('Authentication') private service: Authentication,
+    private loginUseCase: LoginUseCase,
     private utils: Utils,
+    private refreshTokenUseCase: RefreshTokenUseCase,
   ) {}
   @Post('/login')
   @HttpCode(200)
@@ -26,13 +28,13 @@ export class AuthenticationController {
     @Res({ passthrough: true }) response: Response,
     @Body() loginData: LoginDTO,
   ) {
-    const { access_token, user, refreshToken } = await this.service.login(
-      loginData,
-    );
-    this.utils.setCookies(response, { access_token, refreshToken });
-    const { password, ...sendUser } = user;
+    const { access_token, user, refreshToken } =
+      await this.loginUseCase.execute(loginData);
 
-    return authenticated({ user: sendUser });
+    this.utils.setCookies(response, { access_token, refreshToken });
+    // const { password, ...sendUser } = user;
+
+    return authenticated({ user: { ...user, password: null } });
   }
 
   @Post('/logout')
@@ -48,9 +50,8 @@ export class AuthenticationController {
     @Req() req: Request,
   ) {
     const token = req.cookies['refreshToken'];
-    const { access_token, refreshToken, user } = await this.service.refresh(
-      token,
-    );
+    const { access_token, refreshToken, user } =
+      await this.refreshTokenUseCase.execute(token);
     this.utils.setCookies(response, { access_token, refreshToken });
     const { password, ...sendUser } = user;
     return authenticated({

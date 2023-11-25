@@ -26,6 +26,7 @@ export class CreateEmployeeUseCase {
       newUserData.email,
     );
     if (existedUser) throw new BadRequestException('Email already in use');
+
     if (!departmentName)
       throw new BadRequestException(
         'You must specify the Department to the new Employee',
@@ -37,7 +38,7 @@ export class CreateEmployeeUseCase {
 
     if (!selectedDepartment)
       throw new NotFoundException(`Departament ${departmentName} not found`);
-    console.log(newUserData);
+
     const newEmployeeData: CreateEmployeeRepositoryDTO = {
       ...newUserData,
       department: selectedDepartment,

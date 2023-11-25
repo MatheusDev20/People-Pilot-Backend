@@ -19,11 +19,13 @@ import { v4 } from 'uuid';
 import { FindOneDTO } from 'src/class-validator/find-one.dto';
 import { UpdateEmployeeResponse } from 'src/modules/employee/DTOs/responses.dto';
 import { CreateEmployeeUseCase } from 'src/modules/employee/use-cases/create-employee-use-case';
+import { GetEmployeeListUseCase } from 'src/modules/employee/use-cases/get-employee-list-use-case';
 
 describe('Employee Controller', () => {
   let sut: EmployeeController;
   let employeeService: EmployeeService;
   let useCase: CreateEmployeeUseCase;
+  let listEmployeeUseCase: GetEmployeeListUseCase;
 
   class ServiceStub {
     async getEmployeeByDepartment(): Promise<Employee[]> {
@@ -52,6 +54,11 @@ describe('Employee Controller', () => {
       return new Promise((resolve) => resolve('OK'));
     }
   }
+  class ListEmployeeUseCaseStub {
+    async execute() {
+      return new Promise((resolve) => resolve('OK'));
+    }
+  }
   class EmployeeRepositoryStub {
     async find() {
       return new Promise((resolve) => resolve(makeFakeUser()));
@@ -73,6 +80,10 @@ describe('Employee Controller', () => {
           useClass: CreateEmployeeUseCaseStub,
         },
         {
+          provide: GetEmployeeListUseCase,
+          useClass: ListEmployeeUseCaseStub,
+        },
+        {
           provide: CreateManagerUseCase,
           useClass: CreateManagerUseCaseStub,
         },
@@ -90,17 +101,20 @@ describe('Employee Controller', () => {
     sut = module.get<EmployeeController>(EmployeeController);
     employeeService = module.get<EmployeeService>(EmployeeService);
     useCase = module.get<CreateEmployeeUseCase>(CreateEmployeeUseCase);
+    listEmployeeUseCase = module.get<GetEmployeeListUseCase>(
+      GetEmployeeListUseCase,
+    );
   });
 
   it('Should be defined', () => {
     expect(sut).toBeDefined();
   });
 
-  it('Should call getByDepartment with the right arguments', async () => {
+  it('Should call excute the employee List use case with the right arguments', async () => {
     const fakeData = makeFakeGetDepartmentRequest();
-    const spy = jest.spyOn(sut, 'getByDepartament');
-    const serviceSpy = jest.spyOn(employeeService, 'getEmployeeByDepartment');
-    await sut.getByDepartament(fakeData);
+    const spy = jest.spyOn(sut, 'getEmployeeList');
+    const serviceSpy = jest.spyOn(listEmployeeUseCase, 'execute');
+    await sut.getEmployeeList(fakeData);
 
     expect.assertions(3);
     expect(spy).toHaveBeenCalledTimes(1);

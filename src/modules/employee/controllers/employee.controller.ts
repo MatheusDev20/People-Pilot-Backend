@@ -21,7 +21,7 @@ import {
   DEFAULT_APP_LIMIT,
   DEFAULT_APP_PAGINATION,
 } from 'src/constants/constants';
-import { GetEmployeeByDepartmentDTO } from '../DTOs/get-employees-by-department';
+import { GetEmployeeListDTO } from '../DTOs/get-employees-by-department';
 import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard';
 import { Roles } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
@@ -33,6 +33,7 @@ import { pipeInstance } from '../../storage/file-validations';
 import { AvatarProfile } from 'src/@types';
 import { CreateEmployeeUseCase } from '../use-cases/create-employee-use-case';
 import { CreateManagerUseCase } from '../use-cases/create-manager-use-case';
+import { GetEmployeeListUseCase } from '../use-cases/get-employee-list-use-case';
 
 @Controller('employee')
 export class EmployeeController {
@@ -40,6 +41,7 @@ export class EmployeeController {
     private employeeService: EmployeeService,
     private createEmployeeUseCase: CreateEmployeeUseCase,
     private createManagerUseCase: CreateManagerUseCase,
+    private listEmployeesUseCase: GetEmployeeListUseCase,
     private uploadService: UploadFileService,
   ) {}
 
@@ -58,18 +60,18 @@ export class EmployeeController {
 
   @UseGuards(LoginGuard)
   @Get()
-  async getByDepartament(
-    @Query() queryParams: GetEmployeeByDepartmentDTO,
+  async getEmployeeList(
+    @Query() queryParams: GetEmployeeListDTO,
   ): Promise<HttpResponse> {
-    const { name, page, limit } = queryParams;
+    const { departmentName, page, limit } = queryParams;
     const pagination = page ?? DEFAULT_APP_PAGINATION;
     const appLimit = limit ?? DEFAULT_APP_LIMIT;
 
-    const employess = await this.employeeService.getEmployeeByDepartment(
-      name,
-      pagination,
-      appLimit,
-    );
+    const employess = await this.listEmployeesUseCase.execute({
+      departmentName,
+      page: pagination,
+      limit: appLimit,
+    });
 
     return ok(employess);
   }
