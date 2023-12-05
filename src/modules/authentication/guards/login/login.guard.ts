@@ -18,6 +18,7 @@ export class LoginGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
+
     if (this.areCookiesExpired(request.cookies)) {
       this.logger.expiredCookie(request.ip, request['headers']['user-agent']);
       throw new UnauthorizedException('Expired Cookie');
@@ -37,13 +38,12 @@ export class LoginGuard implements CanActivate {
       request['user'] = payload;
       this.logger.sucessFullLogin(payload.id);
     } catch (err) {
-      console.log(err);
       this.logger.failedAttempt(
         err.message,
         request.ip,
         request['headers']['user-agent'],
       );
-      throw new UnauthorizedException(err);
+      throw new UnauthorizedException('Token Signature Verification Failed');
     }
 
     return true;

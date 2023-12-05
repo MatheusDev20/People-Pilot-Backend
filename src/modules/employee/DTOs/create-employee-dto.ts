@@ -33,7 +33,7 @@ export class CreateEmployeeDTO {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  @MaxLength(22)
+  @MaxLength(40)
   phone: string;
 
   @ApiProperty({
@@ -48,7 +48,7 @@ export class CreateEmployeeDTO {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  @MaxLength(25)
+  @MaxLength(40)
   position: string;
 
   @IsNotEmpty()

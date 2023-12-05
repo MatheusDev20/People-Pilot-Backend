@@ -17,11 +17,21 @@ import { Roles } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
 import { UpdateDepartmentDTO } from '../DTO/update-department.dto';
 import { FindOneDepartmentDTO } from '../DTO/find-one-department.dto';
+import { ListAllDepartmentsUseCase } from '../use-cases/listAll-use-case';
 
 @Controller('departments')
 @UseGuards(LoginGuard, RoleGuard)
 export class DepartmentsController {
-  constructor(private service: DepartmentsService) {}
+  constructor(
+    private service: DepartmentsService,
+    private listAllUseCase: ListAllDepartmentsUseCase,
+  ) {}
+
+  @Get('/')
+  @Roles('manager')
+  async listAllDepartments() {
+    return ok(await this.listAllUseCase.execute());
+  }
 
   @Get(':id')
   @Roles('manager')

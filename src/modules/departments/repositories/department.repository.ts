@@ -11,6 +11,9 @@ export class DepartmentRepository {
     @InjectRepository(Department) private repository: Repository<Department>,
   ) {}
 
+  async findAll() {
+    return await this.repository.find({ relations: ['employees'] });
+  }
   async save(newDepartmentData: CreateDepartmentRepositoryDTO) {
     return await this.repository.save(newDepartmentData);
   }

@@ -7,6 +7,7 @@ import { DepartmentRepository } from './repositories/department.repository';
 import { SecurityModule } from '../security/security.module';
 import { EmployeeModule } from '../employee/employee.module';
 import { LoggerModule } from '../logger/logger.module';
+import { ListAllDepartmentsUseCase } from './use-cases/listAll-use-case';
 
 @Module({
   imports: [
@@ -16,7 +17,11 @@ import { LoggerModule } from '../logger/logger.module';
     LoggerModule,
   ],
   controllers: [DepartmentsController],
-  providers: [DepartmentsService, DepartmentRepository],
+  providers: [
+    DepartmentsService,
+    DepartmentRepository,
+    ListAllDepartmentsUseCase,
+  ],
   exports: [DepartmentsService, DepartmentRepository],
 })
 export class DepartmentsModule {}
