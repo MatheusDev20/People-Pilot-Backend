@@ -26,6 +26,7 @@ export const makeFakeUser = (): Employee => {
     created_tasks: [],
     refreshToken,
     status: 'active',
+    managedDepartments: [],
   };
   return user;
 };

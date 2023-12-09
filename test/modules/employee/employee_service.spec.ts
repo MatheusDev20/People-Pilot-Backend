@@ -236,10 +236,14 @@ describe('Employee Service', () => {
     await sut.getDetails(fake_id);
 
     expect(repositorySpy).toHaveBeenCalled();
-    expect(repositorySpy).toHaveBeenCalledWith(
-      { where: { id: fake_id } },
-      { assignee_tasks: true, created_tasks: true, department: true },
-    );
+    expect(repositorySpy).toHaveBeenCalledWith({ where: { id: fake_id } }, [
+      'assignee_tasks',
+      'created_tasks',
+      'department',
+      'department.manager',
+      'department.employees',
+      'managedDepartments',
+    ]);
     expect.assertions(2);
   });
 

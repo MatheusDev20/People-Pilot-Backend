@@ -14,6 +14,7 @@ export class RefreshTokenUseCase {
       await this.jwtManager.verifyToken(token, { refresh: true });
       const existedToken = await this.employeeService.getRefreshToken(token);
       if (!existedToken) {
+        console.log('?');
         throw new UnauthorizedException('Unauthorized Request');
       }
 

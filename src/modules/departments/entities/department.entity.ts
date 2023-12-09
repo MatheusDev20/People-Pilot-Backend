@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -19,8 +20,11 @@ export class Department {
   @Column()
   description: string;
 
-  @Column()
-  manager: string;
+  // @Column()
+  // manager: string;
+
+  @ManyToOne(() => Employee, (employee) => employee.managedDepartments)
+  manager: Employee;
 
   @Column({ default: true })
   isActive: boolean;

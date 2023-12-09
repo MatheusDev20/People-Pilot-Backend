@@ -69,10 +69,18 @@ export class EmployeeService {
   }
 
   async getDetails(id: string): Promise<Employee> {
-    return await this.employeeRepository.find(
-      { where: { id } },
-      { assignee_tasks: true, created_tasks: true, department: true },
-    );
+    const employee = await this.employeeRepository.find({ where: { id } }, [
+      'assignee_tasks',
+      'created_tasks',
+      'department',
+      'department.manager',
+      'department.employees',
+      'managedDepartments',
+    ]);
+
+    if (!employee) throw new NotFoundException('Employee not found');
+
+    return employee;
   }
 
   /**
@@ -126,10 +134,12 @@ export class EmployeeService {
   }
 
   async getRefreshToken(token: string): Promise<RefreshTokens | null> {
+    console.log(token);
     const refreshToken = await this.refreshTokenRepository.find({
       where: { token },
       relations: { userId: true },
     });
+
     return refreshToken;
   }
 }

@@ -12,7 +12,7 @@ export class DepartmentRepository {
   ) {}
 
   async findAll() {
-    return await this.repository.find({ relations: ['employees'] });
+    return await this.repository.find({ relations: ['employees', 'manager'] });
   }
   async save(newDepartmentData: CreateDepartmentRepositoryDTO) {
     return await this.repository.save(newDepartmentData);

@@ -6,6 +6,7 @@ export class ListAllDepartmentsUseCase {
   constructor(private repositoy: DepartmentRepository) {}
 
   async execute() {
-    return await this.repositoy.findAll();
+    const departments = await this.repositoy.findAll();
+    return departments.filter((department) => department.name !== 'Managers');
   }
 }

@@ -18,6 +18,7 @@ import { UpdateDepartmentRepositoryDTO } from '../repositories/DTO/update-deparm
 import { ValidColumn } from 'src/@types';
 import { FindOptionsWhere } from 'typeorm';
 import { EmployeeService } from 'src/modules/employee/services/employee.service';
+import { Employee } from 'src/modules/employee/entities/employee.entity';
 
 @Injectable()
 export class DepartmentsService {
@@ -49,7 +50,7 @@ export class DepartmentsService {
 
     const newDepartment: CreateDepartmentRepositoryDTO = {
       ...data,
-      manager: manager.name,
+      manager: manager,
     };
     const { id } = await this.departmentRepository.save(newDepartment);
     return { id };
@@ -72,9 +73,10 @@ export class DepartmentsService {
     const updateData: Partial<UpdateDepartmentRepositoryDTO> = { ...data };
 
     if (managerMail)
-      updateData.manager = (
-        await this.employeeService.find('email', managerMail)
-      ).name;
+      updateData.manager = await this.employeeService.find(
+        'email',
+        managerMail,
+      );
 
     return this.departmentRepository.updateDepartment(id, updateData);
   }
@@ -94,7 +96,7 @@ export class DepartmentsService {
     return await this.departmentRepository.save({
       description: 'Managers Department',
       name: 'Managers',
-      manager: 'Manager',
+      manager: new Employee(),
     });
   }
 }

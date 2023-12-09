@@ -100,7 +100,6 @@ export class EmployeeRepository {
     options: FindOneOptions<Employee>,
     pushRelations = null,
   ): Promise<Employee> {
-    console.log(options);
     if (pushRelations)
       options = { ...options, ...{ relations: pushRelations } };
 

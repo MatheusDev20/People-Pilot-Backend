@@ -70,4 +70,7 @@ export class Employee {
 
   @OneToOne(() => RefreshTokens, (refreshToken) => refreshToken.userId)
   refreshToken: RefreshTokens;
+
+  @OneToMany(() => Department, (department) => department.manager)
+  managedDepartments: Department[];
 }
