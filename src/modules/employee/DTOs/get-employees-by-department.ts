@@ -11,4 +11,7 @@ export class GetEmployeeListDTO {
 
   @IsOptional()
   limit: number;
+
+  @IsOptional()
+  role: 'managers' | 'employee' | 'admin';
 }

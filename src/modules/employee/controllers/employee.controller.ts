@@ -63,7 +63,8 @@ export class EmployeeController {
   async getEmployeeList(
     @Query() queryParams: GetEmployeeListDTO,
   ): Promise<HttpResponse> {
-    const { departmentName, page, limit } = queryParams;
+    const { departmentName, page, limit, role } = queryParams;
+
     const pagination = page ?? DEFAULT_APP_PAGINATION;
     const appLimit = limit ?? DEFAULT_APP_LIMIT;
 
@@ -71,6 +72,7 @@ export class EmployeeController {
       departmentName,
       page: pagination,
       limit: appLimit,
+      role: role ?? null,
     });
 
     return ok(employess);
@@ -79,7 +81,7 @@ export class EmployeeController {
   @Post()
   async save(@Body() data: CreateEmployeeDTO): Promise<HttpResponse> {
     const { role } = data;
-    if (role === 'manager' || role === 'admin') {
+    if (role === 'managers' || role === 'admin') {
       const { id } = await this.createManagerUseCase.execute(data);
       return created({ id });
     }
@@ -89,7 +91,7 @@ export class EmployeeController {
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('manager')
+  @Roles('managers')
   @Get('details/:uuid')
   @UseInterceptors(ClassSerializerInterceptor)
   async getDetails(@Param() params: FindOneDTO): Promise<HttpResponse> {
@@ -97,7 +99,7 @@ export class EmployeeController {
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('manager')
+  @Roles('managers')
   @Put(':uuid')
   async update(
     @Param() params: FindOneDTO,
@@ -109,7 +111,7 @@ export class EmployeeController {
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('manager')
+  @Roles('managers')
   @Delete(':uuid')
   async delete(@Param() params: FindOneDTO): Promise<HttpResponse> {
     const { uuid } = params;
@@ -117,7 +119,7 @@ export class EmployeeController {
   }
 
   @UseGuards(LoginGuard, RoleGuard)
-  @Roles('manager')
+  @Roles('managers')
   @Patch('/avatar/:uuid')
   @UseInterceptors(FileInterceptor('employee_avatar'))
   async uploadAvatar(

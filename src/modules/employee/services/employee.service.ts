@@ -134,7 +134,6 @@ export class EmployeeService {
   }
 
   async getRefreshToken(token: string): Promise<RefreshTokens | null> {
-    console.log(token);
     const refreshToken = await this.refreshTokenRepository.find({
       where: { token },
       relations: { userId: true },

@@ -28,24 +28,24 @@ export class DepartmentsController {
   ) {}
 
   @Get('/')
-  @Roles('manager')
+  @Roles('managers')
   async listAllDepartments() {
     return ok(await this.listAllUseCase.execute());
   }
 
   @Get(':id')
-  @Roles('manager')
+  @Roles('managers')
   async getDepartmentByID(@Param('id', ParseUUIDPipe) uuid: string) {
     return ok(await this.service.find('id', uuid));
   }
 
   @Post()
-  @Roles('admin')
+  @Roles('managers')
   async post(@Body() data: CreateDepartmentDTO) {
     return created(await this.service.createDepartment(data));
   }
 
-  @Roles('admin')
+  @Roles('managers')
   @Put(':uuid')
   async update(
     @Param() params: FindOneDepartmentDTO,
@@ -55,7 +55,7 @@ export class DepartmentsController {
     return updated(await this.service.updateDepartment(uuid, data));
   }
 
-  @Roles('admin')
+  @Roles('managers')
   @Delete(':uuid')
   async delete(@Param() params: FindOneDepartmentDTO): Promise<HttpResponse> {
     const { uuid } = params;

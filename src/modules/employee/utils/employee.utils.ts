@@ -8,6 +8,7 @@ export class Utils {
 
   async pushRoles(role: string): Promise<Role> {
     const findRole = await this.rolesRepository.findRole(role);
+
     if (!findRole) {
       throw new BadRequestException('Desired role not found');
     }
@@ -17,6 +18,19 @@ export class Utils {
 
   async isManager(roles: string): Promise<boolean> {
     const rolesArr = roles.split(',');
-    return rolesArr.includes('manager');
+    return rolesArr.includes('managers');
+  }
+
+  getIdRoleByName(roleName: 'managers' | 'employee' | 'admin'): number {
+    switch (roleName) {
+      case 'managers':
+        return 2;
+      case 'employee':
+        return 3;
+      case 'admin':
+        return 1;
+      default:
+        return 0;
+    }
   }
 }

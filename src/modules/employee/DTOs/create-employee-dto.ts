@@ -58,7 +58,7 @@ export class CreateEmployeeDTO {
   @ApiProperty()
   @IsNotEmpty()
   @MaxLength(21)
-  @IsIn(['employee', 'manager', 'admin'])
+  @IsIn(['employee', 'managers', 'admin'])
   role: string;
 
   @ApiProperty()

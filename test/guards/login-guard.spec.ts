@@ -10,6 +10,7 @@ import { LoggerModule } from 'src/modules/logger/logger.module';
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 import { makeFakeUser } from 'test/modules/authentication/mocks';
+import { CustomLogger } from 'src/modules/logger/services/logger.service';
 
 const jwtMockData = {
   access_token: 'any_token',
@@ -38,9 +39,21 @@ class JwtManagerStub implements JwtManager {
     return new Promise((resolve) => resolve(jwtMockPayload));
   }
 }
+
+// class LoggerStub {
+//   expiredCookie(ip: any, userAgent: any) {
+//     console.log('calling Stub');
+//     return 'Expired Cookies error log';
+//   }
+//   failedAttempt(errMsg: any, ipAddress: any, userAgent: string) {
+//     console.log('Failed loggin attempt log');
+//   }
+// }
 describe('Login Guard', () => {
   let guard: LoginGuard;
   let jwtManager: JwtManager;
+  let logger: CustomLogger;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -49,6 +62,7 @@ describe('Login Guard', () => {
         ConfigModule.forRoot({ isGlobal: true }),
       ],
       providers: [
+        CustomLogger,
         LoginGuard,
         { provide: 'JWTConfigService', useClass: JwtConfigService },
         {
@@ -60,6 +74,7 @@ describe('Login Guard', () => {
 
     guard = module.get<LoginGuard>(LoginGuard);
     jwtManager = module.get<JwtManagerStub>('JwtManager');
+    logger = module.get<CustomLogger>(CustomLogger);
   });
 
   it('Should be defined', () => {
@@ -78,24 +93,39 @@ describe('Login Guard', () => {
     expect(expiredCheckSpy).toHaveReturnedWith(true);
   });
 
-  it('Should throw when the token is not in the cookies object', async () => {
-    const extractFromCookiesSpy = jest.spyOn(guard, 'exctractFromCookies');
-    const ctx = makeGenericContext({ random_key: 'random_value' }, 'fake-ip', {
+  it('Should throw an EXPIRED BOTH TOKENS unauthorized message when the token and refreshToken is not in the cookies object', async () => {
+    // Empty Cookies
+    const ctx = makeGenericContext({}, 'fake-ip', {
       'user-agent': 'fake-user-agent',
     });
-    const request: Request = ctx.switchToHttp().getRequest();
-    await expect(guard.canActivate(ctx)).rejects.toThrow(UnauthorizedException);
-    expect(extractFromCookiesSpy).toHaveBeenCalledWith(request);
-    expect(extractFromCookiesSpy).toHaveReturnedWith(null);
+    await expect(guard.canActivate(ctx)).rejects.toThrow(
+      new UnauthorizedException('EXPIRED BOTH TOKENS'),
+    );
   });
 
-  it('Should return the access_token when cookie is present', async () => {
-    const extractFromCookiesSpy = jest.spyOn(guard, 'exctractFromCookies');
-    const ctx = makeGenericContext({ access_token: 'any_jwt' }, 'fake-ip', {
+  it('Should throw and EXPIRED ACCESS TOKEN  when only accessToken is not present on the cookie payload', async () => {
+    const ctx = makeGenericContext({ refreshToken: 'any_jwt' }, 'fake-ip', {
       'user-agent': 'fake-user-agent',
     });
+    await expect(guard.canActivate(ctx)).rejects.toThrow(
+      new UnauthorizedException('EXPIRED ACCESS TOKEN'),
+    );
+  });
+
+  it('Should return the access_token and refreshToken when cookie is present', async () => {
+    const extractFromCookiesSpy = jest.spyOn(guard, 'exctractFromCookies');
+    const ctx = makeGenericContext(
+      { access_token: 'any_jwt', refreshToken: 'any_jwt' },
+      'fake-ip',
+      {
+        'user-agent': 'fake-user-agent',
+      },
+    );
     await guard.canActivate(ctx);
-    expect(extractFromCookiesSpy).toHaveReturnedWith('any_jwt');
+    expect(extractFromCookiesSpy).toHaveReturnedWith({
+      accessToken: 'any_jwt',
+      refreshToken: 'any_jwt',
+    });
   });
 
   it('Should throw when the verify function throws', async () => {

@@ -21,18 +21,19 @@ export class LoginGuard implements CanActivate {
 
     if (this.areCookiesExpired(request.cookies)) {
       this.logger.expiredCookie(request.ip, request['headers']['user-agent']);
-      throw new UnauthorizedException('Expired Cookie');
+      throw new UnauthorizedException('EXPIRED BOTH TOKENS');
     }
 
-    const token = this.exctractFromCookies(request);
+    const { accessToken, refreshToken } = this.exctractFromCookies(request);
 
-    if (!token) {
-      throw new UnauthorizedException('Unauthorized Request');
+    // Access Token expirou
+    if (!accessToken && refreshToken) {
+      throw new UnauthorizedException('EXPIRED ACCESS TOKEN');
     }
 
     /* JWT Signature Verifycation */
     try {
-      const payload = await this.jwtManager.verifyToken(token, {
+      const payload = await this.jwtManager.verifyToken(accessToken, {
         refresh: false,
       });
       request['user'] = payload;
@@ -43,17 +44,21 @@ export class LoginGuard implements CanActivate {
         request.ip,
         request['headers']['user-agent'],
       );
+
       throw new UnauthorizedException('Token Signature Verification Failed');
     }
 
     return true;
   }
 
-  exctractFromCookies(request: Request): string | null {
-    if (request.cookies && request.cookies.access_token) {
-      return request.cookies.access_token;
-    }
-    return null;
+  exctractFromCookies(
+    request: Request,
+  ): { accessToken: string; refreshToken: string } | null {
+    console.log('CK', request.cookies);
+    return {
+      accessToken: request.cookies.access_token,
+      refreshToken: request.cookies.refreshToken,
+    };
   }
 
   areCookiesExpired = (cookies: any) => {

@@ -9,6 +9,7 @@ export const makeFakeGetDepartmentRequest = (): GetEmployeeListDTO => {
     departmentName: 'fake-department',
     limit: 10,
     page: 1,
+    role: 'managers',
   };
 };
 

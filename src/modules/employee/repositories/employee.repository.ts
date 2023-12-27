@@ -2,7 +2,6 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from '../entities/employee.entity';
 import { FindOneOptions, Repository } from 'typeorm';
-import { Department } from 'src/modules/departments/entities/department.entity';
 import {
   CreateEmployeeResponse,
   DeleteEmployeeResponse,
@@ -26,6 +25,7 @@ export class EmployeeRepository {
       .createQueryBuilder('employee')
       .skip((page - 1) * limit)
       .take(limit)
+      .leftJoinAndSelect('employee.department', 'department')
       .getMany();
   }
   /**
@@ -110,6 +110,13 @@ export class EmployeeRepository {
     return await this.repository.findOne({
       where: { id: userId },
       relations: ['roles'],
+    });
+  }
+
+  /* Find all managers method */
+  async getAllByRole({ roleId }): Promise<Employee[]> {
+    return await this.repository.find({
+      where: { role: { id: roleId } },
     });
   }
 }

@@ -5,7 +5,7 @@ import { JwtData } from '../DTOs/jwt/jwt-dto';
 import { CreateJwtData, JwtPayload } from '../DTOs/jwt/jwt-payload';
 import { JwtConfigService } from 'src/config/security/jwt.config.service';
 import { CustomLogger } from 'src/modules/logger/services/logger.service';
-
+import ms from 'ms';
 @Injectable()
 export class JwtServiceManager implements JwtManager {
   constructor(
@@ -18,12 +18,12 @@ export class JwtServiceManager implements JwtManager {
     const jwtOptions = this.jwtConfig.getJwtOptions();
     const access_token = await this.jwtService.signAsync(payload, {
       secret: jwtOptions.secret,
-      expiresIn: jwtOptions.expiration,
+      expiresIn: ms(1800000),
     });
-
+    console.log(jwtOptions.refreshTokenExpiration, jwtOptions.expiration);
     const refreshToken = await this.jwtService.signAsync(payload, {
       secret: jwtOptions.refreshTokenSecret,
-      expiresIn: jwtOptions.refreshTokenExpiration,
+      expiresIn: ms('1d'),
     });
 
     this.logger.generateJwtLog(payload.username, jwtOptions.expiration);
