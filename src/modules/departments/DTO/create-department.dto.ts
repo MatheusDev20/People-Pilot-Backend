@@ -12,5 +12,5 @@ export class CreateDepartmentDTO {
 
   @IsNotEmpty()
   @IsEmail()
-  managerMail: string;
+  managerEmail: string;
 }

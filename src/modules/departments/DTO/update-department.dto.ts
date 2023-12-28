@@ -14,5 +14,5 @@ export class UpdateDepartmentDTO {
   @IsNotEmpty()
   @IsString()
   @MaxLength(25)
-  managerMail: string;
+  managerEmail: string;
 }
