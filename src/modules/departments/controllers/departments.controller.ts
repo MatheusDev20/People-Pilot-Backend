@@ -45,7 +45,7 @@ export class DepartmentsController {
     return created(await this.service.createDepartment(data));
   }
 
-  // @Roles('managers')
+  @Roles('managers')
   @Put(':uuid')
   async update(
     @Param() params: FindOneDepartmentDTO,
