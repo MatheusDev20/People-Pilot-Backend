@@ -36,15 +36,15 @@ export class DepartmentsService {
   async createDepartment(
     data: CreateDepartmentDTO,
   ): Promise<CreateDepartmentResponseDTO> {
-    const { name, managerMail } = data;
+    const { name, managerEmail } = data;
     if (await this.find('name', name)) {
       throw new BadRequestException(`Department ${name} already exists`);
     }
 
-    const manager = await this.employeeService.find('email', managerMail);
+    const manager = await this.employeeService.find('email', managerEmail);
     if (!manager) {
       throw new BadRequestException(
-        `Manager ${managerMail} not found in the System`,
+        `Manager ${managerEmail} not found in the System`,
       );
     }
 
@@ -57,25 +57,28 @@ export class DepartmentsService {
   }
 
   async updateDepartment(id: string, data: Partial<UpdateDepartmentDTO>) {
-    const { managerMail, name } = data;
+    const { managerEmail, name } = data;
 
     if (name && (await this.find('name', name))) {
       throw new BadRequestException(`Department ${name} already exists`);
     }
 
-    if (managerMail && !(await this.employeeService.find('email', managerMail)))
+    if (
+      managerEmail &&
+      !(await this.employeeService.find('email', managerEmail))
+    )
       throw new BadRequestException(
-        `Manager Mail ${managerMail} not found in the System`,
+        `Manager Mail ${managerEmail} not found in the System`,
       );
 
-    delete data.managerMail;
+    delete data.managerEmail;
 
     const updateData: Partial<UpdateDepartmentRepositoryDTO> = { ...data };
 
-    if (managerMail)
+    if (managerEmail)
       updateData.manager = await this.employeeService.find(
         'email',
-        managerMail,
+        managerEmail,
       );
 
     return this.departmentRepository.updateDepartment(id, updateData);

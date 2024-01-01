@@ -54,7 +54,6 @@ export class LoginGuard implements CanActivate {
   exctractFromCookies(
     request: Request,
   ): { accessToken: string; refreshToken: string } | null {
-    console.log('CK', request.cookies);
     return {
       accessToken: request.cookies.access_token,
       refreshToken: request.cookies.refreshToken,

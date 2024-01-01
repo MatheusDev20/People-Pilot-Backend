@@ -10,7 +10,7 @@ export class Utils {
       httpOnly: true,
       secure: false,
       // expires: COOKIE_EXPIRATION_NEW,
-      maxAge: 60 * 60 * 1000, // 1h
+      maxAge: 55 * 60 * 1000, // 55 min
       // maxAge: 120000, // 3min tst
     });
 
