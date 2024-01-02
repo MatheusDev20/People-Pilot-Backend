@@ -13,14 +13,11 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter()); // Handles all exceptions throw by the App.
   app.use(cookieParser()); // cookie parser middleware
-  app.enableCors({
-    origin: 'http://localhost:3000',
-    credentials: true,
-  });
-  app.enableCors({
-    origin: 'https://hr-fz76pv9ix-matheusdev20.vercel.app/',
-    credentials: true,
-  });
+  // app.enableCors({
+  //   origin: 'http://localhost:3000',
+  //   credentials: true,
+  // });
+  app.enableCors();
   const config = new DocumentBuilder()
     .setTitle('STX-APIs')
     .setDescription('APIs and resources to manage STX entities')
