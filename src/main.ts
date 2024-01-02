@@ -18,7 +18,7 @@ async function bootstrap() {
   //   credentials: true,
   // });
   app.enableCors({
-    origin: 'https://hr-fz76pv9ix-matheusdev20.vercel.app/',
+    origin: 'https://hr-fz76pv9ix-matheusdev20.vercel.app',
     credentials: true,
   });
   const config = new DocumentBuilder()
