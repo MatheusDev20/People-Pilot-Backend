@@ -9,3 +9,6 @@
 
 -> Kill process on port 3001
     fuser -k 9999/tcp
+
+
+    MYSQL_ROOT_PASSWORD=digitaloceandb123
