@@ -10,6 +10,7 @@ export class Utils {
       httpOnly: true,
       secure: false,
       domain: 'https://ksx-backend.onrender.com',
+      sameSite: 'none',
       // expires: COOKIE_EXPIRATION_NEW,
       maxAge: 55 * 60 * 1000, // 55 min
       // maxAge: 120000, // 3min tst
@@ -19,6 +20,7 @@ export class Utils {
       httpOnly: true,
       secure: false,
       domain: 'https://ksx-backend.onrender.com',
+      sameSite: 'none',
       maxAge: 1 * 24 * 60 * 60 * 1000, // 2 days
       // maxAge: 180000, // 3min tst
     });
