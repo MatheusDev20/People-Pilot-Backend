@@ -17,10 +17,7 @@ async function bootstrap() {
   //   origin: 'http://localhost:3000',
   //   credentials: true,
   // });
-  app.enableCors({
-    origin: 'https://hr-fz76pv9ix-matheusdev20.vercel.app',
-    credentials: true,
-  });
+  app.enableCors();
   const config = new DocumentBuilder()
     .setTitle('STX-APIs')
     .setDescription('APIs and resources to manage STX entities')

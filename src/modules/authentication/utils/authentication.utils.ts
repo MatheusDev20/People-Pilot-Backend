@@ -8,9 +8,8 @@ export class Utils {
     const { access_token } = cookieData;
     currResponse.cookie('access_token', access_token, {
       httpOnly: true,
-      secure: true,
-      domain: 'https://ksx-backend.onrender.com',
-      sameSite: 'none',
+      secure: false,
+      // sameSite: 'none',
       // expires: COOKIE_EXPIRATION_NEW,
       maxAge: 55 * 60 * 1000, // 55 min
       // maxAge: 120000, // 3min tst
@@ -18,9 +17,8 @@ export class Utils {
 
     currResponse.cookie('refreshToken', cookieData.refreshToken, {
       httpOnly: true,
-      secure: true,
-      domain: 'https://ksx-backend.onrender.com',
-      sameSite: 'none',
+      secure: false,
+      // sameSite: 'none',
       maxAge: 1 * 24 * 60 * 60 * 1000, // 2 days
       // maxAge: 180000, // 3min tst
     });
