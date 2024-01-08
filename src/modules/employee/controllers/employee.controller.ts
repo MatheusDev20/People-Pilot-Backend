@@ -149,9 +149,18 @@ export class EmployeeController {
     @Body() data: PaymentInfoDTO,
   ) {
     const { uuid } = params;
-    await this.addPaymentInfoUseCase.execute({
+    const { id } = await this.addPaymentInfoUseCase.execute({
       employeeId: uuid,
       paymentInfo: data,
     });
+
+    return updated({ updatedEmployeeId: id });
+  }
+
+  @UseGuards(LoginGuard, RoleGuard)
+  @Roles('managers')
+  @Get('/payment-info/available-banks')
+  async getAvailableBanks() {
+    return ok(await this.addPaymentInfoUseCase.listAvailableBanks());
   }
 }

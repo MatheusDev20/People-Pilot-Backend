@@ -25,4 +25,9 @@ export class PaymentInfoRepository {
 
     return dbResponse;
   }
+
+  async getAllBanks(): Promise<Bank[]> {
+    const dbResponse = await this.bankRepository.find();
+    return dbResponse;
+  }
 }

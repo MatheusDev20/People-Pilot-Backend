@@ -42,4 +42,9 @@ export class AddPaymentInformation {
 
     return { id: updatedId };
   }
+
+  async listAvailableBanks() {
+    const availableBanks = await this.paymentInfoRepository.getAllBanks();
+    return availableBanks;
+  }
 }

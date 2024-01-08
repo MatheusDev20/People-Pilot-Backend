@@ -13,12 +13,14 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter()); // Handles all exceptions throw by the App.
   app.use(cookieParser()); // cookie parser middleware
-  // app.enableCors({
-  //   origin: 'http://localhost:3000',
-  //   credentials: true,
-  // });
+  const localOrigin = {
+    origin: 'http://localhost:3000',
+    credentials: true,
+  };
+  process.env.NODE_ENV === 'production'
+    ? app.enableCors()
+    : app.enableCors(localOrigin);
 
-  app.enableCors();
   const config = new DocumentBuilder()
     .setTitle('STX-APIs')
     .setDescription('APIs and resources to manage STX entities')
