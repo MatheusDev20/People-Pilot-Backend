@@ -34,6 +34,8 @@ import { AvatarProfile } from 'src/@types';
 import { CreateEmployeeUseCase } from '../use-cases/create-employee-use-case';
 import { CreateManagerUseCase } from '../use-cases/create-manager-use-case';
 import { GetEmployeeListUseCase } from '../use-cases/get-employee-list-use-case';
+import { PaymentInfoDTO } from '../DTOs/payment-info-dto';
+import { AddPaymentInformation } from '../use-cases/add-payment-information-use-case';
 
 @Controller('employee')
 export class EmployeeController {
@@ -43,6 +45,7 @@ export class EmployeeController {
     private createManagerUseCase: CreateManagerUseCase,
     private listEmployeesUseCase: GetEmployeeListUseCase,
     private uploadService: UploadFileService,
+    private addPaymentInfoUseCase: AddPaymentInformation,
   ) {}
 
   /**
@@ -136,5 +139,19 @@ export class EmployeeController {
       avatar: fileUrl,
     });
     return updated(updatedEmployee);
+  }
+
+  @UseGuards(LoginGuard, RoleGuard)
+  @Roles('managers')
+  @Post('/payment-info/:uuid')
+  async addEmployeePaymentInfo(
+    @Param() params: FindOneDTO,
+    @Body() data: PaymentInfoDTO,
+  ) {
+    const { uuid } = params;
+    await this.addPaymentInfoUseCase.execute({
+      employeeId: uuid,
+      paymentInfo: data,
+    });
   }
 }

@@ -17,6 +17,7 @@ async function bootstrap() {
   //   origin: 'http://localhost:3000',
   //   credentials: true,
   // });
+
   app.enableCors();
   const config = new DocumentBuilder()
     .setTitle('STX-APIs')

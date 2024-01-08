@@ -20,6 +20,7 @@ import { FindOneDTO } from 'src/class-validator/find-one.dto';
 import { UpdateEmployeeResponse } from 'src/modules/employee/DTOs/responses.dto';
 import { CreateEmployeeUseCase } from 'src/modules/employee/use-cases/create-employee-use-case';
 import { GetEmployeeListUseCase } from 'src/modules/employee/use-cases/get-employee-list-use-case';
+import { AddPaymentInformation } from 'src/modules/employee/use-cases/add-payment-information-use-case';
 
 describe('Employee Controller', () => {
   let sut: EmployeeController;
@@ -65,6 +66,12 @@ describe('Employee Controller', () => {
     }
   }
 
+  class AddPaymentInfoStub {
+    async execute() {
+      return new Promise((resolve) => resolve('OK'));
+    }
+  }
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -94,6 +101,10 @@ describe('Employee Controller', () => {
         {
           provide: EmployeeRepository,
           useClass: EmployeeRepositoryStub,
+        },
+        {
+          provide: AddPaymentInformation,
+          useClass: AddPaymentInfoStub,
         },
       ],
     }).compile();

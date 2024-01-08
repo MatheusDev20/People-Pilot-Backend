@@ -27,6 +27,7 @@ export const makeFakeUser = (): Employee => {
     refreshToken,
     status: 'active',
     managedDepartments: [],
+    paymentInfo: null,
   };
   return user;
 };

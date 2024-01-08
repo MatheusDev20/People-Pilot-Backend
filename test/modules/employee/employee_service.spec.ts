@@ -243,6 +243,7 @@ describe('Employee Service', () => {
       'department.manager',
       'department.employees',
       'managedDepartments',
+      'paymentInfo',
     ]);
     expect.assertions(2);
   });
