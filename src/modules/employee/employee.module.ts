@@ -18,10 +18,22 @@ import { RefreshTokenRepository } from './repositories/refresh-token.repository'
 import { CreateEmployeeUseCase } from './use-cases/create-employee-use-case';
 import { CreateManagerUseCase } from './use-cases/create-manager-use-case';
 import { GetEmployeeListUseCase } from './use-cases/get-employee-list-use-case';
+import { AddPaymentInformation } from './use-cases/add-payment-information-use-case';
+import { PaymentInfoRepository } from './repositories/payment-info.repository';
+import { PaymentInfo } from './entities/paymentInfo.entity';
+import { Bank } from './entities/banks.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Employee, Department, Role, Task, RefreshTokens]),
+    TypeOrmModule.forFeature([
+      Employee,
+      Department,
+      Role,
+      Task,
+      RefreshTokens,
+      PaymentInfo,
+      Bank,
+    ]),
     SecurityModule,
     DepartmentsModule,
     LoggerModule,
@@ -37,6 +49,8 @@ import { GetEmployeeListUseCase } from './use-cases/get-employee-list-use-case';
     CreateEmployeeUseCase,
     CreateManagerUseCase,
     GetEmployeeListUseCase,
+    AddPaymentInformation,
+    PaymentInfoRepository,
   ],
   exports: [EmployeeService, EmployeeRepository],
 })

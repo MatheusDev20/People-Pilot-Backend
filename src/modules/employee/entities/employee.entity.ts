@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -14,6 +15,7 @@ import { Task } from 'src/modules/task/entities/task.entity';
 import { Exclude, Transform } from 'class-transformer';
 import { isoToLocale } from 'src/helpers';
 import { RefreshTokens } from './refresh-token.entity';
+import { PaymentInfo } from './paymentInfo.entity';
 
 @Entity()
 export class Employee {
@@ -73,4 +75,11 @@ export class Employee {
 
   @OneToMany(() => Department, (department) => department.manager)
   managedDepartments: Department[];
+
+  @OneToOne(() => PaymentInfo, { nullable: true })
+  @JoinColumn({
+    name: 'paymentInfoId',
+    referencedColumnName: 'id',
+  })
+  paymentInfo: PaymentInfo;
 }

@@ -13,6 +13,7 @@ import {
   GetDtoByDepartment,
   UpdateEmployeeRepositoryDTO,
 } from './DTOs/employe.dto';
+import { PaymentInfoDTO } from '../DTOs/payment-info-dto';
 
 @Injectable()
 export class EmployeeRepository {
@@ -118,5 +119,18 @@ export class EmployeeRepository {
     return await this.repository.find({
       where: { role: { id: roleId } },
     });
+  }
+
+  async savePaymentInfo(
+    employee: Employee,
+    data: PaymentInfoDTO,
+  ): Promise<string> {
+    const dbResponse = await this.repository.save({
+      ...employee,
+      paymentInfo: data,
+    });
+    console.log(dbResponse);
+
+    return employee.id;
   }
 }

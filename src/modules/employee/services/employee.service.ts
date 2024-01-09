@@ -76,6 +76,7 @@ export class EmployeeService {
       'department.manager',
       'department.employees',
       'managedDepartments',
+      'paymentInfo',
     ]);
 
     if (!employee) throw new NotFoundException('Employee not found');
