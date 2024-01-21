@@ -13,7 +13,7 @@ export class PaymentInfoDTO {
   accountNumber: string;
 
   @IsString()
-  @MaxLength(5)
+  @MaxLength(6)
   agencyNumber: string;
 
   @IsString()

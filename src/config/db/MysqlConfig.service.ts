@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { Logger } from '@nestjs/common';
 import path from 'path';
+import e from 'express';
 
 @Injectable()
 export class MySQLDBConfigService implements TypeOrmOptionsFactory {
@@ -11,6 +12,7 @@ export class MySQLDBConfigService implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
     const entities = this.configService.get<string>('DB_ENTITIES');
     try {
+      console.log(path.join(__dirname, '..', '..') + entities);
       const options: TypeOrmModuleOptions = {
         type: 'mysql',
         host: this.configService.get<string>('DB_HOST'),
