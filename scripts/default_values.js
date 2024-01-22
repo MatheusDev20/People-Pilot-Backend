@@ -19,7 +19,6 @@ const source = new DataSource({
 
 const SALT_ROUNDS = 12;
 const defaultUserMail = 'admin@dunder.com';
-const defaultPass = bcrypt.hash('admin123456', SALT_ROUNDS);
 
 async function run() {
   try {
@@ -32,6 +31,7 @@ async function run() {
     await source.query(
       `INSERT INTO department (id, name, description, isActive, created_at, updated_at, managerId) VALUES ("${defaultDepartmentId}", "Managers", "Managers Department", 1, NOW(), NOW(), NULL)`,
     );
+    const defaultPass = await bcrypt.hash('admin123456', SALT_ROUNDS);
     await source.query(
       `INSERT INTO employee (id, name, email, password, phone, birthDate, hire_date, position, updated_at, created_at, status, departmentId, roleId)
       VALUES ("${uuidv4()}", "Admin", "${defaultUserMail}", "${defaultPass}", "32999850138", "1999-01-01", NOW(), "SYSTEM Admin", NOW(), NOW(), "Active", "${defaultDepartmentId}", 1)`,
