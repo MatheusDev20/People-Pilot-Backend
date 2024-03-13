@@ -1,13 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  Body,
-  Controller,
-  HttpCode,
-  Inject,
-  Post,
-  Req,
-  Res,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Req, Res } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { LoginDTO } from '../DTOs/login-controller.dto';
 import { authenticated, ok } from 'src/helpers/http';
@@ -50,7 +42,6 @@ export class AuthenticationController {
     @Req() req: Request,
   ) {
     const token = req.cookies['refreshToken'];
-    console.log('TK', token);
     const { access_token, refreshToken, user } =
       await this.refreshTokenUseCase.execute(token);
     this.utils.setCookies(response, { access_token, refreshToken });

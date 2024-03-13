@@ -52,6 +52,7 @@ export class S3Service implements StorageManager {
         resolve(`${process.env.BUCKET_URL}${s3Path}`),
       );
     } catch (err) {
+      console.log('Error', err);
       throw new InternalServerErrorException('Internal Server Error');
     }
   }

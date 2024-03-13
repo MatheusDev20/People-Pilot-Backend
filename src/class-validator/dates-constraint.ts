@@ -22,7 +22,7 @@ export class IsDateYYYYMMDDConstraint implements ValidatorConstraintInterface {
   }
 
   defaultMessage() {
-    return 'Date format is not valid';
+    return 'Date must be in the format YYYY-MM-DD.';
   }
 }
 

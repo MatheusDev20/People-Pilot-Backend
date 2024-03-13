@@ -40,20 +40,24 @@ const makeSdkInput = (
   return new PutObjectCommand(input);
 };
 
+class S3ClientStub {
+  send = jest.fn();
+}
+
 describe('S3Service', () => {
   let s3Service: S3Service;
   let logger: CustomLogger;
-  let mockedClient: S3Client;
+  let mockedClient: S3ClientStub;
 
   beforeEach(async () => {
-    mockedClient = new S3Client({});
+    mockedClient = new S3ClientStub();
     const moduleRef = await Test.createTestingModule({
       providers: [S3Service, CustomLogger],
     }).compile();
 
     s3Service = moduleRef.get<S3Service>(S3Service);
     logger = moduleRef.get<CustomLogger>(CustomLogger);
-    s3Service.client = mockedClient;
+    s3Service.client = mockedClient as any;
   });
 
   describe('Persiste file on s3', () => {
