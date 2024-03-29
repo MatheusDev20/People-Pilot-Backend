@@ -1,11 +1,10 @@
-import { Role } from 'src/modules/employee/entities/roles.entity';
 import { LoginDTO } from 'src/modules/authentication/DTOs/login-controller.dto';
 import { JwtData } from 'src/modules/security/DTOs/jwt/jwt-dto';
 
 /**
  * Folders to be created on S3
  */
-export type FileAppResources = 'employee_avatar' | 'another_resource';
+export type FileAppResources = 'employee_avatar' | any;
 
 export type StorageManager = {
   persist(
@@ -15,6 +14,7 @@ export type StorageManager = {
 };
 
 export type AvatarProfile = Express.Multer.File;
+export type EmployeeDocument = Express.Multer.File;
 
 export type Authentication = {
   login(data: LoginDTO): Promise<JwtData>;

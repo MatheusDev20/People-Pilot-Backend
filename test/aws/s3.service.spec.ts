@@ -5,6 +5,7 @@ import { FileAppResources } from 'src/@types';
 import { Test } from '@nestjs/testing';
 import * as helpers from '../../src/modules/aws/helpers';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { getMonthName } from 'src/helpers';
 
 const makeFileRequest = (): {
   file: Express.Multer.File;
@@ -73,9 +74,9 @@ describe('S3Service', () => {
         'employee_avatar',
       );
       expect(s3Path).toEqual(
-        `stx-s3-storage-employee_avatar/${date.getFullYear()}/${
-          date.getMonth() + 1
-        }/filename-test`,
+        `stx-s3-storage-employee_avatar/${date.getFullYear()}/${getMonthName(
+          date.getMonth() + 1,
+        )}/filename-test`,
       );
     });
 

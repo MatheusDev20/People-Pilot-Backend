@@ -16,6 +16,7 @@ import { Exclude, Transform } from 'class-transformer';
 import { isoToLocale } from 'src/helpers';
 import { RefreshTokens } from './refresh-token.entity';
 import { PaymentInfo } from './paymentInfo.entity';
+import { Documents } from './documents.entity';
 
 @Entity()
 export class Employee {
@@ -82,4 +83,9 @@ export class Employee {
     referencedColumnName: 'id',
   })
   paymentInfo: PaymentInfo;
+
+  @OneToMany(() => Documents, (document) => document.employee, {
+    nullable: true,
+  })
+  documents: Documents[];
 }

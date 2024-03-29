@@ -22,6 +22,9 @@ import { AddPaymentInformation } from './use-cases/add-payment-information-use-c
 import { PaymentInfoRepository } from './repositories/payment-info.repository';
 import { PaymentInfo } from './entities/paymentInfo.entity';
 import { Bank } from './entities/banks.entity';
+import { UploadDocumentUseCase } from './use-cases/upload-document-use-case';
+import { DocumentsRepository } from './repositories/documents.repository';
+import { Documents } from './entities/documents.entity';
 
 @Module({
   imports: [
@@ -33,6 +36,7 @@ import { Bank } from './entities/banks.entity';
       RefreshTokens,
       PaymentInfo,
       Bank,
+      Documents,
     ]),
     SecurityModule,
     DepartmentsModule,
@@ -51,6 +55,8 @@ import { Bank } from './entities/banks.entity';
     GetEmployeeListUseCase,
     AddPaymentInformation,
     PaymentInfoRepository,
+    UploadDocumentUseCase,
+    DocumentsRepository,
   ],
   exports: [EmployeeService, EmployeeRepository],
 })

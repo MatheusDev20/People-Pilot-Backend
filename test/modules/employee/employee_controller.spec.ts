@@ -21,6 +21,7 @@ import { UpdateEmployeeResponse } from 'src/modules/employee/DTOs/responses.dto'
 import { CreateEmployeeUseCase } from 'src/modules/employee/use-cases/create-employee-use-case';
 import { GetEmployeeListUseCase } from 'src/modules/employee/use-cases/get-employee-list-use-case';
 import { AddPaymentInformation } from 'src/modules/employee/use-cases/add-payment-information-use-case';
+import { UploadDocumentUseCase } from 'src/modules/employee/use-cases';
 
 describe('Employee Controller', () => {
   let sut: EmployeeController;
@@ -71,6 +72,11 @@ describe('Employee Controller', () => {
       return new Promise((resolve) => resolve('OK'));
     }
   }
+  class UploadDocumentUseCaseStub {
+    async execute() {
+      return new Promise((resolve) => resolve('OK'));
+    }
+  }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -105,6 +111,10 @@ describe('Employee Controller', () => {
         {
           provide: AddPaymentInformation,
           useClass: AddPaymentInfoStub,
+        },
+        {
+          provide: UploadDocumentUseCase,
+          useClass: UploadDocumentUseCaseStub,
         },
       ],
     }).compile();

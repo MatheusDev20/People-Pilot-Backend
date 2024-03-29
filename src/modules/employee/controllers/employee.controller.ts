@@ -29,13 +29,18 @@ import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
 import { FindOneDTO } from '../../../class-validator/find-one.dto';
 import { UploadFileService } from 'src/modules/storage/upload/upload-file';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { pipeInstance } from '../../storage/file-validations';
-import { AvatarProfile } from 'src/@types';
+import {
+  AvatarPipeInstance,
+  DocumentPipeInstance,
+} from '../../storage/file-validations';
+import { AvatarProfile, EmployeeDocument } from 'src/@types';
 import { CreateEmployeeUseCase } from '../use-cases/create-employee-use-case';
 import { CreateManagerUseCase } from '../use-cases/create-manager-use-case';
 import { GetEmployeeListUseCase } from '../use-cases/get-employee-list-use-case';
 import { PaymentInfoDTO } from '../DTOs/payment-info-dto';
 import { AddPaymentInformation } from '../use-cases/add-payment-information-use-case';
+import { UploadDocumentDTO } from '../DTOs/update-document-dto';
+import { UploadDocumentUseCase } from '../use-cases/upload-document-use-case';
 
 @Controller('employee')
 export class EmployeeController {
@@ -46,6 +51,7 @@ export class EmployeeController {
     private listEmployeesUseCase: GetEmployeeListUseCase,
     private uploadService: UploadFileService,
     private addPaymentInfoUseCase: AddPaymentInformation,
+    private uploadDocumentUseCase: UploadDocumentUseCase,
   ) {}
 
   /**
@@ -126,7 +132,7 @@ export class EmployeeController {
   @Patch('/avatar/:uuid')
   @UseInterceptors(FileInterceptor('employee_avatar'))
   async uploadAvatar(
-    @UploadedFile(pipeInstance)
+    @UploadedFile(AvatarPipeInstance)
     file: AvatarProfile,
     @Param() params: FindOneDTO,
   ): Promise<HttpResponse> {
@@ -162,5 +168,25 @@ export class EmployeeController {
   @Get('/payment-info/available-banks')
   async getAvailableBanks() {
     return ok(await this.addPaymentInfoUseCase.listAvailableBanks());
+  }
+
+  @UseGuards(LoginGuard, RoleGuard)
+  @Roles('managers')
+  @Post('/:uuid/documents')
+  @UseInterceptors(FileInterceptor('document'))
+  async uploadDocument(
+    @UploadedFile(DocumentPipeInstance)
+    file: EmployeeDocument,
+    @Body() data: UploadDocumentDTO,
+    @Param() params: FindOneDTO,
+  ) {
+    const { uuid } = params;
+    const { docIdentifierId } = await this.uploadDocumentUseCase.execute({
+      id: uuid,
+      data,
+      file,
+    });
+
+    return created({ docIdentifierId });
   }
 }

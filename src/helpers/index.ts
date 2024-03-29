@@ -12,3 +12,27 @@ export const getClientIp = (request: Request) => {
 
 export const isoToLocale = (date: Date, locale: string) =>
   date.toLocaleDateString(locale);
+
+export function getMonthName(monthNumber) {
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  const index = monthNumber - 1;
+  if (index >= 0 && index < 12) {
+    return monthNames[index];
+  } else {
+    return 'Invalid month number';
+  }
+}

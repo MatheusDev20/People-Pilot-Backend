@@ -28,6 +28,7 @@ export const makeFakeUser = (): Employee => {
     status: 'active',
     managedDepartments: [],
     paymentInfo: null,
+    documents: null,
   };
   return user;
 };
