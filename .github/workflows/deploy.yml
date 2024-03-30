@@ -45,6 +45,6 @@ jobs:
       run: scp -r  ./dist root@${{ secrets.SSH_HOST }}:~/backend
 
     - name: Restarting Application with PM2
-      run: ssh root@${{ secrets.SSH_HOST }} "pm2 restart all || pm2 start /home/backend/dist/main.js --name pp-backend"
+      run: ssh root@${{ secrets.SSH_HOST }} "pm2 restart all && pm2 start ~/backend/dist/main.js"
 
     
