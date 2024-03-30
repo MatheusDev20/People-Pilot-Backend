@@ -50,7 +50,7 @@ jobs:
 
     - name: Install Production Dependencies on Server
       run: 
-        ssh root@${{ secrets.SSH_HOST }} "cd ~/backend && npm ci --omit-dev --ignore-scripts"
+        ssh root@${{ secrets.SSH_HOST }} "cd ~/backend && npm install --production --ignore-scripts"
 
     - name: Restarting Application with PM2
       run: ssh root@${{ secrets.SSH_HOST }} "pm2 restart all || pm2 start ~/backend/dist/main.js"
