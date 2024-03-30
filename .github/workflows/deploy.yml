@@ -34,25 +34,11 @@ jobs:
 
     - name: "Running Tests"
       run: npm run test
-
-    - name: 'Building App'
-      run: npm run build
-      
-    - name: Preparing Server Environment
-      run: ssh root@${{ secrets.SSH_HOST }} "mkdir -p ~/backend && rm -rf ~/backend/*"
-
-    - name: 'Moving Files via Security Shell'
+    
+    - name: "Deploying to Server"
       run: |
-        scp -r ./dist root@${{ secrets.SSH_HOST }}:~/backend
-        scp ./package.json root@${{ secrets.SSH_HOST }}:~/backend
-        scp ./package-lock.json root@${{ secrets.SSH_HOST }}:~/backend
-        scp ./.npmrc root@${{ secrets.SSH_HOST }}:~/backend
-
-    - name: Install Production Dependencies on Server
-      run: 
-        ssh root@${{ secrets.SSH_HOST }} "cd ~/backend && npm install --production --ignore-scripts"
-
-    - name: Restarting Application with PM2 Proccess
-      run: ssh root@${{ secrets.SSH_HOST }} "pm2 restart all || pm2 start ~/backend/dist/main.js"
+        ssh root@${{ secrets.SSH_HOST }} 'cd~:backend/${{ github.event.repository.name }}'
+        ssh root@${{ secrets.SSH_HOST }} 'chmod +x deploy.sh'
+        ssh root@${{ secrets.SSH_HOST }} './deploy.sh'
 
     
