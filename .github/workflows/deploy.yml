@@ -60,7 +60,7 @@ jobs:
     
     - name: 'Transfer Envirmento Variables'
       run:
-          scp ./scripts/.env.vars.sh root@${{ secrets.SSH_HOST }}:~/env.vars.sh
+          scp ./scripts/.env-vars.sh root@${{ secrets.SSH_HOST }}:~/env-vars.sh
     - name: Deploy
       run: |
         ssh root@${{ secrets.SSH_HOST }} "chmod +x ~/deploy.sh && ~/deploy.sh"
