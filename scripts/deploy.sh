@@ -2,7 +2,7 @@ echo 'Starting Deploy....'
 
 pm2 stop main
 
-echo 'Pulling from Master branch ... '
+echo 'Pulling from Github ... '
 
 git pull
 
