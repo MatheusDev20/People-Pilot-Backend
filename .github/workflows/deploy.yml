@@ -37,5 +37,5 @@ jobs:
 
     - name: Deploy
       run: 
-        ssh root@${{ secrets.SSH_HOST }} 'cd /var/www/api && chmod +x ./scripts/deploy.sh && ./scripts/deploy.sh'
+        ssh root@${{ secrets.SSH_HOST }} 'chmod +x ./scripts/deploy.sh && ./scripts/deploy.sh'
 
