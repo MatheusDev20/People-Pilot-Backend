@@ -43,12 +43,12 @@ jobs:
 
     - name: 'Moving Files via Security Shell'
       run: |
-        scp -r  ./dist root@${{ secrets.SSH_HOST }}:~/backend
-        scp  ./package.json root@${{ secrets.SSH_HOST }}:~/backend/dist
+        scp -r  ./dist root@${{ secrets.SSH_HOST }}:~backend
+        scp  ./package.json root@${{ secrets.SSH_HOST }}:~backend/dist
 
     - name: Install Production Dependencies on Server
       run: 
-        ssh root@${{ secrets.SSH_HOST }} "cd ~/backend && npm install --production"
+        ssh root@${{ secrets.SSH_HOST }} "cd ~backend && npm install --production"
 
     - name: Restarting Application with PM2
       run: ssh root@${{ secrets.SSH_HOST }} "pm2 restart all || pm2 start ~/backend/dist/main.js"
