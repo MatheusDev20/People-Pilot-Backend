@@ -44,8 +44,8 @@ jobs:
     - name: 'Moving Files via Security Shell'
       run: |
         scp -r  ./dist root@${{ secrets.SSH_HOST }}:~/backend
-        scp  ./package-lock.json root@${{ secrets.SSH_HOST }}:~/backend/dist
-        scp  ./package.json root@${{ secrets.SSH_HOST }}:~/backend/dist
+        scp  ./package-lock.json root@${{ secrets.SSH_HOST }}:~/backend
+        scp  ./package.json root@${{ secrets.SSH_HOST }}:~/backend
 
     - name: Install Production Dependencies on Server
       run: 
