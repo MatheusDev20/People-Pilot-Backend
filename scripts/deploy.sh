@@ -7,7 +7,7 @@ echo 'Pulling from Master branch ... '
 git pull
 
 rm -rf node_modules
-npm install --ignore-scripts --no-cache
+npm install --production --ignore-scripts --no-cache
 npm run build
 
 cd dist
