@@ -1,6 +1,6 @@
 echo 'Starting Deploy....'
 
-pm2 stop main
+# pm2 stop main
 
 echo 'Pulling from Github ... '
 
