@@ -4,6 +4,7 @@ echo 'Starting Deploy....'
 
 echo 'Pulling from Github ... '
 
+git checkout .
 git pull
 
 rm -rf node_modules
