@@ -43,7 +43,7 @@ jobs:
 
     - name: 'Moving Files via Security Shell'
       run: |
-        scp -r  . root@${{ secrets.SSH_HOST }}:~/backend
+        scp -r ./* root@${{ secrets.SSH_HOST }}:~/backend
 
     - name: Install Production Dependencies on Server
       run: 
