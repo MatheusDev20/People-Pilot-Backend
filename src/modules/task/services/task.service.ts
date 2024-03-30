@@ -38,6 +38,7 @@ export class TaskService {
   async read(id: string): Promise<any> {
     if (!(await this.find('id', id)))
       throw new NotFoundException('Task not found');
+
     return await this.repository.findBy(
       { where: { id } },
       { assignee: true, created_by: true },
