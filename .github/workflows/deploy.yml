@@ -42,7 +42,7 @@ jobs:
       run: ssh root@${{ secrets.SSH_HOST }} "rm -rf /~/backend/*"
 
     - name: 'Moving Files via Security Shell'
-      run: scp -r  ./dist root@${{ secrets.SSH_HOST }}:/home/backend
+      run: scp -r  ./dist root@${{ secrets.SSH_HOST }}:/~/backend
 
     - name: Restarting Application with PM2
       run: ssh root@${{ secrets.SSH_HOST }} "pm2 restart all || pm2 start /home/backend/dist/main.js --name pp-backend"
