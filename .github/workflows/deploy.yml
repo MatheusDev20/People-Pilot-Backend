@@ -11,7 +11,7 @@ on:
 jobs:
   deploy-digital-ocean:
     runs-on: ubuntu-latest
-    environment: production
+    environment: Production
     steps:
     - uses: actions/checkout@v3
 
@@ -57,7 +57,7 @@ jobs:
         echo "BUCKET_URL=${{ secrets.BUCKET_URL }}" >> $GITHUB_ENV
         echo "LOCAL_UPLOAD_FOLDER=${{ secrets.LOCAL_UPLOAD_FOLDER}}" >> $GITHUB_ENV
         echo "DEFAULT_EMPLOYEES_PASSWORD=${{ secrets.DEFAULT_EMPLOYEES_PASSWORD }}" >> $GITHUB_ENV
-        
+
     - name: Deploy
       run: |
         ssh root@${{ secrets.SSH_HOST }} "chmod +x ~/deploy.sh && ~/deploy.sh"
