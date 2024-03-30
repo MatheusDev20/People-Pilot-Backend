@@ -1,16 +1,12 @@
 echo 'Starting Deploy....'
 
-pm2 stop main
+echo 'Cloning the repository....'
 
-echo 'Pulling from Github ... '
+git clone https://github.com/MatheusDev20/People-Pilot-Backend.git /var/www/api
 
-git checkout .
-git pull
+cd /var/www/api
 
-rm -rf node_modules
-npm install --production --ignore-scripts --no-cache
-npm run build
-
-cd dist
-
-pm2 start main.js
+node -v && \
+yarn && \
+yarn build && \
+yarn start:prod

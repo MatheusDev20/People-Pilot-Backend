@@ -35,20 +35,7 @@ jobs:
     - name: Running Tests
       run: npm run test
 
-    - name: 'Building App'
-      run: npm run build
-      
-    - name: Preparing Server Environment
-      run: ssh root@${{ secrets.SSH_HOST }} "mkdir -p ~/backend && rm -rf ~/backend/*"
-
-    - name: 'Moving Files via Security Shell'
-      run: |
-        scp -r ./dist root@${{ secrets.SSH_HOST }}:~/backend
-        scp ./package.json root@${{ secrets.SSH_HOST }}:~/backend/dist
-
-    - name: Install Production Dependencies on Server
+    - name: Deploy
       run: 
-        ssh root@${{ secrets.SSH_HOST }} "cd ~/backend/dist && npm install --production --ignore-scripts"
+        ssh root@${{ secrets.SSH_HOST }} 'cd /var/www/api && chmod +x ./scripts/deploy.sh && ./scripts/deploy.sh'
 
-    - name: Restarting Application with PM2
-      run: ssh root@${{ secrets.SSH_HOST }} "pm2 restart all || pm2 start ~/backend/dist/main.js"
