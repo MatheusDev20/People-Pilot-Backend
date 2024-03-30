@@ -9,9 +9,9 @@ on:
       - master
 
 jobs:
-  build:
+  deploy-digital-ocean:
     runs-on: ubuntu-latest
-
+    environment: production
     steps:
     - uses: actions/checkout@v3
 
@@ -34,6 +34,29 @@ jobs:
 
     - name: Running Tests
       run: npm run test
+
+    - name: Set up environment variables
+      run: |
+        echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> $GITHUB_ENV
+        echo "API_PORT=${{ secrets.API_PORT }}" >> $GITHUB_ENV
+        echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+        echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
+        echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
+        echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
+        echo "DB_ENTITIES"=${{secrets.DB_ENTITIES}}" >> $GITHUB_ENV
+        echo "DB_SYNC"=${{secrets.DB_SYNC}}" >> $GITHUB_ENV
+        echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
+        echo "JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}" >> $GITHUB_ENV
+        echo "JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }}" >> $GITHUB_ENV
+        echo "JWT_REFRESH_EXPIRATION=${{ secrets.JWT_REFRESH_EXPIRATION }}" >> $GITHUB_ENV
+        echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+        echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+        echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
+        echo "BUCKET_NAME=${{ secrets.BUCKET_NAME }}" >> $GITHUB_ENV
+        echo "BUCKET_URL=${{ secrets.BUCKET_URL }}" >> $GITHUB_ENV
+        echo "LOCAL_UPLOAD_FOLDER=${{ secrets.LOCAL_UPLOAD_FOLDER}}" >> $GITHUB_ENV
+        echo "DEFAULT_EMPLOYEES_PASSWORD=${{ secrets.DEFAULT_EMPLOYEES_PASSWORD }}" >> $GITHUB_ENV
 
     - name: Deploy
       run: 
