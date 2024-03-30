@@ -47,7 +47,7 @@ jobs:
         fi
         mkdir -p api # Ensure api directory exists for .env file
         ssh root@${{ secrets.SSH_HOST }} "bash -c '\
-        cat << EOF > /var/www/api/.env
+        cat << 'INNEREOF' > api/.env
         NODE_ENV=${{ secrets.NODE_ENV }}
         API_PORT=${{ secrets.API_PORT }}
         DB_PORT=${{ secrets.DB_PORT }}
@@ -64,7 +64,8 @@ jobs:
         BUCKET_NAME=${{ secrets.BUCKET_NAME }}
         BUCKET_URL=${{ secrets.BUCKET_URL }}
         LOCAL_UPLOAD_FOLDER=${{ secrets.LOCAL_UPLOAD_FOLDER }}
-        EOF '"
+        INNEREOF
+        EOF
 
     - name: Deploy
       run: |
