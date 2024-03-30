@@ -39,7 +39,7 @@ jobs:
       run: npm run build
       
     - name: 'Removing Older Build'
-      run: ssh root${{ secrets.SSH_HOST }} "rm -rf /~/backend/*"
+      run: ssh root@${{ secrets.SSH_HOST }} "rm -rf /~/backend/*"
 
     - name: 'Moving Files via Security Shell'
       run: scp -r  ./dist root@${{ secrets.SSH_HOST }}:/home/backend
