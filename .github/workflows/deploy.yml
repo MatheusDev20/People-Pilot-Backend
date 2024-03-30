@@ -37,7 +37,7 @@ jobs:
     
     - name: "Deploying to Server"
       run: |
-        ssh root@${{ secrets.SSH_HOST }} 'cd ~:backend/${{ github.event.repository.name }}'
+        ssh root@${{ secrets.SSH_HOST }} 'cd ~/backend/${{ github.event.repository.name }}'
         ssh root@${{ secrets.SSH_HOST }} 'chmod +x deploy.sh'
         ssh root@${{ secrets.SSH_HOST }} './deploy.sh'
 
