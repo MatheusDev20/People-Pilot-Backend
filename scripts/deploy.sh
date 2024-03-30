@@ -1,9 +1,15 @@
 echo 'Starting Deploy...'
 
-cd /var/www 
-rm -rf /api
+cd /var/www
 
-echo 'Setup Enviroment Variables...'
+if [ -d "api" ]; then
+    echo 'Removing existing api directory...'
+    rm -rf api
+else
+    echo 'No existing api directory found. Skipping removal.'
+fi
+
+echo 'Setup Environment Variables...'
 chmod +x ~/env-vars.sh
 ~/env-vars.sh
 
@@ -13,7 +19,6 @@ git clone https://github.com/MatheusDev20/People-Pilot-Backend.git /var/www/api
 cd /var/www/api
 
 echo 'Installing dependencies...'
-
 node -v && \
 yarn && \
 yarn build && \
