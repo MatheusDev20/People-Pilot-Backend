@@ -10,11 +10,6 @@ describe('Role Guard', () => {
     get: jest.fn(),
   };
 
-  const ctxFactory = () => ({
-    ip: 'fake-ip',
-    cookies: { acess_token: 'valid_token' },
-    headers: {},
-  });
   let guard: RoleGuard;
   class EmployeeRepositoryStub {
     async find() {

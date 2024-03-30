@@ -52,7 +52,7 @@ class JwtManagerStub implements JwtManager {
 describe('Login Guard', () => {
   let guard: LoginGuard;
   let jwtManager: JwtManager;
-  let logger: CustomLogger;
+  // let logger: CustomLogger;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -74,7 +74,6 @@ describe('Login Guard', () => {
 
     guard = module.get<LoginGuard>(LoginGuard);
     jwtManager = module.get<JwtManagerStub>('JwtManager');
-    logger = module.get<CustomLogger>(CustomLogger);
   });
 
   it('Should be defined', () => {

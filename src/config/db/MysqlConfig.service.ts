@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { Logger } from '@nestjs/common';
 import path from 'path';
-import e from 'express';
 
 @Injectable()
 export class MySQLDBConfigService implements TypeOrmOptionsFactory {
