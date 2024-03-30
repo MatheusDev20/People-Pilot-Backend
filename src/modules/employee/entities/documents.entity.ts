@@ -1,5 +1,14 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Employee } from './employee.entity';
+import { isoToLocale } from 'src/helpers';
+import { Transform } from 'class-transformer';
 
 @Entity()
 export class Documents {
@@ -17,4 +26,12 @@ export class Documents {
 
   @ManyToOne(() => Employee, (employee) => employee.documents)
   employee: Employee;
+
+  @Transform(({ value }) => isoToLocale(value, 'pt-BR'))
+  @CreateDateColumn()
+  uploaded_at: Date;
+
+  @Transform(({ value }) => isoToLocale(value, 'pt-BR'))
+  @UpdateDateColumn()
+  updated_at: Date;
 }

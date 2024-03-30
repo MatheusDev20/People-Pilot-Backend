@@ -41,6 +41,8 @@ import { PaymentInfoDTO } from '../DTOs/payment-info-dto';
 import { AddPaymentInformation } from '../use-cases/add-payment-information-use-case';
 import { UploadDocumentDTO } from '../DTOs/update-document-dto';
 import { UploadDocumentUseCase } from '../use-cases/upload-document-use-case';
+import { Employee } from '../entities/employee.entity';
+import { DeleteEmployeeResponse, UpdateEmployeeResponse } from '../DTOs';
 
 @Controller('employee')
 export class EmployeeController {
@@ -61,7 +63,7 @@ export class EmployeeController {
   @UseGuards(LoginGuard)
   @Get('me')
   @UseInterceptors(ClassSerializerInterceptor)
-  async getMe(@Req() request): Promise<HttpResponse> {
+  async getMe(@Req() request): Promise<HttpResponse<Employee>> {
     const { id } = request.user;
     const me = await this.employeeService.find('id', id);
     return ok(me);
@@ -71,7 +73,7 @@ export class EmployeeController {
   @Get()
   async getEmployeeList(
     @Query() queryParams: GetEmployeeListDTO,
-  ): Promise<HttpResponse> {
+  ): Promise<HttpResponse<Employee>> {
     const { departmentName, page, limit, role } = queryParams;
 
     const pagination = page ?? DEFAULT_APP_PAGINATION;
@@ -88,7 +90,9 @@ export class EmployeeController {
   }
 
   @Post()
-  async save(@Body() data: CreateEmployeeDTO): Promise<HttpResponse> {
+  async save(
+    @Body() data: CreateEmployeeDTO,
+  ): Promise<HttpResponse<{ id: string }>> {
     const { role } = data;
     if (role === 'managers' || role === 'admin') {
       const { id } = await this.createManagerUseCase.execute(data);
@@ -103,7 +107,9 @@ export class EmployeeController {
   @Roles('managers')
   @Get('details/:uuid')
   @UseInterceptors(ClassSerializerInterceptor)
-  async getDetails(@Param() params: FindOneDTO): Promise<HttpResponse> {
+  async getDetails(
+    @Param() params: FindOneDTO,
+  ): Promise<HttpResponse<Employee>> {
     return ok(await this.employeeService.getDetails(params.uuid));
   }
 
@@ -113,7 +119,7 @@ export class EmployeeController {
   async update(
     @Param() params: FindOneDTO,
     @Body() data: Partial<UpdateEmployeeDTO>,
-  ): Promise<HttpResponse> {
+  ): Promise<HttpResponse<{ id: string }>> {
     const { uuid } = params;
     const { id } = await this.employeeService.update(uuid, data);
     return updated({ id });
@@ -122,7 +128,9 @@ export class EmployeeController {
   @UseGuards(LoginGuard, RoleGuard)
   @Roles('managers')
   @Delete(':uuid')
-  async delete(@Param() params: FindOneDTO): Promise<HttpResponse> {
+  async delete(
+    @Param() params: FindOneDTO,
+  ): Promise<HttpResponse<DeleteEmployeeResponse>> {
     const { uuid } = params;
     return deleted(await this.employeeService.delete(uuid));
   }
@@ -135,7 +143,7 @@ export class EmployeeController {
     @UploadedFile(AvatarPipeInstance)
     file: AvatarProfile,
     @Param() params: FindOneDTO,
-  ): Promise<HttpResponse> {
+  ): Promise<HttpResponse<UpdateEmployeeResponse>> {
     const { uuid } = params;
     const fileUrl = await this.uploadService.uploadSingleFile(
       file,
@@ -179,7 +187,7 @@ export class EmployeeController {
     file: EmployeeDocument,
     @Body() data: UploadDocumentDTO,
     @Param() params: FindOneDTO,
-  ) {
+  ): Promise<HttpResponse<{ docIdentifierId: string }>> {
     const { uuid } = params;
     const { docIdentifierId } = await this.uploadDocumentUseCase.execute({
       id: uuid,

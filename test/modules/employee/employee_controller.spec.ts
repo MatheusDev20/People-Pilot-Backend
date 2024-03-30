@@ -14,6 +14,7 @@ import {
   makeFakeEmployee,
   makeFakeGetDepartmentRequest,
   makeFakeupdateEmployee,
+  mockFile,
 } from './mocks';
 import { v4 } from 'uuid';
 import { FindOneDTO } from 'src/class-validator/find-one.dto';
@@ -22,12 +23,14 @@ import { CreateEmployeeUseCase } from 'src/modules/employee/use-cases/create-emp
 import { GetEmployeeListUseCase } from 'src/modules/employee/use-cases/get-employee-list-use-case';
 import { AddPaymentInformation } from 'src/modules/employee/use-cases/add-payment-information-use-case';
 import { UploadDocumentUseCase } from 'src/modules/employee/use-cases';
+import { InternalServerErrorException } from '@nestjs/common';
 
 describe('Employee Controller', () => {
   let sut: EmployeeController;
   let employeeService: EmployeeService;
   let useCase: CreateEmployeeUseCase;
   let listEmployeeUseCase: GetEmployeeListUseCase;
+  let uploadDocumentUseCase: UploadDocumentUseCase;
 
   class ServiceStub {
     async getEmployeeByDepartment(): Promise<Employee[]> {
@@ -125,6 +128,9 @@ describe('Employee Controller', () => {
     listEmployeeUseCase = module.get<GetEmployeeListUseCase>(
       GetEmployeeListUseCase,
     );
+    uploadDocumentUseCase = module.get<UploadDocumentUseCase>(
+      UploadDocumentUseCase,
+    );
   });
 
   it('Should be defined', () => {
@@ -196,5 +202,58 @@ describe('Employee Controller', () => {
     expect(serviceSpy).toHaveBeenCalled();
 
     expect.assertions(3);
+  });
+
+  it('Should call uploadDocument execute useCase with the Rigth arguments', async () => {
+    const params: FindOneDTO = { uuid: v4() };
+    const uploadData = {
+      documentType: 'cpf',
+      metadata: { cpf: '123456789' },
+    };
+
+    const file = mockFile();
+    jest.spyOn(uploadDocumentUseCase, 'execute');
+    await sut.uploadDocument(file, uploadData, params);
+    expect(uploadDocumentUseCase.execute).toHaveBeenCalledWith({
+      id: params.uuid,
+      data: uploadData,
+      file,
+    });
+    expect(uploadDocumentUseCase.execute).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should return the Document Identifer for the recent uploaded document', async () => {
+    const params: FindOneDTO = { uuid: v4() };
+    const uploadData = {
+      documentType: 'cpf',
+      metadata: { cpf: '123456789' },
+    };
+
+    const file = mockFile();
+    jest
+      .spyOn(uploadDocumentUseCase, 'execute')
+      .mockResolvedValue({ docIdentifierId: 'ID123' });
+
+    const response = await sut.uploadDocument(file, uploadData, params);
+    expect(response.statusCode).toEqual(201);
+    expect(response.body).toEqual({ docIdentifierId: 'ID123' });
+    expect(response.message).toEqual('Sucessfully Created!');
+  });
+
+  it('Should Throw an Error if the uploadDocument use case fails', async () => {
+    const params: FindOneDTO = { uuid: v4() };
+    const uploadData = {
+      documentType: 'cpf',
+      metadata: { cpf: '123456789' },
+    };
+
+    const file = mockFile();
+    jest.spyOn(uploadDocumentUseCase, 'execute').mockImplementationOnce(() => {
+      throw new InternalServerErrorException('Error');
+    });
+
+    expect(sut.uploadDocument(file, uploadData, params)).rejects.toThrow(
+      new InternalServerErrorException('Error'),
+    );
   });
 });

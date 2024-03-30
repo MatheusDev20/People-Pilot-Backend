@@ -15,7 +15,7 @@ import {
 import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard';
 import { Roles } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
-import { CreateTaskDTO } from '../DTO';
+import { CreateTaskDTO, UpdatedTask } from '../DTO';
 import { CreateTaskUseCase } from '../services/create-task-use-case';
 import { Request as Req } from 'express';
 import { TaskService } from '../services/task.service';
@@ -35,7 +35,7 @@ export class TaskController {
   async create(
     @Request() request: Req,
     @Body() data: CreateTaskDTO,
-  ): Promise<HttpResponse> {
+  ): Promise<HttpResponse<UpdatedTask>> {
     return created(
       await this.createTaskUseCase.execute({
         ...data,
@@ -47,7 +47,9 @@ export class TaskController {
   @UseGuards(LoginGuard, RoleGuard)
   @Roles('manager')
   @Delete(':uuid')
-  async delete(@Param() params: FindOneDTO): Promise<HttpResponse> {
+  async delete(
+    @Param() params: FindOneDTO,
+  ): Promise<HttpResponse<UpdatedTask>> {
     const { uuid } = params;
     return deleted(await this.taskService.delete(uuid));
   }
@@ -58,7 +60,7 @@ export class TaskController {
   async update(
     @Param() params: FindOneDTO,
     @Body() data: UpdateTaskDTO,
-  ): Promise<HttpResponse> {
+  ): Promise<HttpResponse<any>> {
     const { uuid } = params;
     return updated(await this.taskService.update(uuid, data));
   }
@@ -66,7 +68,7 @@ export class TaskController {
   @UseGuards(LoginGuard)
   @Get(':uuid')
   @UseInterceptors(ClassSerializerInterceptor)
-  async read(@Param() params: FindOneDTO): Promise<HttpResponse> {
+  async read(@Param() params: FindOneDTO): Promise<HttpResponse<any>> {
     const { uuid } = params;
     return ok(await this.taskService.read(uuid));
   }

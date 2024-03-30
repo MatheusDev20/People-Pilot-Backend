@@ -18,6 +18,7 @@ import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.gua
 import { UpdateDepartmentDTO } from '../DTO/update-department.dto';
 import { FindOneDepartmentDTO } from '../DTO/find-one-department.dto';
 import { ListAllDepartmentsUseCase } from '../use-cases/listAll-use-case';
+import { DeleteDepartmentResponseDTO } from '../DTO/responses.dto';
 
 @Controller('departments')
 @UseGuards(LoginGuard, RoleGuard)
@@ -50,14 +51,16 @@ export class DepartmentsController {
   async update(
     @Param() params: FindOneDepartmentDTO,
     @Body() data: Partial<UpdateDepartmentDTO>,
-  ): Promise<HttpResponse> {
+  ): Promise<HttpResponse<{ id: string }>> {
     const { uuid } = params;
     return updated(await this.service.updateDepartment(uuid, data));
   }
 
   @Roles('managers')
   @Delete(':uuid')
-  async delete(@Param() params: FindOneDepartmentDTO): Promise<HttpResponse> {
+  async delete(
+    @Param() params: FindOneDepartmentDTO,
+  ): Promise<HttpResponse<DeleteDepartmentResponseDTO>> {
     const { uuid } = params;
     return deleted(await this.service.delete(uuid));
   }

@@ -35,6 +35,7 @@ export class S3Service implements StorageManager {
   ): Promise<string> {
     const { originalname, buffer, mimetype } = file;
     const s3Path = buildS3Path(originalname, resource);
+
     const input: PutObjectCommandInput = {
       Bucket: 'stx-system',
       Key: s3Path,
@@ -42,9 +43,11 @@ export class S3Service implements StorageManager {
       ContentType: mimetype,
       ACL: 'public-read',
     };
+
     try {
       const command = new PutObjectCommand(input);
       await this.client.send(command);
+
       this.customLogger.log(
         `File ${originalname} Uploaded to ${process.env.BUCKET_NAME}`,
       );
