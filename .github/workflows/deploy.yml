@@ -34,18 +34,17 @@ jobs:
 
     - name: Running Tests
       run: yarn test
-    
     - name: Check API Directory
       run: |
         ssh root@${{ secrets.SSH_HOST }} <<'EOF'
         cd /var/www
         if [ -d "api" ]; then
-          echo "Removing existing api directory..."
           rm -rf api
         else
           echo "No existing api directory found. Skipping removal."
         fi
-        mkdir -p api # Ensure api directory exists for .env file
+        mkdir -p api
+        EOF
 
     - name: Make envfile
       uses: SpicyPizza/create-envfile@v2.0
@@ -74,19 +73,26 @@ jobs:
             fail_on_empty: false
             sort_keys: false
     
-    - name: Clone Project
+    - name: Clone Project on Production Server
       run: |
-        cd /var/www/api
-        git clone https://github.com/MatheusDev20/People-Pilot-Backend.git .
-    
+            ssh root@${{ secrets.SSH_HOST }} << 'EOF'
+            cd /var/www/api
+            rm -rf /var/www/api/*
+            git clone https://github.com/MatheusDev20/People-Pilot-Backend.git .
+            EOF
     - name: Transfer Env file
       run: scp .env root@${{ secrets.SSH_HOST }}:/var/www/api 
     
-    - name: Installing Dependencies
+    - name: Installing Dependencies and Starting Application on Production Server
       run: |
+        ssh root@${{ secrets.SSH_HOST }} <<'EOF'
+        echo "Navigating to the project directory..."
+        cd /var/www/api || exit 1
         echo 'Installing dependencies...'
         node -v
-        yarn
+        yarn install
         yarn build
+        echo 'Starting the application in production mode...'
         yarn start:prod
+        EOF
 
