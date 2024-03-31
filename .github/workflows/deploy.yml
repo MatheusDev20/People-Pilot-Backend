@@ -73,11 +73,20 @@ jobs:
             directory: '.'
             fail_on_empty: false
             sort_keys: false
-      
+    
+    - name: Clone Project
+      run: |
+        cd /var/www/api
+        git clone https://github.com/MatheusDev20/People-Pilot-Backend.git .
+    
     - name: Transfer Env file
       run: scp .env root@${{ secrets.SSH_HOST }}:/var/www/api 
-
-    - name: Deploy
+    
+    - name: Installing Dependencies
       run: |
-        ssh root@${{ secrets.SSH_HOST }} "chmod +x ~/deploy.sh && ~/deploy.sh"
+        echo 'Installing dependencies...'
+        node -v
+        yarn
+        yarn build
+        yarn start:prod
 
