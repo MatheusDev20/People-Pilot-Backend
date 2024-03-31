@@ -70,8 +70,12 @@ jobs:
             envkey_BUCKET_URL: ${{secrets.BUCKET_URL}}
             envkey_LOCAL_UPLOAD_FOLDER: ${{secrets.LOCAL_UPLOAD_FOLDER}}
             file_name: .env
+            directory: '.'
             fail_on_empty: false
             sort_keys: false
+      
+    - name: Transfer Env file
+      run: scp .env root@${{ secrets.SSH_HOST }}:/var/www/api 
 
     - name: Deploy
       run: |
