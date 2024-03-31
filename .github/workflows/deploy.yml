@@ -92,7 +92,6 @@ jobs:
         node -v
         yarn install
         yarn build
-        echo 'Starting the application in production mode...'
-        yarn start:prod
+        pm2 start dist/main.js
         EOF
 
