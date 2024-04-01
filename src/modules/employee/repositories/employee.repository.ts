@@ -103,7 +103,6 @@ export class EmployeeRepository {
   ): Promise<Employee> {
     if (pushRelations)
       options = { ...options, ...{ relations: pushRelations } };
-
     return await this.repository.findOne(options);
   }
 

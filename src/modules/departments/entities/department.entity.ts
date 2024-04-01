@@ -20,9 +20,6 @@ export class Department {
   @Column()
   description: string;
 
-  // @Column()
-  // manager: string;
-
   @ManyToOne(() => Employee, (employee) => employee.managedDepartments)
   manager: Employee;
 

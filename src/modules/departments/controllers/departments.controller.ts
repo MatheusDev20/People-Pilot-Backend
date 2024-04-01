@@ -19,6 +19,7 @@ import { UpdateDepartmentDTO } from '../DTO/update-department.dto';
 import { FindOneDepartmentDTO } from '../DTO/find-one-department.dto';
 import { ListAllDepartmentsUseCase } from '../use-cases/listAll-use-case';
 import { DeleteDepartmentResponseDTO } from '../DTO/responses.dto';
+import { Department } from '../entities/department.entity';
 
 @Controller('departments')
 @UseGuards(LoginGuard, RoleGuard)
@@ -30,7 +31,7 @@ export class DepartmentsController {
 
   @Get('/')
   @Roles('managers')
-  async listAllDepartments() {
+  async listAllDepartments(): Promise<HttpResponse<Department[] & { employeeCount: number }>> {
     return ok(await this.listAllUseCase.execute());
   }
 

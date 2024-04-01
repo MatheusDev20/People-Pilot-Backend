@@ -1,4 +1,4 @@
-import { IsIn, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsIn, IsNotEmpty, IsOptional, IsJSON} from 'class-validator';
 import { AVAILABLE_DOCUMENTS } from '../utils/constants';
 
 export class UploadDocumentDTO {
@@ -7,5 +7,6 @@ export class UploadDocumentDTO {
   documentType: string;
 
   @IsOptional()
+  @IsJSON()
   metadata: Record<string, any>;
 }

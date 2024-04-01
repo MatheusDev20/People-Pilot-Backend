@@ -6,7 +6,12 @@ export class ListAllDepartmentsUseCase {
   constructor(private repositoy: DepartmentRepository) {}
 
   async execute() {
-    const departments = await this.repositoy.findAll();
-    return departments.filter((department) => department.name !== 'Managers');
+    const response = await this.repositoy.findAll();
+    const departments = response.filter((department) => department.name !== 'Managers').map((data) => ({
+      ...data,
+      employeeCount: data.employees.length,
+    }));
+
+    return departments
   }
 }
