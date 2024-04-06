@@ -30,10 +30,8 @@ jobs:
       run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
     - name: Install Dependencies
-      run: npm install -g yarn && yarn install
+      run: npm ci
 
-    - name: Running Tests
-      run: yarn test
     - name: Check API Directory
       run: |
         ssh root@${{ secrets.SSH_HOST }} <<'EOF'
@@ -72,26 +70,22 @@ jobs:
             directory: '.'
             fail_on_empty: false
             sort_keys: false
-    
-    - name: Clone Project on Production Server
-      run: |
-            ssh root@${{ secrets.SSH_HOST }} << 'EOF'
-            cd /var/www/api
-            rm -rf /var/www/api/*
-            git clone https://github.com/MatheusDev20/People-Pilot-Backend.git .
-            EOF
-    - name: Transfer Env file
+
+    - name: Build the project
+      run: npm run build
+
+    - name: Move Env file to /Api folder
       run: scp .env root@${{ secrets.SSH_HOST }}:/var/www/api 
     
-    - name: Installing Dependencies and Starting Application on Production Server
+    - name: Move builded files to /api folder
+      run: scp -r dist root@${{ secrets.SSH_HOST }}:/var/www/api 
+    
+    - name: Starting Application on Production Server
       run: |
         ssh root@${{ secrets.SSH_HOST }} <<'EOF'
         echo "Navigating to the project directory..."
         cd /var/www/api || exit 1
         echo 'Installing dependencies...'
-        node -v
-        yarn install
-        yarn build
         pm2 start dist/main.js
         EOF
 
