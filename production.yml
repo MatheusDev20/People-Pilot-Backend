@@ -25,7 +25,8 @@ services:
       resources:
         limits:
           memory: 250M
-      depends_on:
+
+    depends_on:
         - db
 
 volumes:
