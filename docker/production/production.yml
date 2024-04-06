@@ -17,7 +17,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: ./Dockerfile.prod
+      dockerfile: ./docker/production/Dockerfile
     ports:
       - 3001:3001
     command: npm run start
