@@ -1,7 +1,7 @@
 {
-  "name": "stx-backend",
+  "name": "people-pilot-api",
   "version": "1.0.0",
-  "description": "Backend service STX",
+  "description": "API Service to People Pilot Product",
   "author": "Matheus de Paula",
   "private": true,
   "license": "UNLICENSED",
