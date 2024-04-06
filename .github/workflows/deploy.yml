@@ -49,7 +49,10 @@ jobs:
 
     - name: Package Application
       run: tar -czf package.tar.gz dist node_modules
-    
+        
+    - name: Move Package to production server
+      run: scp package.tar.gz root@${{ secrets.SSH_HOST }}:/var/www/api
+
     - name: Starting Application on Production Server
       run: |
         ssh root@${{ secrets.SSH_HOST }} <<'EOF'
