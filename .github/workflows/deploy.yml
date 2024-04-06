@@ -44,48 +44,21 @@ jobs:
         mkdir -p api
         EOF
 
-    - name: Make envfile
-      uses: SpicyPizza/create-envfile@v2.0
-      with:
-            envkey_NODE_ENV: ${{secrets.NODE_ENV}}
-            envkey_API_PORT: ${{secrets.API_PORT}}
-            envkey_DB_PORT: ${{secrets.DB_PORT}}
-            envkey_DB_PASSWORD: ${{secrets.DB_PASSWORD}}
-            envkey_DB_HOST: ${{secrets.DB_HOST}}
-            envkey_DB_USERNAME: ${{secrets.DB_USERNAME}}
-            envkey_DB_NAME: ${{secrets.DB_NAME}}
-            envkey_DB_SYNC: ${{secrets.DB_SYNC}}
-            envkey_DB_ENTITIES: ${{secrets.DB_ENTITIES}}
-            envkey_JWT_SECRET: ${{secrets.JWT_SECRET}}
-            envkey_JWT_EXPIRATION: ${{secrets.JWT_EXPIRATION}}
-            envkey_JWT_REFRESH_SECRET: ${{secrets.JWT_REFRESH_SECRET}}
-            envkey_JWT_REFRESH_EXPIRATION: ${{secrets.JWT_REFRESH_EXPIRATION}}
-            envkey_AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-            envkey_AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-            envkey_AWS_REGION: ${{secrets.AWS_REGION}}
-            envkey_BUCKET_NAME: ${{secrets.BUCKET_NAME}}
-            envkey_BUCKET_URL: ${{secrets.BUCKET_URL}}
-            envkey_LOCAL_UPLOAD_FOLDER: ${{secrets.LOCAL_UPLOAD_FOLDER}}
-            file_name: .env
-            directory: '.'
-            fail_on_empty: false
-            sort_keys: false
-
     - name: Build the project
       run: npm run build
 
-    - name: Move Env file to /Api folder
-      run: scp .env root@${{ secrets.SSH_HOST }}:/var/www/api 
-    
-    - name: Move builded files to /api folder
-      run: scp -r dist root@${{ secrets.SSH_HOST }}:/var/www/api 
+    - name: Package Application
+      run: tar -czf package.tar.gz dist node_modules
     
     - name: Starting Application on Production Server
       run: |
         ssh root@${{ secrets.SSH_HOST }} <<'EOF'
         echo "Navigating to the project directory..."
         cd /var/www/api || exit 1
-        echo 'Installing dependencies...'
+        if [ -f "package.tar.gz" ]; then
+          tar -xzf package.tar.gz
+          rm package.tar.gz
+        fi
         pm2 start dist/main.js
         EOF
 
