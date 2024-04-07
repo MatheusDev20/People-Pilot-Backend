@@ -8,12 +8,12 @@ const { DataSource } = typeorm;
 
 const entities = ['../dist/modules/**/entities/*.entity.js'];
 const source = new DataSource({
-  type: 'mysql',
-  host: 'localhost',
+  type: 'mysql', 
+  host: process.env.DB_HOST,
   port: 3306,
-  username: 'root',
-  password: 'ksxbackend',
-  database: 'ksxbackend',
+  username:  process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   entities,
 });
 
