@@ -32,7 +32,7 @@ const makeSdkInput = (
   resource: FileAppResources,
 ): PutObjectCommand => {
   const input = {
-    Bucket: 'stx-system',
+    Bucket: 'peoplepilot',
     Key: helpers.buildS3Path(file.originalname, resource),
     Body: file.buffer,
     ContentType: file.mimetype,

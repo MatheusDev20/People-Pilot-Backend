@@ -37,7 +37,7 @@ export class S3Service implements StorageManager {
     const s3Path = buildS3Path(originalname, resource);
 
     const input: PutObjectCommandInput = {
-      Bucket: 'stx-system',
+      Bucket: process.env.BUCKET_NAME,
       Key: s3Path,
       Body: buffer,
       ContentType: mimetype,
