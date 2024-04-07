@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const { DataSource } = typeorm;
 
 const entities = ['../dist/modules/**/entities/*.entity.js'];
+// TODO: This does not work.
 const source = new DataSource({
   type: 'mysql', 
   host: process.env.DB_HOST,
