@@ -52,12 +52,43 @@ jobs:
         
     - name: Move Package to production server
       run: scp package.tar.gz root@${{ secrets.SSH_HOST }}:/var/www/api
+    - name: Make envfile
+      uses: SpicyPizza/create-envfile@v2.0
+      with:
+          envKey_NODE_ENV: ${{secrets.NODE_ENV}}
+          envKey_API_PORT: ${{secrets.API_PORT}}
+          envKey_DB_PORT: ${{secrets.DB_PORT}}
+          envKey_DB_HOST: ${{secrets.DB_HOST}}
+          envKey_DB_USERNAME: ${{secrets.DB_USERNAME}}
+          envKey_DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+          envKey_DB_NAME: ${{secrets.DB_NAME}}
+          envKey_DB_SYNC: ${{secrets.DB_SYNC}}
+          envKey_DB_ENTITIES: ${{secrets.DB_ENTITIES}}
+          envKey_JWT_SECRET: ${{secrets.JWT_SECRET}}
+          envKey_JWT_EXPIRATION: ${{secrets.JWT_EXPIRATION}}
+          envKey_JWT_REFRESH_SECRET: ${{secrets.JWT_REFRESH_SECRET}}
+          envKey_JWT_REFRESH_EXPIRATION: ${{secrets.JWT_REFRESH_EXPIRATION}}
+          envKey_AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          envKey_AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          envKey_AWS_REGION: ${{secrets.AWS_REGION}}
+          envKey_BUCKET_NAME: ${{secrets.BUCKET_NAME}}
+          envKey_BUCKET_URL: ${{secrets.BUCKET_URL}}
+          envKey_LOCAL_UPLOAD_FOLDER: ${{secrets.LOCAL_UPLOAD_FOLDER}}
+          file_name: .env
+          directory: '.'
+          fail_on_empty: false
+          sort_keys: false
+
+    - name: Move .env File to /var/www/api
+      run: scp .env root@${{ secrets.SSH_HOST }}:/var/www/api
 
     - name: Starting Application on Production Server
+
       run: |
         ssh root@${{ secrets.SSH_HOST }} <<'EOF'
         echo "Navigating to the project directory..."
         cd /var/www/api || exit 1
+        echo "Extracting the package..."
         if [ -f "package.tar.gz" ]; then
           tar -xzf package.tar.gz
           rm package.tar.gz
