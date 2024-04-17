@@ -36,6 +36,7 @@ export class EmployeeRepository {
     if (filters.role) {
       builder.andWhere('role.name = :roleName', { roleName: filters.role });
     }
+
     builder.skip((filters.page - 1) * filters.limit)
     .take(filters.limit)
 

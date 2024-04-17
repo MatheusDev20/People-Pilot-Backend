@@ -33,9 +33,12 @@ export interface UpdateEmployeeRepositoryDTO {
   refreshToken: Employee;
 }
 
-export type ListFilterOptions = {
+type BaseFilter = {
   page: number;
   limit: number;
+}
+
+export type ListFilterOptions = BaseFilter & {
   department: string;
   role: number;
 };
