@@ -11,6 +11,7 @@ import {
   CreateEmployeeRepositoryDTO,
   GetAllEmployesDTO,
   GetDtoByDepartment,
+  ListFilterOptions,
   UpdateEmployeeRepositoryDTO,
 } from './DTOs/employe.dto';
 import { PaymentInfoDTO } from '../DTOs/payment-info-dto';
@@ -20,6 +21,27 @@ export class EmployeeRepository {
   constructor(
     @InjectRepository(Employee) private repository: Repository<Employee>,
   ) {}
+
+  async list(filters: Partial<ListFilterOptions>): Promise<Employee[]> {
+    const builder = this.repository
+    .createQueryBuilder('employee')
+    .innerJoinAndSelect('employee.department', 'department')
+    .innerJoinAndSelect('employee.role', 'role')
+    .select(['employee', 'department.name', 'role.name'])
+
+    if (filters.department) {
+      builder.andWhere('department.id = :department', { department: filters.department })
+    }
+
+    if (filters.role) {
+      builder.andWhere('role.name = :roleName', { roleName: filters.role });
+    }
+    builder.skip((filters.page - 1) * filters.limit)
+    .take(filters.limit)
+
+    const list = await builder.getMany()
+    return list
+  }
 
   async getAll({ limit, page }: GetAllEmployesDTO): Promise<Employee[]> {
     return await this.repository

@@ -15,27 +15,11 @@ export class GetEmployeeListUseCase {
 
   async execute(data: GetEmployeeListDTO): Promise<Employee[]> {
     const { departmentName, page, limit, role } = data;
-
-    if (role) {
-      return await this.employeeRepository.getAllByRole({
-        roleId: this.utils.getIdRoleByName(role),
-      });
-    }
-
-    if (!departmentName)
-      return await this.employeeRepository.getAll({ page, limit });
-
-    const department = await this.departmentRepository.find({
-      where: { name: departmentName },
-    });
-
-    if (!department)
-      throw new NotFoundException(`Department ${departmentName} not found`);
-
-    return await this.employeeRepository.getEmployeesByDepartment({
-      departmentId: department.id,
-      limit,
+    return  await this.employeeRepository.list({
+      department: departmentName ? (await this.departmentRepository.find({ where: { name: departmentName }})).id : null,
+      role: role ? this.utils.getIdRoleByName(role) : null,
       page,
+      limit,
     });
   }
 }
