@@ -34,7 +34,7 @@ export class EmployeeRepository {
     }
 
     if (filters.role) {
-      builder.andWhere('role.name = :roleName', { roleName: filters.role });
+      builder.andWhere('role.id = :roleId', { roleId: filters.role });
     }
 
     builder.skip((filters.page - 1) * filters.limit)
