@@ -20,4 +20,8 @@ export class OrganizationsRepository {
     const { id } = organization;
     return { id };
   }
+
+  public findById = async (id: string): Promise<Organization> => {
+    return await this.repository.findOne({ where: { id } });
+  };
 }

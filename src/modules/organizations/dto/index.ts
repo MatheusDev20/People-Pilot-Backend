@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Max, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class CreateOrganization {
   @IsNotEmpty()

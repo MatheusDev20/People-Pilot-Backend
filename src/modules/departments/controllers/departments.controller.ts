@@ -31,7 +31,9 @@ export class DepartmentsController {
 
   @Get('/')
   @Roles('managers')
-  async listAllDepartments(): Promise<HttpResponse<Department[] & { employeeCount: number }>> {
+  async listAllDepartments(): Promise<
+    HttpResponse<Department[] & { employeeCount: number }>
+  > {
     return ok(await this.listAllUseCase.execute());
   }
 

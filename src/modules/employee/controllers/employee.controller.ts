@@ -99,14 +99,22 @@ export class EmployeeController {
   @Post()
   async save(
     @Body() data: CreateEmployeeDTO,
+    @Req() request: Request,
   ): Promise<HttpResponse<{ id: string }>> {
     const { role } = data;
+
     if (role === 'managers' || role === 'admin') {
-      const { id } = await this.createManagerUseCase.execute(data);
+      const { id } = await this.createManagerUseCase.execute({
+        ...data,
+        organizationId: request['x-organization-id'],
+      });
       return created({ id });
     }
 
-    const { id } = await this.createEmployeeUseCase.execute(data);
+    const { id } = await this.createEmployeeUseCase.execute({
+      ...data,
+      organizationId: request['x-organization-id'],
+    });
     return created({ id });
   }
 

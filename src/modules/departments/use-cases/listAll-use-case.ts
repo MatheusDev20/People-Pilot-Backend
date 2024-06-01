@@ -7,11 +7,13 @@ export class ListAllDepartmentsUseCase {
 
   async execute() {
     const response = await this.repositoy.findAll();
-    const departments = response.filter((department) => department.name !== 'Managers').map((data) => ({
-      ...data,
-      employeeCount: data.employees.length,
-    }));
+    const departments = response
+      .filter((department) => department.name !== 'Managers')
+      .map((data) => ({
+        ...data,
+        employeeCount: data.employees.length,
+      }));
 
-    return departments
+    return departments;
   }
 }

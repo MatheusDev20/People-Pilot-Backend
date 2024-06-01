@@ -26,7 +26,7 @@ export class OrganizationController {
     return 'ok';
   }
 
-  @UseGuards(LoginGuard, RoleGuard)
+  @UseGuards(LoginGuard)
   @Roles('managers')
   @Post()
   @UseInterceptors(FileInterceptor('brand_image'))

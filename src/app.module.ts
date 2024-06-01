@@ -1,5 +1,10 @@
 import { HttpExceptionFilter } from './helpers/http/http-exceptions.filter';
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { EmployeeModule } from './modules/employee/employee.module';
@@ -9,6 +14,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { TaskModule } from './modules/task/task.module';
 import { OrganizationsModule } from './modules/organizations/organizations.module';
+import { TenantIdentifier } from './helpers/http/middlewares';
 
 @Module({
   imports: [
@@ -30,4 +36,14 @@ import { OrganizationsModule } from './modules/organizations/organizations.modul
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(TenantIdentifier)
+      .exclude('auth/(.*)', {
+        path: 'organization',
+        method: RequestMethod.POST,
+      })
+      .forRoutes('*');
+  }
+}
