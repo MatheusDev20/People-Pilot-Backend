@@ -8,6 +8,7 @@ import { MySQLDBConfigService } from './config/db/MysqlConfig.service';
 import { APP_FILTER } from '@nestjs/core';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { TaskModule } from './modules/task/task.module';
+import { OrganizationsModule } from './modules/organizations/organizations.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TaskModule } from './modules/task/task.module';
     DepartmentsModule,
     TaskModule,
     AuthenticationModule,
+    OrganizationsModule,
   ],
   providers: [
     {

@@ -16,10 +16,17 @@ export class CreateManagerUseCase {
 
   async execute(data: CreateEmployeeDTO) {
     const { password, role } = data;
+
     if (!password)
       throw new BadRequestException(
-        'Password is required to register a new Manager or ADMIN level',
+        'Password is required to register a new MANAGER or ADMIN level',
       );
+
+    const user = await this.employeeRepository.find({
+      where: { email: data.email },
+    });
+
+    if (user) throw new BadRequestException('Manager Email already in use');
 
     const managersDepartment = await this.departmentService.find(
       'name',
@@ -29,6 +36,7 @@ export class CreateManagerUseCase {
     const defaultDepartment =
       managersDepartment ??
       (await this.departmentService.createDefaultDepartment());
+
     const newEmployeeData: CreateEmployeeRepositoryDTO = {
       ...data,
       password: await this.hashService.hash(password),

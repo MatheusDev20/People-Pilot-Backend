@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UploadDocumentDTO } from '../DTOs';
-import { UploadFileService } from 'src/modules/storage/upload/upload-file';
+import { UploadFileService } from 'src/modules/storage/upload-file';
 import { EmployeeRepository } from '../repositories/employee.repository';
 import { EmployeeDocument } from 'src/@types';
 import { DocumentsRepository } from '../repositories/documents.repository';

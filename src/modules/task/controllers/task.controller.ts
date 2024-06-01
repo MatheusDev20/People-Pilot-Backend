@@ -16,7 +16,7 @@ import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard'
 import { Roles } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
 import { CreateTaskDTO, UpdatedTask } from '../DTO';
-import { CreateTaskUseCase } from '../services/create-task-use-case';
+import { CreateTaskUseCase } from '../use-cases/create-task-use-case';
 import { Request as Req } from 'express';
 import { TaskService } from '../services/task.service';
 import { FindOneDTO } from 'src/class-validator/find-one.dto';

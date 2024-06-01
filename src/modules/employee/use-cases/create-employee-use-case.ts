@@ -1,5 +1,4 @@
 import { DepartmentsService } from 'src/modules/departments/services/department.service';
-import { EmployeeService } from '../services/employee.service';
 import { EmployeeRepository } from '../repositories/employee.repository';
 import { Utils } from '../utils/employee.utils';
 import { Hashing } from 'src/modules/security/interfaces/hashing';
@@ -13,7 +12,6 @@ type Output = {
 export class CreateEmployeeUseCase {
   constructor(
     private departmentService: DepartmentsService,
-    private employeeService: EmployeeService,
     private employeeRepository: EmployeeRepository,
     private utils: Utils,
     @Inject('HashingService') private hashService: Hashing,
@@ -21,10 +19,10 @@ export class CreateEmployeeUseCase {
 
   async execute(data: CreateEmployeeDTO): Promise<Output> {
     const { departmentName, ...newUserData } = data;
-    const existedUser = await this.employeeService.find(
-      'email',
-      newUserData.email,
-    );
+    const existedUser = await this.employeeRepository.find({
+      where: { email: newUserData.email },
+    });
+
     if (existedUser) throw new BadRequestException('Email already in use');
 
     if (!departmentName)

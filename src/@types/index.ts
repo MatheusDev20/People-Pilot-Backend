@@ -10,6 +10,7 @@ export type StorageManager = {
   persist(
     file: Express.Multer.File,
     resource: FileAppResources,
+    alternativeName?: string,
   ): Promise<string>;
 };
 
