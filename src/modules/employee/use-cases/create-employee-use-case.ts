@@ -1,4 +1,3 @@
-import { DepartmentsService } from 'src/modules/departments/services/department.service';
 import { EmployeeRepository } from '../repositories/employee.repository';
 import { Utils } from '../utils/employee.utils';
 import { Hashing } from 'src/modules/security/interfaces/hashing';
@@ -6,6 +5,7 @@ import { BadRequestException, Inject, NotFoundException } from '@nestjs/common';
 import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
 import { CreateEmployeeRepositoryDTO } from '../repositories/DTOs/employe.dto';
 import { Organization } from 'src/modules/organizations/entities/organizations.entity';
+import { DepartmentRepository } from 'src/modules/departments/repositories/department.repository';
 
 type Output = {
   id: string;
@@ -14,8 +14,8 @@ type Output = {
 type Input = CreateEmployeeDTO & { organization: Organization };
 export class CreateEmployeeUseCase {
   constructor(
-    private departmentService: DepartmentsService,
     private employeeRepository: EmployeeRepository,
+    private departmentsRepository: DepartmentRepository,
     private utils: Utils,
     @Inject('HashingService') private hashService: Hashing,
   ) {}
@@ -33,10 +33,9 @@ export class CreateEmployeeUseCase {
         'You must specify the Department to the new Employee',
       );
 
-    const selectedDepartment = await this.departmentService.find(
-      'name',
-      departmentName,
-    );
+    const selectedDepartment = await this.departmentsRepository.find({
+      where: { name: departmentName },
+    });
 
     if (!selectedDepartment)
       throw new NotFoundException(`Departament ${departmentName} not found`);

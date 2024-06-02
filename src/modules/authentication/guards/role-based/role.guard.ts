@@ -26,7 +26,6 @@ export class RoleGuard implements CanActivate {
       },
       { role: true },
     );
-
     const { role } = user;
     if (role.name === 'admin') return true;
     if (requiredRole === role.name) return true;

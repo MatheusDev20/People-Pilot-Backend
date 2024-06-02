@@ -1,3 +1,4 @@
+import { Department } from 'src/modules/departments/entities/department.entity';
 import { Employee } from 'src/modules/employee/entities/employee.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -14,4 +15,7 @@ export class Organization {
 
   @OneToMany(() => Employee, (employee) => employee.organization)
   employees: Employee[];
+
+  @OneToMany(() => Department, (department) => department.organization)
+  departments: Department[];
 }

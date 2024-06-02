@@ -1,4 +1,3 @@
-import { authenticated } from 'src/helpers/http';
 import {
   PutObjectCommand,
   PutObjectCommandInput,

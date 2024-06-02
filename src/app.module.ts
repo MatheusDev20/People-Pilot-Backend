@@ -14,7 +14,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { TaskModule } from './modules/task/task.module';
 import { OrganizationsModule } from './modules/organizations/organizations.module';
-import { TenantIdentifier } from './helpers/http/middlewares';
+import { TenantIdentifier } from './middlewares';
 
 @Module({
   imports: [
@@ -40,10 +40,17 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(TenantIdentifier)
-      .exclude('auth/(.*)', {
-        path: 'organization',
-        method: RequestMethod.POST,
-      })
+      .exclude(
+        'auth/(.*)',
+        {
+          path: 'organization',
+          method: RequestMethod.POST,
+        },
+        {
+          path: 'employee/me',
+          method: RequestMethod.GET,
+        },
+      )
       .forRoutes('*');
   }
 }

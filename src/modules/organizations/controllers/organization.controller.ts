@@ -12,7 +12,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Roles } from 'src/modules/authentication/guards/role-based';
 import { BrandImagePipeInstance } from 'src/modules/storage/file-validations';
 import { LoginGuard } from 'src/modules/authentication/guards/login/login.guard';
-import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
 import { AddOrganization } from '../use-cases/add-organization';
 import { created } from 'src/helpers/http';
 

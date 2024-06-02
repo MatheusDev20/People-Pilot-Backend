@@ -24,7 +24,8 @@ export class LoginUseCase {
 
     const findUser = await this.employeeRepository.find(
       { where: { email } },
-      { role: true },
+      { role: true, organization: true },
+      // { organization: true },
     );
 
     if (!findUser) throw new NotFoundException(NotFoundEmail);

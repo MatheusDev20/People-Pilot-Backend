@@ -79,7 +79,6 @@ export class EmployeeRepository {
   async save(
     newEmployeeData: CreateEmployeeRepositoryDTO,
   ): Promise<CreateEmployeeResponse> {
-    console.log(newEmployeeData);
     const dbResponse = await this.repository.save({ ...newEmployeeData });
     const { id } = dbResponse;
     return { id: String(id) };
@@ -130,6 +129,7 @@ export class EmployeeRepository {
   ): Promise<Employee> {
     if (pushRelations)
       options = { ...options, ...{ relations: pushRelations } };
+
     return await this.repository.findOne(options);
   }
 

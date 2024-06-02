@@ -12,19 +12,16 @@ export class TenantIdentifier implements NestMiddleware {
   async use(req: Request, _: Response, next: NextFunction) {
     const organizationId = req.headers['x-organization-id'];
 
-    if (!organizationId) {
+    if (!organizationId)
       throw new BadRequestException(
         'Missing Header x-organization-id is required',
       );
-    }
 
     const organization =
       await this.organizationRepository.findById(organizationId);
 
-    if (!organization) {
-      throw new BadRequestException('Organization not found');
-    }
-    req['org'] = organization;
+    if (!organization) throw new BadRequestException('Organization not found');
+    req['organization'] = organization;
     next();
   }
 }

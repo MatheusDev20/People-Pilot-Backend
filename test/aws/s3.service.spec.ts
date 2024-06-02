@@ -74,7 +74,7 @@ describe('S3Service', () => {
         'employee_avatar',
       );
       expect(s3Path).toEqual(
-        `stx-s3-storage-employee_avatar/${date.getFullYear()}/${getMonthName(
+        `people-pilot-employee_avatar/${date.getFullYear()}/${getMonthName(
           date.getMonth() + 1,
         )}/filename-test`,
       );

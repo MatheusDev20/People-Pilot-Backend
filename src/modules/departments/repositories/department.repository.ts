@@ -4,6 +4,8 @@ import { Department } from '../entities/department.entity';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { DeleteDepartmentResponseDTO } from '../DTO/responses.dto';
 import { CreateDepartmentRepositoryDTO } from './DTO/create-department.dto';
+import { Employee } from 'src/modules/employee/entities/employee.entity';
+import { Organization } from 'src/modules/organizations/entities/organizations.entity';
 
 @Injectable()
 export class DepartmentRepository {
@@ -55,5 +57,14 @@ export class DepartmentRepository {
     }
 
     return { id };
+  }
+
+  async createDefaultDepartment() {
+    return await this.repository.save({
+      description: 'Managers Department',
+      name: 'Managers',
+      manager: new Employee(),
+      organization: new Organization(),
+    });
   }
 }

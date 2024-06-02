@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Employee } from '../../employee/entities/employee.entity';
+import { Organization } from 'src/modules/organizations/entities/organizations.entity';
 
 @Entity()
 export class Department {
@@ -19,6 +20,9 @@ export class Department {
 
   @Column()
   description: string;
+
+  @ManyToOne(() => Organization, (organization) => organization.departments)
+  organization: Organization;
 
   @ManyToOne(() => Employee, (employee) => employee.managedDepartments)
   manager: Employee;
