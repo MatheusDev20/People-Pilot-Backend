@@ -8,6 +8,7 @@ import { SecurityModule } from '../security/security.module';
 import { EmployeeModule } from '../employee/employee.module';
 import { LoggerModule } from '../logger/logger.module';
 import { ListAllDepartmentsUseCase } from './use-cases/listAll-use-case';
+import { CreateDepartmentUseCase } from './use-cases/create-department-use-case';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ListAllDepartmentsUseCase } from './use-cases/listAll-use-case';
     DepartmentsService,
     DepartmentRepository,
     ListAllDepartmentsUseCase,
+    CreateDepartmentUseCase,
   ],
   exports: [DepartmentsService, DepartmentRepository],
 })

@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { HttpResponse, created, deleted, ok, updated } from 'src/helpers/http';
@@ -20,6 +21,9 @@ import { FindOneDepartmentDTO } from '../DTO/find-one-department.dto';
 import { ListAllDepartmentsUseCase } from '../use-cases/listAll-use-case';
 import { DeleteDepartmentResponseDTO } from '../DTO/responses.dto';
 import { Department } from '../entities/department.entity';
+import { CreateDepartmentUseCase } from '../use-cases/create-department-use-case';
+import { Organization } from 'src/modules/organizations/entities/organizations.entity';
+import { ORG } from 'src/decorators';
 
 @Controller('departments')
 @UseGuards(LoginGuard, RoleGuard)
@@ -27,6 +31,7 @@ export class DepartmentsController {
   constructor(
     private service: DepartmentsService,
     private listAllUseCase: ListAllDepartmentsUseCase,
+    private createDepartmentUseCase: CreateDepartmentUseCase,
   ) {}
 
   @Get('/')
@@ -45,8 +50,15 @@ export class DepartmentsController {
 
   @Post()
   @Roles('managers')
-  async post(@Body() data: CreateDepartmentDTO) {
-    return created(await this.service.createDepartment(data));
+  async post(
+    @Body() data: CreateDepartmentDTO,
+    @ORG() organization: Organization,
+  ) {
+    const { id } = await this.createDepartmentUseCase.execute({
+      ...data,
+      organization: organization,
+    });
+    return created({ id });
   }
 
   @Roles('managers')

@@ -4,19 +4,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Department } from '../entities/department.entity';
-import { CreateDepartmentDTO } from '../DTO/create-department.dto';
 import { DepartmentRepository } from '../repositories/department.repository';
 import { UpdateDepartmentDTO } from '../DTO/update-department.dto';
-import {
-  CreateDepartmentResponseDTO,
-  DeleteDepartmentResponseDTO,
-} from '../DTO/responses.dto';
-import { CreateDepartmentRepositoryDTO } from '../repositories/DTO/create-department.dto';
+import { DeleteDepartmentResponseDTO } from '../DTO/responses.dto';
 import { UpdateDepartmentRepositoryDTO } from '../repositories/DTO/update-deparment.dto';
 import { ValidColumn } from 'src/@types';
 import { FindOptionsWhere } from 'typeorm';
 import { Employee } from 'src/modules/employee/entities/employee.entity';
 import { EmployeeRepository } from 'src/modules/employee/repositories/employee.repository';
+import { Organization } from 'src/modules/organizations/entities/organizations.entity';
 
 @Injectable()
 export class DepartmentsService {
@@ -29,31 +25,6 @@ export class DepartmentsService {
   async find(property: ValidColumn<Department>, value: string) {
     const options: FindOptionsWhere<Department> = { [property]: value };
     return await this.departmentRepository.find({ where: options });
-  }
-
-  async createDepartment(
-    data: CreateDepartmentDTO,
-  ): Promise<CreateDepartmentResponseDTO> {
-    const { name, managerEmail } = data;
-    if (await this.find('name', name)) {
-      throw new BadRequestException(`Department ${name} already exists`);
-    }
-
-    const manager = await this.employeeRepository.find({
-      where: { email: managerEmail },
-    });
-
-    if (!manager)
-      throw new BadRequestException(
-        `Manager ${managerEmail} not found in the System`,
-      );
-
-    const newDepartment: CreateDepartmentRepositoryDTO = {
-      ...data,
-      manager: manager,
-    };
-    const { id } = await this.departmentRepository.save(newDepartment);
-    return { id };
   }
 
   async updateDepartment(id: string, data: Partial<UpdateDepartmentDTO>) {
@@ -97,6 +68,7 @@ export class DepartmentsService {
       description: 'Managers Department',
       name: 'Managers',
       manager: new Employee(),
+      organization: new Organization(),
     });
   }
 }
