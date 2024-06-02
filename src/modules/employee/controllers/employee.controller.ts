@@ -45,6 +45,8 @@ import { DeleteEmployeeResponse, UpdateEmployeeResponse } from '../DTOs';
 import { FindByPropertyEmployeeUseCase } from '../use-cases/search/find-employee-use-case';
 import { UpdateEmployeeUseCase } from '../use-cases/update-employee-use-case';
 import { DeleteEmployeeUseCase } from '../use-cases/delete-employee-use-case';
+import { ORG } from 'src/decorators';
+import { Organization } from 'src/modules/organizations/entities/organizations.entity';
 
 @Controller('employee')
 export class EmployeeController {
@@ -99,21 +101,21 @@ export class EmployeeController {
   @Post()
   async save(
     @Body() data: CreateEmployeeDTO,
-    @Req() request: Request,
+    @ORG() organization: Organization,
   ): Promise<HttpResponse<{ id: string }>> {
     const { role } = data;
 
     if (role === 'managers' || role === 'admin') {
       const { id } = await this.createManagerUseCase.execute({
         ...data,
-        organizationId: request['x-organization-id'],
+        organization,
       });
       return created({ id });
     }
 
     const { id } = await this.createEmployeeUseCase.execute({
       ...data,
-      organizationId: request['x-organization-id'],
+      organization,
     });
     return created({ id });
   }

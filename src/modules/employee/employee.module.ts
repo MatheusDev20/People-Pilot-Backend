@@ -1,5 +1,5 @@
 import { Utils } from './utils/employee.utils';
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Department } from '../departments/entities/department.entity';
 import { EmployeeController } from './controllers/employee.controller';
@@ -27,7 +27,6 @@ import { Documents } from './entities/documents.entity';
 import { FindByPropertyEmployeeUseCase } from './use-cases/search/find-employee-use-case';
 import { UpdateEmployeeUseCase } from './use-cases/update-employee-use-case';
 import { DeleteEmployeeUseCase } from './use-cases/delete-employee-use-case';
-import { OrganizationsModule } from '../organizations/organizations.module';
 
 @Module({
   imports: [
@@ -45,7 +44,6 @@ import { OrganizationsModule } from '../organizations/organizations.module';
     DepartmentsModule,
     LoggerModule,
     StorageModule,
-    OrganizationsModule,
   ],
   controllers: [EmployeeController],
   providers: [
