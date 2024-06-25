@@ -11,28 +11,40 @@ export class RefreshTokenUseCase {
     @Inject('JwtManager') private jwtManager: JwtManager,
   ) {}
 
-  async execute(token: string): Promise<JwtData> {
+  async execute(refreshToken: string): Promise<JwtData> {
+    // If i try to generate a new pair token/refreshToken and the refreshToken is not there, should throw an 401
+    if (!refreshToken) throw new UnauthorizedException('Unauthorized Request');
+
+    const token = refreshToken;
+
     try {
       await this.jwtManager.verifyToken(token, { refresh: true });
-      const existedToken = await this.refreshTokenRepository.find({
+      const sessionUser = await this.refreshTokenRepository.find({
         where: { token },
+        relations: ['user'],
       });
-      if (!existedToken)
-        throw new UnauthorizedException('Unauthorized Request');
 
-      const user = existedToken.userId;
+      // If there is a refreshToken, and the token is valid, but the session is not persisted in the RefreshToken table, should throw an 401
+      if (!sessionUser) {
+        throw new UnauthorizedException('Unauthorized Request');
+      }
+      console.log('sessionUser: ', sessionUser);
       const jwtData = await this.jwtManager.generate({
-        username: user.name,
-        sub: String(user.id),
+        username: sessionUser.user.name,
+        sub: String(sessionUser.user.id),
       });
 
       const { refreshToken } = jwtData;
 
       /* Update the Refresh Token on the DB - Invalidate the old one */
-      await this.employeeRepository.storeRefreshToken(user, refreshToken);
+      await this.employeeRepository.storeRefreshToken(
+        sessionUser.user,
+        refreshToken,
+      );
 
-      return { ...jwtData, user, refreshToken };
+      return { ...jwtData, user: sessionUser.user, refreshToken };
     } catch (err) {
+      console.log('RefreshTokenUseCase Error: ', err);
       throw new UnauthorizedException('Unauthorized Request');
     }
   }

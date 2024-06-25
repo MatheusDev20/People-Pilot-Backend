@@ -172,7 +172,7 @@ export class EmployeeRepository {
     await this.refreshTokenRepository.save({
       expiration: '7d',
       token,
-      userId: user,
+      user,
     });
   }
 }

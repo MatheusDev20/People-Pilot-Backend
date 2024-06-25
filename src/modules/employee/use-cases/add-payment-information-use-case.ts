@@ -25,6 +25,7 @@ export class AddPaymentInformation {
     });
 
     if (!employee) throw new NotFoundException('Employee not found');
+
     const { bankName } = paymentInfo;
     const bank = await this.paymentInfoRepository.getBank(bankName);
 

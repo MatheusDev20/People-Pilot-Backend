@@ -75,7 +75,7 @@ export class Employee {
   @Column()
   status: string;
 
-  @OneToOne(() => RefreshTokens, (refreshToken) => refreshToken.userId)
+  @OneToOne(() => RefreshTokens, (refreshToken) => refreshToken.user)
   refreshToken: RefreshTokens;
 
   @OneToMany(() => Department, (department) => department.manager)
