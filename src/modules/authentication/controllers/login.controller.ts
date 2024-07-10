@@ -44,8 +44,11 @@ export class AuthenticationController {
     const token = req.cookies['refreshToken'];
     const { access_token, refreshToken, user } =
       await this.refreshTokenUseCase.execute(token);
+
     this.utils.setCookies(response, { access_token, refreshToken });
+
     const { password, ...sendUser } = user;
+
     return authenticated({
       user: sendUser,
       strategy: 'AccessToken Gerado pelo uso único do Refresh Token',

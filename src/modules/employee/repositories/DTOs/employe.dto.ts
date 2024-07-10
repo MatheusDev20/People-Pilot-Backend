@@ -1,6 +1,7 @@
 import { Role } from '../../entities/roles.entity';
 import { Department } from 'src/modules/departments/entities/department.entity';
 import { Employee } from '../../entities/employee.entity';
+import { Organization } from 'src/modules/organizations/entities/organizations.entity';
 
 export class CreateEmployeeRepositoryDTO {
   name: string;
@@ -8,6 +9,7 @@ export class CreateEmployeeRepositoryDTO {
   password: string;
   phone: string;
   department: Department;
+  organization: Organization;
   position: string;
   role: Role;
   hire_date?: string;
@@ -36,7 +38,7 @@ export interface UpdateEmployeeRepositoryDTO {
 type BaseFilter = {
   page: number;
   limit: number;
-}
+};
 
 export type ListFilterOptions = BaseFilter & {
   department: string;

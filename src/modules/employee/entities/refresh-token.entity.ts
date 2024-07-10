@@ -16,7 +16,7 @@ export class RefreshTokens {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'userId' })
-  userId: Employee;
+  user: Employee;
 
   @Column()
   token: string;

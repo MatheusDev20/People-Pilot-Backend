@@ -17,6 +17,7 @@ import { isoToLocale } from 'src/helpers';
 import { RefreshTokens } from './refresh-token.entity';
 import { PaymentInfo } from './paymentInfo.entity';
 import { Documents } from './documents.entity';
+import { Organization } from 'src/modules/organizations/entities/organizations.entity';
 
 @Entity()
 export class Employee {
@@ -32,6 +33,9 @@ export class Employee {
   @Column({ nullable: true })
   @Exclude()
   password: string;
+
+  @ManyToOne(() => Organization, (organization) => organization.employees)
+  organization: Organization;
 
   @Column()
   phone: string;
@@ -71,7 +75,7 @@ export class Employee {
   @Column()
   status: string;
 
-  @OneToOne(() => RefreshTokens, (refreshToken) => refreshToken.userId)
+  @OneToOne(() => RefreshTokens, (refreshToken) => refreshToken.user)
   refreshToken: RefreshTokens;
 
   @OneToMany(() => Department, (department) => department.manager)

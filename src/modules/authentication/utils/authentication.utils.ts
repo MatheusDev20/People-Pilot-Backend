@@ -11,7 +11,9 @@ export class Utils {
       secure: false,
       // sameSite: 'none',
       // expires: COOKIE_EXPIRATION_NEW,
-      maxAge: 55 * 60 * 1000, // 55 min
+      // maxAge: 55 * 60 * 1000, // 55 min
+      // 1 min of max age
+      maxAge: 1 * 60 * 1000, // 1 min
       // maxAge: 120000, // 3min tst
     });
 

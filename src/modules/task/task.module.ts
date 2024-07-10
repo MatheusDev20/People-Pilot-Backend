@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EmployeeModule } from '../employee/employee.module';
 import { SecurityModule } from '../security/security.module';
 import { LoggerModule } from '../logger/logger.module';
-import { CreateTaskUseCase } from './services/create-task-use-case';
+import { CreateTaskUseCase } from './use-cases/create-task-use-case';
 import { TaskRepository } from './repositories/task.repository';
 import { TaskService } from './services/task.service';
 

@@ -32,9 +32,14 @@ export class S3Service implements StorageManager {
   async persist(
     file: Express.Multer.File,
     resource: FileAppResources,
+    alternativeName?: string,
   ): Promise<string> {
     const { originalname, buffer, mimetype } = file;
-    const s3Path = buildS3Path(originalname, resource);
+    const fileName = alternativeName
+      ? `${alternativeName}.${mimetype.split('/')[1]}`
+      : originalname;
+
+    const s3Path = buildS3Path(fileName, resource);
 
     const input: PutObjectCommandInput = {
       Bucket: process.env.BUCKET_NAME,

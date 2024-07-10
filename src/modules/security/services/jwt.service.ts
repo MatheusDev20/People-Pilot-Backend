@@ -20,7 +20,6 @@ export class JwtServiceManager implements JwtManager {
       secret: jwtOptions.secret,
       expiresIn: ms(1800000),
     });
-    console.log(jwtOptions.refreshTokenExpiration, jwtOptions.expiration);
     const refreshToken = await this.jwtService.signAsync(payload, {
       secret: jwtOptions.refreshTokenSecret,
       expiresIn: ms('1d'),

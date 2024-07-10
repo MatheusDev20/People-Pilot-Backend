@@ -1,5 +1,10 @@
 import { HttpExceptionFilter } from './helpers/http/http-exceptions.filter';
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { EmployeeModule } from './modules/employee/employee.module';
@@ -8,6 +13,8 @@ import { MySQLDBConfigService } from './config/db/MysqlConfig.service';
 import { APP_FILTER } from '@nestjs/core';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { TaskModule } from './modules/task/task.module';
+import { OrganizationsModule } from './modules/organizations/organizations.module';
+import { TenantIdentifier } from './middlewares';
 
 @Module({
   imports: [
@@ -20,6 +27,7 @@ import { TaskModule } from './modules/task/task.module';
     DepartmentsModule,
     TaskModule,
     AuthenticationModule,
+    OrganizationsModule,
   ],
   providers: [
     {
@@ -28,4 +36,21 @@ import { TaskModule } from './modules/task/task.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(TenantIdentifier)
+      .exclude(
+        'auth/(.*)',
+        {
+          path: 'organization',
+          method: RequestMethod.POST,
+        },
+        {
+          path: 'employee/me',
+          method: RequestMethod.GET,
+        },
+      )
+      .forRoutes('*');
+  }
+}

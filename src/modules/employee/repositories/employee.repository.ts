@@ -15,33 +15,37 @@ import {
   UpdateEmployeeRepositoryDTO,
 } from './DTOs/employe.dto';
 import { PaymentInfoDTO } from '../DTOs/payment-info-dto';
+import { RefreshTokens } from '../entities/refresh-token.entity';
 
 @Injectable()
 export class EmployeeRepository {
   constructor(
     @InjectRepository(Employee) private repository: Repository<Employee>,
+    @InjectRepository(RefreshTokens)
+    private refreshTokenRepository: Repository<RefreshTokens>,
   ) {}
 
   async list(filters: Partial<ListFilterOptions>): Promise<Employee[]> {
     const builder = this.repository
-    .createQueryBuilder('employee')
-    .innerJoinAndSelect('employee.department', 'department')
-    .innerJoinAndSelect('employee.role', 'role')
-    .select(['employee', 'department.name', 'role.name'])
+      .createQueryBuilder('employee')
+      .innerJoinAndSelect('employee.department', 'department')
+      .innerJoinAndSelect('employee.role', 'role')
+      .select(['employee', 'department.name', 'role.name']);
 
     if (filters.department) {
-      builder.andWhere('department.id = :department', { department: filters.department })
+      builder.andWhere('department.id = :department', {
+        department: filters.department,
+      });
     }
 
     if (filters.role) {
       builder.andWhere('role.id = :roleId', { roleId: filters.role });
     }
 
-    builder.skip((filters.page - 1) * filters.limit)
-    .take(filters.limit)
+    builder.skip((filters.page - 1) * filters.limit).take(filters.limit);
 
-    const list = await builder.getMany()
-    return list
+    const list = await builder.getMany();
+    return list;
   }
 
   async getAll({ limit, page }: GetAllEmployesDTO): Promise<Employee[]> {
@@ -75,7 +79,6 @@ export class EmployeeRepository {
   async save(
     newEmployeeData: CreateEmployeeRepositoryDTO,
   ): Promise<CreateEmployeeResponse> {
-    console.log(newEmployeeData);
     const dbResponse = await this.repository.save({ ...newEmployeeData });
     const { id } = dbResponse;
     return { id: String(id) };
@@ -126,6 +129,7 @@ export class EmployeeRepository {
   ): Promise<Employee> {
     if (pushRelations)
       options = { ...options, ...{ relations: pushRelations } };
+
     return await this.repository.findOne(options);
   }
 
@@ -147,12 +151,28 @@ export class EmployeeRepository {
     employee: Employee,
     data: PaymentInfoDTO,
   ): Promise<string> {
-    const dbResponse = await this.repository.save({
+    await this.repository.save({
       ...employee,
       paymentInfo: data,
     });
-    console.log(dbResponse);
-
     return employee.id;
+  }
+
+  async storeRefreshToken(user: Employee, token: string): Promise<void> {
+    const { refreshToken } = await this.find(
+      { where: { id: user.id } },
+      { refreshToken: true },
+    );
+
+    if (refreshToken) {
+      await this.refreshTokenRepository.save({ ...refreshToken, token });
+      return;
+    }
+
+    await this.refreshTokenRepository.save({
+      expiration: '7d',
+      token,
+      user,
+    });
   }
 }

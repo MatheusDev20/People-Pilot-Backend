@@ -13,8 +13,7 @@ export class PaymentInfoRepository {
   ) {}
 
   async save(data: PaymentInfoDTO): Promise<string> {
-    const dbResponse = await this.repository.save(data);
-    console.log('dbResponse', dbResponse);
+    await this.repository.save(data);
     return '3';
   }
 

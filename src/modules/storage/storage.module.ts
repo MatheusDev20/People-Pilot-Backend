@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { S3Service } from '../aws';
-import { UploadFileService } from './upload/upload-file';
+import { UploadFileService } from './upload-file';
 import AwsModule from '../aws/aws.module';
 import { LoggerModule } from '../logger/logger.module';
 import { ConfigModule } from '@nestjs/config';

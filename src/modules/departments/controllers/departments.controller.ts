@@ -17,34 +17,52 @@ import { Roles } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
 import { UpdateDepartmentDTO } from '../DTO/update-department.dto';
 import { FindOneDepartmentDTO } from '../DTO/find-one-department.dto';
-import { ListAllDepartmentsUseCase } from '../use-cases/listAll-use-case';
+import { FindDepartmentUseCase } from '../use-cases/find-department-use-case';
 import { DeleteDepartmentResponseDTO } from '../DTO/responses.dto';
 import { Department } from '../entities/department.entity';
+import { CreateDepartmentUseCase } from '../use-cases/create-department-use-case';
+import { Organization } from 'src/modules/organizations/entities/organizations.entity';
+import { ORG } from 'src/decorators';
 
 @Controller('departments')
 @UseGuards(LoginGuard, RoleGuard)
 export class DepartmentsController {
   constructor(
     private service: DepartmentsService,
-    private listAllUseCase: ListAllDepartmentsUseCase,
+    private findDepartmentUseCase: FindDepartmentUseCase,
+    private createDepartmentUseCase: CreateDepartmentUseCase,
   ) {}
 
   @Get('/')
   @Roles('managers')
-  async listAllDepartments(): Promise<HttpResponse<Department[] & { employeeCount: number }>> {
-    return ok(await this.listAllUseCase.execute());
+  async listAllDepartments(): Promise<
+    HttpResponse<Department[] & { employeeCount: number }>
+  > {
+    return ok(await this.findDepartmentUseCase.execute({ listAll: true }));
   }
 
   @Get(':id')
   @Roles('managers')
   async getDepartmentByID(@Param('id', ParseUUIDPipe) uuid: string) {
-    return ok(await this.service.find('id', uuid));
+    const department = await this.findDepartmentUseCase.execute({
+      listAll: false,
+      id: uuid,
+    });
+
+    return ok(department);
   }
 
   @Post()
   @Roles('managers')
-  async post(@Body() data: CreateDepartmentDTO) {
-    return created(await this.service.createDepartment(data));
+  async post(
+    @Body() data: CreateDepartmentDTO,
+    @ORG() organization: Organization,
+  ) {
+    const { id } = await this.createDepartmentUseCase.execute({
+      ...data,
+      organization: organization,
+    });
+    return created({ id });
   }
 
   @Roles('managers')

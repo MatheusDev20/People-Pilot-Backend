@@ -2,17 +2,17 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdatedTask } from '../DTO/responses.dto';
 import { TaskRepository } from '../repositories/task.repository';
 import { UpdateTaskDTO } from '../DTO/update-task.dto';
-import { EmployeeService } from 'src/modules/employee/services/employee.service';
 import { Task } from '../entities/task.entity';
 import { FindOptionsWhere } from 'typeorm';
 import { ValidColumn } from 'src/@types';
 import { UpdateTaskRepositoryDTO } from '../repositories/DTO';
+import { EmployeeRepository } from 'src/modules/employee/repositories/employee.repository';
 
 @Injectable()
 export class TaskService {
   constructor(
     private repository: TaskRepository,
-    private employeeService: EmployeeService,
+    private employeeRepository: EmployeeRepository,
   ) {}
 
   async find(property: ValidColumn<Task>, value: string): Promise<Task> {
@@ -57,10 +57,9 @@ export class TaskService {
       Object.entries(propertyes).map(async ([key, value]) => {
         switch (key as keyof UpdateTaskDTO) {
           case 'assignee_email':
-            const assignee = await this.employeeService.find(
-              'email',
-              value as string,
-            );
+            const assignee = await this.employeeRepository.find({
+              where: { email: value },
+            });
             if (!assignee)
               throw new NotFoundException('Assignee destiny not found');
             return ['assignee', assignee];

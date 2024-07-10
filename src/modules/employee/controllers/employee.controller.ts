@@ -16,7 +16,6 @@ import {
 } from '@nestjs/common';
 import { created, deleted, HttpResponse, ok, updated } from 'src/helpers/http';
 import { CreateEmployeeDTO } from '../DTOs/create-employee-dto';
-import { EmployeeService } from '../services/employee.service';
 import {
   DEFAULT_APP_LIMIT,
   DEFAULT_APP_PAGINATION,
@@ -27,7 +26,7 @@ import { Roles } from 'src/modules/authentication/guards/role-based';
 import { RoleGuard } from 'src/modules/authentication/guards/role-based/role.guard';
 import { UpdateEmployeeDTO } from '../DTOs/update-employee.dto';
 import { FindOneDTO } from '../../../class-validator/find-one.dto';
-import { UploadFileService } from 'src/modules/storage/upload/upload-file';
+import { UploadFileService } from 'src/modules/storage/upload-file';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   AvatarPipeInstance,
@@ -36,24 +35,31 @@ import {
 import { AvatarProfile, EmployeeDocument } from 'src/@types';
 import { CreateEmployeeUseCase } from '../use-cases/create-employee-use-case';
 import { CreateManagerUseCase } from '../use-cases/create-manager-use-case';
-import { GetEmployeeListUseCase } from '../use-cases/get-employee-list-use-case';
+import { GetEmployeeListUseCase } from '../use-cases/search/get-employee-list-use-case';
 import { PaymentInfoDTO } from '../DTOs/payment-info-dto';
 import { AddPaymentInformation } from '../use-cases/add-payment-information-use-case';
 import { UploadDocumentDTO } from '../DTOs/update-document-dto';
 import { UploadDocumentUseCase } from '../use-cases/upload-document-use-case';
 import { Employee } from '../entities/employee.entity';
 import { DeleteEmployeeResponse, UpdateEmployeeResponse } from '../DTOs';
+import { FindByPropertyEmployeeUseCase } from '../use-cases/search/find-employee-use-case';
+import { UpdateEmployeeUseCase } from '../use-cases/update-employee-use-case';
+import { DeleteEmployeeUseCase } from '../use-cases/delete-employee-use-case';
+import { ORG } from 'src/decorators';
+import { Organization } from 'src/modules/organizations/entities/organizations.entity';
 
 @Controller('employee')
 export class EmployeeController {
   constructor(
-    private employeeService: EmployeeService,
     private createEmployeeUseCase: CreateEmployeeUseCase,
     private createManagerUseCase: CreateManagerUseCase,
     private listEmployeesUseCase: GetEmployeeListUseCase,
     private uploadService: UploadFileService,
     private addPaymentInfoUseCase: AddPaymentInformation,
     private uploadDocumentUseCase: UploadDocumentUseCase,
+    private findByPropertyUseCase: FindByPropertyEmployeeUseCase,
+    private updateEmployeeUseCase: UpdateEmployeeUseCase,
+    private deleteEmployeeUseCase: DeleteEmployeeUseCase,
   ) {}
 
   /**
@@ -65,7 +71,10 @@ export class EmployeeController {
   @UseInterceptors(ClassSerializerInterceptor)
   async getMe(@Req() request): Promise<HttpResponse<Employee>> {
     const { id } = request.user;
-    const me = await this.employeeService.find('id', id);
+    const me = await this.findByPropertyUseCase.execute('id', id, {
+      bringDetails: false,
+    });
+
     return ok(me);
   }
 
@@ -92,14 +101,22 @@ export class EmployeeController {
   @Post()
   async save(
     @Body() data: CreateEmployeeDTO,
+    @ORG() organization: Organization,
   ): Promise<HttpResponse<{ id: string }>> {
     const { role } = data;
+
     if (role === 'managers' || role === 'admin') {
-      const { id } = await this.createManagerUseCase.execute(data);
+      const { id } = await this.createManagerUseCase.execute({
+        ...data,
+        organization,
+      });
       return created({ id });
     }
 
-    const { id } = await this.createEmployeeUseCase.execute(data);
+    const { id } = await this.createEmployeeUseCase.execute({
+      ...data,
+      organization,
+    });
     return created({ id });
   }
 
@@ -110,7 +127,14 @@ export class EmployeeController {
   async getDetails(
     @Param() params: FindOneDTO,
   ): Promise<HttpResponse<Employee>> {
-    return ok(await this.employeeService.getDetails(params.uuid));
+    const details = await this.findByPropertyUseCase.execute(
+      'id',
+      params.uuid,
+      {
+        bringDetails: true,
+      },
+    );
+    return ok(details);
   }
 
   @UseGuards(LoginGuard, RoleGuard)
@@ -121,7 +145,7 @@ export class EmployeeController {
     @Body() data: Partial<UpdateEmployeeDTO>,
   ): Promise<HttpResponse<{ id: string }>> {
     const { uuid } = params;
-    const { id } = await this.employeeService.update(uuid, data);
+    const { id } = await this.updateEmployeeUseCase.execute(uuid, data);
     return updated({ id });
   }
 
@@ -132,7 +156,8 @@ export class EmployeeController {
     @Param() params: FindOneDTO,
   ): Promise<HttpResponse<DeleteEmployeeResponse>> {
     const { uuid } = params;
-    return deleted(await this.employeeService.delete(uuid));
+    const { id } = await this.deleteEmployeeUseCase.execute(uuid);
+    return deleted({ id });
   }
 
   @UseGuards(LoginGuard, RoleGuard)
@@ -149,7 +174,8 @@ export class EmployeeController {
       file,
       'employee_avatar',
     );
-    const updatedEmployee = await this.employeeService.update(uuid, {
+
+    const updatedEmployee = await this.updateEmployeeUseCase.execute(uuid, {
       avatar: fileUrl,
     });
     return updated(updatedEmployee);

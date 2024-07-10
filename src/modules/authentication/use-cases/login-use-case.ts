@@ -1,4 +1,3 @@
-import { EmployeeService } from 'src/modules/employee/services/employee.service';
 import { LoginDTO } from '../DTOs/login-controller.dto';
 import {
   Inject,
@@ -15,7 +14,6 @@ import { EmployeeRepository } from 'src/modules/employee/repositories/employee.r
 @Injectable()
 export class LoginUseCase {
   constructor(
-    private employeeService: EmployeeService,
     private employeeRepository: EmployeeRepository,
     @Inject('HashingService') private hashService: Hashing,
     @Inject('JwtManager') private jwtManager: JwtManager,
@@ -26,7 +24,8 @@ export class LoginUseCase {
 
     const findUser = await this.employeeRepository.find(
       { where: { email } },
-      { role: true },
+      { role: true, organization: true },
+      // { organization: true },
     );
 
     if (!findUser) throw new NotFoundException(NotFoundEmail);
@@ -42,7 +41,7 @@ export class LoginUseCase {
       });
 
       const { refreshToken } = jwtData;
-      await this.employeeService.storeRefreshToken(findUser, refreshToken);
+      await this.employeeRepository.storeRefreshToken(findUser, refreshToken);
 
       return { ...jwtData, user: findUser, refreshToken };
     }

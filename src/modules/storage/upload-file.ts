@@ -8,7 +8,8 @@ export class UploadFileService {
   async uploadSingleFile(
     file: Express.Multer.File,
     resource: FileAppResources,
+    alternativeName?: string,
   ): Promise<string> {
-    return await this.manager.persist(file, resource);
+    return await this.manager.persist(file, resource, alternativeName);
   }
 }
