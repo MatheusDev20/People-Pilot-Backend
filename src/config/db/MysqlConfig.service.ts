@@ -12,6 +12,10 @@ export class MySQLDBConfigService implements TypeOrmOptionsFactory {
     const entities = this.configService.get<string>('DB_ENTITIES');
     try {
       console.log(path.join(__dirname, '..', '..') + entities);
+      this.logger.log(
+        'Trying to connect to the database',
+        this.configService.get<string>('DB_NAME'),
+      );
       const options: TypeOrmModuleOptions = {
         type: 'mysql',
         host: this.configService.get<string>('DB_HOST'),
