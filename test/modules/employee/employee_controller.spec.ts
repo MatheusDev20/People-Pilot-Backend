@@ -1,6 +1,5 @@
 import { CreateManagerUseCase } from './../../../src/modules/employee/use-cases/create-manager-use-case';
 import { EmployeeRepository } from 'src/modules/employee/repositories/employee.repository';
-import { EmployeeService } from './../../../src/modules/employee/services/employee.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EmployeeController } from 'src/modules/employee/controllers/employee.controller';
 import { makeFakeUser } from '../authentication/mocks';
@@ -20,14 +19,13 @@ import { v4 } from 'uuid';
 import { FindOneDTO } from 'src/class-validator/find-one.dto';
 import { UpdateEmployeeResponse } from 'src/modules/employee/DTOs/responses.dto';
 import { CreateEmployeeUseCase } from 'src/modules/employee/use-cases/create-employee-use-case';
-import { GetEmployeeListUseCase } from 'src/modules/employee/use-cases/get-employee-list-use-case';
 import { AddPaymentInformation } from 'src/modules/employee/use-cases/add-payment-information-use-case';
 import { UploadDocumentUseCase } from 'src/modules/employee/use-cases';
 import { InternalServerErrorException } from '@nestjs/common';
+import { GetEmployeeListUseCase } from 'src/modules/employee/use-cases/search/get-employee-list-use-case';
 
 describe('Employee Controller', () => {
   let sut: EmployeeController;
-  let employeeService: EmployeeService;
   let useCase: CreateEmployeeUseCase;
   let listEmployeeUseCase: GetEmployeeListUseCase;
   let uploadDocumentUseCase: UploadDocumentUseCase;
@@ -104,10 +102,6 @@ describe('Employee Controller', () => {
           useClass: CreateManagerUseCaseStub,
         },
         {
-          provide: EmployeeService,
-          useClass: ServiceStub,
-        },
-        {
           provide: EmployeeRepository,
           useClass: EmployeeRepositoryStub,
         },
@@ -123,7 +117,6 @@ describe('Employee Controller', () => {
     }).compile();
 
     sut = module.get<EmployeeController>(EmployeeController);
-    employeeService = module.get<EmployeeService>(EmployeeService);
     useCase = module.get<CreateEmployeeUseCase>(CreateEmployeeUseCase);
     listEmployeeUseCase = module.get<GetEmployeeListUseCase>(
       GetEmployeeListUseCase,
