@@ -93,6 +93,7 @@ jobs:
           tar -xzf package.tar.gz
           rm package.tar.gz
         fi
-        pm2 restart dist/main.js
+        pm2 delete main
+        pm2 start dist/main.js
         EOF
 
