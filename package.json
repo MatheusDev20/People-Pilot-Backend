@@ -21,7 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky install",
     "docker:dev": "docker compose --profile dev up",
-    "docker:prod": "docker compose --profile prod up"
+    "docker:prod": "docker-compose --profile prod up"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.335.0",
