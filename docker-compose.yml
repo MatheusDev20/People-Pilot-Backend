@@ -10,6 +10,8 @@ services:
     ports:
       - 3001:3001
     command: npm run start:dev
+    profiles: ["dev", "prod"]
+
   db:
     image: mysql:latest
     restart: always
@@ -20,6 +22,7 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+    profiles: ["dev"]
 
 volumes:
   db_data:
