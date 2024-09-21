@@ -18,7 +18,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3000:3000
-    command: npm run start:dev
+    command: npm run start
     profiles: ["prod"]
 
   db:
