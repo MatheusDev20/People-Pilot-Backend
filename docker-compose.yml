@@ -20,7 +20,7 @@ services:
       - 3000:3000
     command: npm run start
     env_file:
-      - ./production.env
+      - .env
     profiles: ["prod"]
 
   db:
